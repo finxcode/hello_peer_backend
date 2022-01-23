@@ -1,18 +1,27 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"net/http"
+	"fmt"
+	"go.uber.org/zap"
+	"webapp_gin/bootstrap"
+	"webapp_gin/global"
 )
 
 func main() {
-	r := gin.Default()
+	bootstrap.InitConfig()
+	fmt.Println(global.App.Config.App.AppName)
 
-	// 测试路由
-	r.GET("/ping", func(c *gin.Context) {
-		c.String(http.StatusOK, "pong")
-	})
+	bootstrap.InitializeLog()
+	zap.L().Info("log init success!")
 
-	// 启动服务器
-	r.Run(":8888")
+	global.App.DB = bootstrap.InitializeDB()
+
+	defer func() {
+		if global.App.DB != nil {
+			db, _ := global.App.DB.DB()
+			db.Close()
+		}
+	}()
+
+	bootstrap.RunServer()
 }
