@@ -11,8 +11,8 @@ import (
 	"os"
 	"strconv"
 	"time"
+	"webapp_gin/app/models"
 	"webapp_gin/global"
-	"webapp_gin/models"
 )
 
 func InitializeDB() *gorm.DB {
