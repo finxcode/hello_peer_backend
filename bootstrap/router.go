@@ -18,6 +18,9 @@ import (
 )
 
 func setupRouter() *gin.Engine {
+	if global.App.Config.App.Env == "production" {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	router := gin.New()
 	router.Use(middleware.GinLogger(), middleware.GinRecovery(true))
 	// register api route group
