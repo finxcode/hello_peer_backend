@@ -1,11 +1,14 @@
 package routes
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"time"
 	"webapp_gin/app/common/request"
 	"webapp_gin/app/controllers/app"
+	"webapp_gin/app/middleware"
+	"webapp_gin/app/services"
+
+	"github.com/gin-gonic/gin"
 )
 
 func SetApiGroupRoutes(router *gin.RouterGroup) {
@@ -32,5 +35,11 @@ func SetApiGroupRoutes(router *gin.RouterGroup) {
 	})
 
 	router.POST("/auth/register", app.Register)
+	router.POST("/auth/login", app.Login)
+	authRouter := router.Group("").Use(middleware.JWTAuth(services.AppGuardName))
+	{
+		authRouter.POST("/auth/info", app.Info)
+		authRouter.POST("/auth/logout", app.Logout)
+	}
 
 }

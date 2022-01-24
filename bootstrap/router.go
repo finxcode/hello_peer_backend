@@ -3,26 +3,26 @@ package bootstrap
 import (
 	"context"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
+	"webapp_gin/app/middleware"
 	"webapp_gin/global"
-	"webapp_gin/middleware"
 	"webapp_gin/routes"
+
+	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 func setupRouter() *gin.Engine {
-	router := gin.Default()
-
+	router := gin.New()
+	router.Use(middleware.GinLogger(), middleware.GinRecovery(true))
 	// register api route group
 	apiGroup := router.Group("/api")
 	routes.SetApiGroupRoutes(apiGroup)
-	router.Use(middleware.GinLogger(), middleware.GinRecovery(true))
 	return router
 }
 

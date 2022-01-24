@@ -1,10 +1,12 @@
 package global
 
 import (
+	"webapp_gin/config"
+
+	"github.com/go-redis/redis/v8"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"gorm.io/gorm"
-	"webapp_gin/config"
 )
 
 type Application struct {
@@ -12,6 +14,7 @@ type Application struct {
 	Config      config.Configuration
 	Log         *zap.Logger
 	DB          *gorm.DB
+	Redis       *redis.Client
 }
 
 var App = new(Application)

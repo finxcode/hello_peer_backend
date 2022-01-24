@@ -1,5 +1,7 @@
 package models
 
+import "strconv"
+
 type User struct {
 	ID
 	Name     string `json:"name" gorm:"not null;comment:user name"`
@@ -7,4 +9,8 @@ type User struct {
 	Password string `json:"password" gorm:"not null;default:'';comment:user password"`
 	Timestamps
 	SoftDeletes
+}
+
+func (user User) GetUid() string {
+	return strconv.Itoa(int(user.ID.ID))
 }

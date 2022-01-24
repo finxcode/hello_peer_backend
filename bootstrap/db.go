@@ -16,7 +16,7 @@ import (
 )
 
 func InitializeDB() *gorm.DB {
-	// 根据驱动配置进行初始化
+
 	switch global.App.Config.Database.Driver {
 	case "mysql":
 		return initMySqlGorm()
@@ -25,7 +25,6 @@ func InitializeDB() *gorm.DB {
 	}
 }
 
-// 初始化 mysql gorm.DB
 func initMySqlGorm() *gorm.DB {
 	dbConfig := global.App.Config.Database
 
@@ -52,6 +51,7 @@ func initMySqlGorm() *gorm.DB {
 		sqlDB, _ := db.DB()
 		sqlDB.SetMaxIdleConns(dbConfig.MaxIdleConns)
 		sqlDB.SetMaxOpenConns(dbConfig.MaxOpenConns)
+		initMySqlTables(db)
 		return db
 	}
 }

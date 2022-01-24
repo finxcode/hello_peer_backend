@@ -14,3 +14,16 @@ func (register Register) GetMessages() ValidatorMessages {
 		"mobile.mobile":     "format of phone number incorrect",
 	}
 }
+
+type Login struct {
+	Mobile   string `form:"mobile" json:"mobile" binding:"required,mobile"`
+	Password string `form:"password" json:"password" binding:"required"`
+}
+
+func (login Login) GetMessages() ValidatorMessages {
+	return ValidatorMessages{
+		"mobile.required":   "phone no field cannot be empty",
+		"mobile.mobile":     "format of phone number incorrect",
+		"password.required": "password cannot be empty",
+	}
+}

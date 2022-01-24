@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"go.uber.org/zap"
 	"webapp_gin/bootstrap"
 	"webapp_gin/global"
+
+	"go.uber.org/zap"
 )
 
 func main() {
@@ -24,5 +25,6 @@ func main() {
 	}()
 
 	bootstrap.InitializeValidator()
+	global.App.Redis = bootstrap.InitializeRedis()
 	bootstrap.RunServer()
 }
