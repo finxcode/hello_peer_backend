@@ -19,7 +19,7 @@ database:
   driver: mysql # database driver
   host: 127.0.0.1
   port: 3306
-  database: ginframe
+  database: hellopeers
   username: root
   password: start2021
   charset: utf8mb4

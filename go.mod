@@ -1,4 +1,4 @@
-module hello_peer
+module webapp_gin
 
 go 1.15
 
