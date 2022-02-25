@@ -17,11 +17,11 @@ Log:
 
 database:
   driver: mysql # database driver
-  host: 127.0.0.1
+  host: 1.12.243.73 #host: 127.0.0.1
   port: 3306
   database: hellopeers
   username: root
-  password: start2021
+  password: Start2021@
   charset: utf8mb4
   max_idle_conns: 10
   max_open_conns: 100
@@ -36,7 +36,7 @@ jwt:
   refresh_grace_period: 1800
 
 redis:
-  host: 127.0.0.1
+  host: 1.12.243.73 #host: 127.0.0.1
   port: 6379
   db: 0
-  password:
+  password: Start2021@
