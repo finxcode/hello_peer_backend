@@ -3,6 +3,8 @@ package bootstrap
 import (
 	"context"
 	"fmt"
+	swaggerFiles "github.com/swaggo/files"
+	"github.com/swaggo/gin-swagger"
 	"log"
 	"net/http"
 	"os"
@@ -15,17 +17,26 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+
+	_ "webapp_gin/docs"
 )
 
 func setupRouter() *gin.Engine {
+
 	if global.App.Config.App.Env == "production" {
 		gin.SetMode(gin.ReleaseMode)
+	} else if global.App.Config.App.Env == "debug" {
+		gin.SetMode(gin.DebugMode)
 	}
 	router := gin.New()
 	router.Use(middleware.GinLogger(), middleware.GinRecovery(true))
 	// register api route group
-	apiGroup := router.Group("/api")
+	apiGroup := router.Group("/api/v0.1")
 	routes.SetApiGroupRoutes(apiGroup)
+
+	url := ginSwagger.URL("http://localhost:8888/swagger/doc.json")
+	router.GET("swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler, url))
+
 	return router
 }
 

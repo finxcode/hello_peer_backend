@@ -1,7 +1,7 @@
 App:
-  env: local
+  env: debug
   port: 8888
-  app_name: gin_app
+  app_name: Hello Peer Backend
   app_url: http://localhost
 
 Log:
