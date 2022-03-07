@@ -20,7 +20,6 @@ import (
 // @Security ApiKeyAuth
 // @Success 200 {object} _ResponsePostList
 // @Router /posts2 [get]
-
 func Register(c *gin.Context) {
 	var form request.Register
 	if err := c.ShouldBindJSON(&form); err != nil {
