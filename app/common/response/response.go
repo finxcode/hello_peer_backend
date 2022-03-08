@@ -7,9 +7,9 @@ import (
 )
 
 type Response struct {
-	ErrorCode int         `json:"error_code"` // 自定义错误码
-	Data      interface{} `json:"data"`       // 数据
-	Message   string      `json:"message"`    // 信息
+	ErrorCode int         `json:"error_code"`
+	Data      interface{} `json:"data"`
+	Message   string      `json:"message"`
 }
 
 func Success(c *gin.Context, data interface{}) {
@@ -42,4 +42,8 @@ func BusinessFail(c *gin.Context, msg string) {
 
 func TokenFail(c *gin.Context) {
 	FailByError(c, global.Errors.TokenError)
+}
+
+func BadRequest(c *gin.Context) {
+	Fail(c, global.Errors.BadRequestError.ErrorCode, global.Errors.BadRequestError.ErrorMsg)
 }

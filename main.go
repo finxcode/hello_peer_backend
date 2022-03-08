@@ -8,17 +8,6 @@ import (
 	"go.uber.org/zap"
 )
 
-// @title Hello Peer API
-// @version 0.1
-// @description Hello Peer是一款基于兴趣的社交应用。
-// @termsOfService API文档仅用于Hello Peer研发使用。
-
-// @contact.name Frank Sheng
-// @contact.email 726569998@qq.com
-
-// @host 1.12.243.73:8686
-// @BasePath /api/v0.1
-
 func main() {
 	bootstrap.InitConfig()
 	fmt.Println(global.App.Config.App.AppName)

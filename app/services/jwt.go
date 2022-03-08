@@ -26,7 +26,7 @@ type CustomClaims struct {
 
 const (
 	TokenType    = "bearer"
-	AppGuardName = "app"
+	AppGuardName = "Hello Peer"
 )
 
 type TokenOutPut struct {
