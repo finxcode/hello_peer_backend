@@ -27,7 +27,3 @@ func (login Login) GetMessages() ValidatorMessages {
 		"password.required": "password cannot be empty",
 	}
 }
-
-type AutoLogin struct {
-	Code string `json:"code"`
-}

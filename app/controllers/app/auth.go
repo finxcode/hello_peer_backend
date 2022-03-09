@@ -28,14 +28,6 @@ func Login(c *gin.Context) {
 	}
 }
 
-func AutoLogin(c *gin.Context) {
-	var loginCode request.AutoLogin
-	if err := c.ShouldBindJSON(&loginCode); err != nil {
-		response.BadRequest(c)
-		return
-	}
-}
-
 func Info(c *gin.Context) {
 	err, user := services.UserService.GetUserInfo(c.Keys["id"].(string))
 	if err != nil {
