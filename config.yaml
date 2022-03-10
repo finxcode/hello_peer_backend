@@ -1,8 +1,8 @@
 App:
   env: debug
-  port: 8888
+  port: 8686
   app_name: Hello Peer Backend
-  app_url: http://localhost
+  app_url: http://1.12.243.73
 
 Log:
   Level: info

@@ -9,7 +9,7 @@ type WechatUser struct {
 	PetId       string  `json:"petId" gorm:"comment:宠物id"`
 	Mobile      string  `json:"mobile" gorm:"index;comment:手机号"`
 	Password    string  `json:"password" gorm:"comment:密码"`
-	Gender      string  `json:"gender" gorm:"comment:性别"`
+	Gender      int     `json:"gender" gorm:"comment:性别"`
 	Age         int     `json:"age" gorm:"not null;default:22;comment:年龄"`
 	Occupation  string  `json:"occupation" gorm:"comment:职业"`
 	Lat         float32 `json:"lat" gorm:"comment:维度"`

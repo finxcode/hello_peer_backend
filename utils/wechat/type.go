@@ -8,6 +8,15 @@ type SessionInfo struct {
 	ErrorMsg   string `json:"errmsg"`
 }
 
+type UserProfileForm struct {
+	Code          string `json:"code"`
+	EncryptedData string `json:"encrypted_data"`
+	UserInfo      string `json:"user_info"`
+	Iv            string `json:"iv"`
+	RawData       string `json:"raw_data"`
+	Signature     string `json:"signature"`
+}
+
 type UnencryptUserData struct {
 	OpenID    string `json:"openId"`
 	UnionID   string `json:"unionId"`

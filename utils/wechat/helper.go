@@ -19,12 +19,12 @@ var url = "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_co
 
 func Code2Session(code string) (SessionInfo, error) {
 	var sessionInfo SessionInfo
-	httpState, bytes := Get(fmt.Sprintf(url, global.App.Config.Wechat.ApiKey, global.App.Config.Wechat.ApiSecret, code))
+	httpState, res := Get(fmt.Sprintf(url, global.App.Config.Wechat.ApiKey, global.App.Config.Wechat.ApiSecret, code))
 	if httpState != 200 {
 		zap.L().Error(fmt.Sprintf("获取sessionKey失败,HTTP CODE:%d", httpState))
 		return sessionInfo, errors.New("获取sessionKey失败")
 	}
-	err := json.Unmarshal(bytes, &sessionInfo)
+	err := json.Unmarshal(res, &sessionInfo)
 	if err != nil {
 		zap.L().Error(fmt.Sprintf("json解析失败", err))
 		return sessionInfo, errors.New("json解析失败")
@@ -40,7 +40,11 @@ func Get(url string) (int, []byte) {
 		zap.L().Error(fmt.Sprintf("error sending GET request, url: %s, %q", url, err))
 		return http.StatusInternalServerError, nil
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+		}
+	}(resp.Body)
 	var buffer [512]byte
 	result := bytes.NewBuffer(nil)
 	for {
@@ -63,13 +67,12 @@ var (
 	ErrInvalidPKCS7Padding = errors.New("invalid padding on input")
 )
 
-type WXUserDataCrypt struct {
-	appID, sessionKey string
+type WechatUserDataCrypt struct {
+	sessionKey string
 }
 
-func NewWXUserDataCrypt(appID, sessionKey string) *WXUserDataCrypt {
-	return &WXUserDataCrypt{
-		appID:      appID,
+func NewWechatUserDataCrypt(sessionKey string) *WechatUserDataCrypt {
+	return &WechatUserDataCrypt{
 		sessionKey: sessionKey,
 	}
 }
@@ -95,7 +98,7 @@ func pkcs7Unpad(data []byte, blockSize int) ([]byte, error) {
 	return data[:len(data)-n], nil
 }
 
-func (w *WXUserDataCrypt) Decrypt(encryptedData, iv string) (*UnencryptUserData, error) {
+func (w *WechatUserDataCrypt) Decrypt(encryptedData, iv string) (*UnencryptUserData, error) {
 	aesKey, err := base64.StdEncoding.DecodeString(w.sessionKey)
 	if err != nil {
 		return nil, err
@@ -123,7 +126,7 @@ func (w *WXUserDataCrypt) Decrypt(encryptedData, iv string) (*UnencryptUserData,
 	if err != nil {
 		return nil, err
 	}
-	if userInfo.Watermark.AppID != w.appID {
+	if userInfo.Watermark.AppID != global.App.Config.Wechat.ApiKey {
 		return nil, ErrAppIDNotMatch
 	}
 	return &userInfo, nil
