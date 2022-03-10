@@ -15,9 +15,14 @@ type WechatUser struct {
 	Lat         float32 `json:"lat" gorm:"comment:维度"`
 	Lng         float32 `json:"lng" gorm:"comment:经度"`
 	OpenId      string  `json:"openid" gorm:"comment:微信openid"`
-	SessionKey  string  `json:"session_key" gorm:"comment:微信sessionkey"`
+	UnionId     string  `json:"unionid" gorm:"comment:微信unionid"`
 	Location    string  `json:"location" gorm:"comment:用户所在地"`
 	HomeTown    string  `json:"homeTown" gorm:"comment:用户家乡"`
+	City        string  `json:"city" gorm:"comment:用户所在城市"`
+	Province    string  `json:"province" gorm:"comment:用户所在省份"`
+	Country     string  `json:"country" gorm:"comment:用户所在国家"`
+	AvatarURL   string  `json:"avatarUrl" gorm:"用户头像链接"`
+	Language    string  `json:"language" gorm:"用户语言"`
 	CoverImage  string  `json:"coverImage" gorm:"comment:用户封面图url"`
 	Images      string  `json:"images" gorm:"comment:用户上传图片url"`
 	Tags        string  `json:"tags" gorm:"comment:用户标签"`
