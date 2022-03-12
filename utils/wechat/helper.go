@@ -117,7 +117,9 @@ func (w *WechatUserDataCrypt) Decrypt(encryptedData, iv string) (*UnencryptUserD
 	}
 	mode := cipher.NewCBCDecrypter(block, ivBytes)
 	mode.CryptBlocks(cipherText, cipherText)
-	cipherText, err = pkcs7Unpad(cipherText, block.BlockSize())
+	//cipherText, err = pkcs7Unpad(cipherText, block.BlockSize())
+	cipherText, err = PKCS7UnPadding(cipherText)
+
 	if err != nil {
 		return nil, err
 	}
@@ -130,4 +132,13 @@ func (w *WechatUserDataCrypt) Decrypt(encryptedData, iv string) (*UnencryptUserD
 		return nil, ErrAppIDNotMatch
 	}
 	return &userInfo, nil
+}
+
+func PKCS7UnPadding(plantText []byte) ([]byte, error) {
+	length := len(plantText)
+	if length > 0 {
+		unPadding := int(plantText[length-1])
+		return plantText[:(length - unPadding)], nil
+	}
+	return plantText, nil
 }
