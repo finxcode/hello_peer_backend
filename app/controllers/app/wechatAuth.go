@@ -2,6 +2,7 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	"webapp_gin/app/common/request"
 	"webapp_gin/app/common/response"
 	"webapp_gin/app/services"
@@ -37,7 +38,7 @@ func AuthLogin(c *gin.Context) {
 		response.BadRequest(c)
 		return
 	}
-
+	zap.L().Info("input data", zap.Any("request form", userProfileForm))
 	wechatUser, err, errCode := services.WechatUserService.AuthRegister(&userProfileForm)
 	if err != nil {
 		response.Fail(c, errCode, err.Error())
