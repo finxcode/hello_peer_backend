@@ -9,12 +9,12 @@ type SessionInfo struct {
 }
 
 type UserProfileForm struct {
-	Code          string `json:"code"`
-	EncryptedData string `json:"encrypted_data"`
-	UserInfo      string `json:"user_info"`
-	Iv            string `json:"iv"`
-	RawData       string `json:"raw_data"`
-	Signature     string `json:"signature"`
+	Code          string      `json:"code"`
+	EncryptedData string      `json:"encrypted_data"`
+	UserInfo      interface{} `json:"user_info"`
+	Iv            string      `json:"iv"`
+	RawData       string      `json:"raw_data"`
+	Signature     string      `json:"signature"`
 }
 
 type UnencryptUserData struct {
