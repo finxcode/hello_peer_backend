@@ -31,6 +31,7 @@ func (wechatUseservice *wechatUserService) AutoRegister(code string) (models.Wec
 
 	//check whether openid exists in db
 	err = global.App.DB.Where("open_id = ?", session.OpenId).First(&wechatUser).Error
+	zap.L().Info("check record in db error recording", zap.Any("error", err.Error()))
 
 	//if not, insert new record
 	if err == gorm.ErrRecordNotFound {
@@ -40,8 +41,6 @@ func (wechatUseservice *wechatUserService) AutoRegister(code string) (models.Wec
 		if result.Error != nil {
 			return wechatUser, errors.New("internal server error"), http.StatusInternalServerError
 		}
-	} else {
-		return wechatUser, errors.New("internal server error"), http.StatusInternalServerError
 	}
 
 	//else, return
@@ -85,8 +84,6 @@ func (wechatUseservice *wechatUserService) AuthRegister(profile *wechat.UserProf
 		if result.Error != nil {
 			return wechatUser, errors.New("internal server error"), http.StatusInternalServerError
 		}
-	} else {
-		return wechatUser, errors.New("internal server error"), http.StatusInternalServerError
 	}
 
 	res := global.App.DB.Model(models.WechatUser{}).Where("open_id = ?", session.OpenId).Updates(wechatUser)
