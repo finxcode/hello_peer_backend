@@ -58,6 +58,7 @@ func (wechatUseservice *wechatUserService) AuthRegister(profile *wechat.UserProf
 	if session.ErrorCode != 0 {
 		return wechatUser, errors.New(session.ErrorMsg), session.ErrorCode
 	}
+	zap.L().Info("recording session key", zap.Any("session_key", session.SessionKey))
 
 	//decrypt encryptedData
 	wechatUserDataCrypt := wechat.NewWechatUserDataCrypt(session.SessionKey)
