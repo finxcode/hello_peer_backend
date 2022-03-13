@@ -10,10 +10,10 @@ type SessionInfo struct {
 
 type UserProfileForm struct {
 	Code          string      `json:"code"`
-	EncryptedData string      `json:"encrypted_data"`
-	UserInfo      interface{} `json:"user_info"`
+	EncryptedData string      `json:"encryptedData"`
+	UserInfo      interface{} `json:"userInfo"`
 	Iv            string      `json:"iv"`
-	RawData       string      `json:"raw_data"`
+	RawData       interface{} `json:"rawData"`
 	Signature     string      `json:"signature"`
 }
 
