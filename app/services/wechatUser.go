@@ -31,7 +31,7 @@ func (wechatUseservice *wechatUserService) AutoRegister(code string) (models.Wec
 
 	//check whether openid exists in db
 	err = global.App.DB.Where("open_id = ?", session.OpenId).First(&wechatUser).Error
-	zap.L().Info("check record in db error recording", zap.Any("error", err.Error()))
+	//zap.L().Info("check record in db error recording", zap.Any("error", err.Error()))
 
 	//if not, insert new record
 	if err == gorm.ErrRecordNotFound {
