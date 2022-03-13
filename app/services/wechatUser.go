@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"go.uber.org/zap"
 	"gorm.io/gorm"
 	"net/http"
 	"webapp_gin/app/models"
@@ -25,6 +26,8 @@ func (wechatUseservice *wechatUserService) AutoRegister(code string) (models.Wec
 	if session.ErrorCode != 0 {
 		return wechatUser, errors.New(session.ErrorMsg), session.ErrorCode
 	}
+
+	zap.L().Info("recording session key", zap.Any("session_key", session.SessionKey))
 
 	//check whether openid exists in db
 	err = global.App.DB.Where("open_id = ?", session.OpenId).First(&wechatUser).Error
