@@ -69,17 +69,18 @@ func (wechatUseservice *wechatUserService) AuthRegister(profile *wechat.UserProf
 	//check whether openid exists in db
 	err = global.App.DB.Where("open_id = ?", session.OpenId).First(&wechatUser).Error
 
+	wechatUser.OpenId = userInfo.OpenID
+	wechatUser.UnionId = userInfo.UnionID
+	wechatUser.AvatarURL = userInfo.AvatarURL
+	wechatUser.Gender = userInfo.Gender
+	wechatUser.WechatName = userInfo.NickName
+	wechatUser.Language = userInfo.Language
+	wechatUser.City = userInfo.City
+	wechatUser.Province = userInfo.Province
+	wechatUser.Country = userInfo.Country
+
 	//if not, insert new record
 	if err == gorm.ErrRecordNotFound {
-		wechatUser.OpenId = userInfo.OpenID
-		wechatUser.UnionId = userInfo.UnionID
-		wechatUser.AvatarURL = userInfo.AvatarURL
-		wechatUser.Gender = userInfo.Gender
-		wechatUser.WechatName = userInfo.NickName
-		wechatUser.Language = userInfo.Language
-		wechatUser.City = userInfo.City
-		wechatUser.Province = userInfo.Province
-		wechatUser.Country = userInfo.Country
 		result := global.App.DB.Create(&wechatUser)
 		if result.Error != nil {
 			return wechatUser, errors.New("internal server error"), http.StatusInternalServerError
