@@ -44,4 +44,5 @@ func Logout(c *gin.Context) {
 		return
 	}
 	response.Success(c, nil)
+
 }
