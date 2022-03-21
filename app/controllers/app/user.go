@@ -6,7 +6,6 @@ import (
 	"webapp_gin/app/common/request"
 	"webapp_gin/app/common/response"
 	"webapp_gin/app/services"
-	_ "webapp_gin/docs"
 )
 
 func Register(c *gin.Context) {

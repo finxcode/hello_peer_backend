@@ -17,8 +17,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-
-	_ "webapp_gin/docs"
 )
 
 func setupRouter() *gin.Engine {
