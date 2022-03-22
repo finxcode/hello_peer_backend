@@ -1,10 +1,11 @@
 package app
 
 import (
-	"github.com/gin-gonic/gin"
 	"strconv"
 	"webapp_gin/app/common/response"
 	"webapp_gin/app/services"
+
+	"github.com/gin-gonic/gin"
 )
 
 func GetUserRecommendSettings(c *gin.Context) {
@@ -19,4 +20,24 @@ func GetUserRecommendSettings(c *gin.Context) {
 		return
 	}
 	response.Success(c, resRecommendSetting)
+}
+
+func SetUserRecommendSettings(c *gin.Context) {
+	var form services.RecommendSetting
+	if err := c.ShouldBindJSON(&form); err != nil {
+		response.BadRequest(c)
+		return
+	}
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+	err, errCode := services.RecommendSettingsService.SetRecommendSetting(intID, &form)
+	if err != nil {
+		response.Fail(c, errCode, err.Error())
+	}
+
+	response.Success(c, nil)
+
 }

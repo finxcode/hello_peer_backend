@@ -46,6 +46,7 @@ func SetApiGroupRoutes(router *gin.RouterGroup) {
 		authRouter.GET("/settings/getSquareSetting", app.GetUserSquareSettings)
 		authRouter.POST("/settings/setSquareSetting", app.SetUserSquareSettings)
 		authRouter.GET("/settings/getRecommendSetting", app.GetUserRecommendSettings)
+		authRouter.POST("/settings/setRecommendSetting", app.SetUserRecommendSettings)
 	}
 
 }
