@@ -53,7 +53,7 @@ func (ss *squareSettingService) SetSquareSettings(uid int, reqSetting *SquareSet
 		return nil, 0
 	}
 	if err != nil {
-		return errors.New("create db record failed"), http.StatusInternalServerError
+		return errors.New("query db record failed"), http.StatusInternalServerError
 	}
 	res := global.App.DB.Model(models.SquareSetting{}).Where("user_id = ?", uid).Updates(reqSetting)
 	if res.Error != nil {

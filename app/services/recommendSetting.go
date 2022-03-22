@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"gorm.io/gorm"
 	"net/http"
 	"webapp_gin/app/models"
@@ -50,5 +51,30 @@ func (rs *recommendSettingSercive) GetRecommendSetting(uid int) (*RecommendSetti
 }
 
 func (rs *recommendSettingSercive) SetRecommendSetting(uid int, reqSetting *RecommendSetting) (error, int) {
+	var recommendSetting models.RecommendSetting
+	err := global.App.DB.Where("user_id = ?", uid).First(&recommendSetting).Error
+	if err == gorm.ErrRecordNotFound {
+		result := global.App.DB.Create(&models.RecommendSetting{
+			UserID:   uid,
+			Gender:   reqSetting.Gender,
+			AgeMin:   reqSetting.AgeMin,
+			AgeMax:   reqSetting.AgeMax,
+			Location: reqSetting.Location,
+			Hometown: reqSetting.Hometown,
+			PetLover: reqSetting.PetLover,
+			Tags:     reqSetting.Tags,
+		})
+		if result.RowsAffected != 1 {
+			return errors.New("create db record failed"), http.StatusInternalServerError
+		}
+		return nil, 0
+	} else if err != nil {
+		return errors.New("db query failed"), http.StatusInternalServerError
+	}
+	res := global.App.DB.Model(models.RecommendSetting{}).Where("user_id = ?", uid).Updates(reqSetting)
+	if res.Error != nil {
+		return errors.New("Update recommend setting failed"), http.StatusInternalServerError
+	}
+	return nil, 0
 
 }
