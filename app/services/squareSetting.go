@@ -25,7 +25,7 @@ func (ss *squareSettingService) GetSquareSettings(uid int) (*SquareSetting, erro
 	if err == gorm.ErrRecordNotFound {
 		return &SquareSetting{
 			Gender:   0,
-			Location: "any",
+			Location: "不限",
 		}, nil, 0
 	} else if err != nil {
 		return nil, err, http.StatusInternalServerError
