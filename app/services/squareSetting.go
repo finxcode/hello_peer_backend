@@ -2,11 +2,16 @@ package services
 
 import (
 	"errors"
-	"go.uber.org/zap"
 	"net/http"
+	"time"
+	"webapp_gin/app/common/request"
+	"webapp_gin/app/common/response"
 	"webapp_gin/app/models"
 	"webapp_gin/global"
+	"webapp_gin/utils/date"
 	"webapp_gin/utils/discovery"
+
+	"go.uber.org/zap"
 
 	"gorm.io/gorm"
 )
@@ -64,7 +69,7 @@ func (ss *squareSettingService) SetSquareSettings(uid int, reqSetting *SquareSet
 	return nil, 0
 }
 
-func (ss *squareSettingService) GetRandomUsersById(uid int) (error, int) {
+func (ss *squareSettingService) GetRandomUsersById(uid int, page *request.Pagination) (error, int) {
 	// 1. 总用户数50
 	// 2. 按时间筛选，3天内20，3天前30
 	// 3. 随机顺序
@@ -72,6 +77,7 @@ func (ss *squareSettingService) GetRandomUsersById(uid int) (error, int) {
 	var user models.WechatUser
 	var squareSetting models.SquareSetting
 	var sq SquareSetting
+	var users []response.RandomUser
 
 	err := global.App.DB.Where("user_id = ?", uid).First(&user).Error
 	if err == gorm.ErrRecordNotFound {
@@ -98,7 +104,21 @@ func (ss *squareSettingService) GetRandomUsersById(uid int) (error, int) {
 			Gender:   defaultGender,
 			Location: "不限",
 		}
-		zap.L().Info("database")
+		zap.L().Warn("database", zap.Any("get user square settings failed", err.Error()))
+	} else {
+		sq.Gender = squareSetting.Gender
+		sq.Location = squareSetting.Location
+	}
+
+	startTime := date.GetDateByOffsetDay(-3, time.Now())
+	endTime := date.GetDateByOffsetDay(0, time.Now())
+
+	// 如果offset = 0， 则从数据库拉取数据
+	// 3天内随机用户20，3天前随机用户30
+	// 将数据存入redis
+	// 返回limit个数据
+	if page.Offset == 0 {
+
 	}
 
 	rule, err, errorCode := discovery.RuleToQuery(&sq)
