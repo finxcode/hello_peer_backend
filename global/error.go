@@ -10,6 +10,7 @@ type CustomErrors struct {
 	ValidateError   CustomError
 	TokenError      CustomError
 	BadRequestError CustomError
+	UserError       CustomError
 }
 
 var Errors = CustomErrors{
@@ -17,4 +18,5 @@ var Errors = CustomErrors{
 	ValidateError:   CustomError{42200, "请求参数错误"},
 	TokenError:      CustomError{40100, "登录授权失效"},
 	BadRequestError: CustomError{400, "请求syntax错误"},
+	UserError:       CustomError{40101, "用户不存在"},
 }
