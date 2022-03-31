@@ -118,7 +118,7 @@ func (ss *squareSettingService) GetRandomUsersById(uid int, page *request.Pagina
 	// 将数据存入redis
 	// 返回limit个数据
 
-	// 如果offset = 0， 则从数据库拉取数据
+	// 如果offset = 0， 则从数据库拉取数据，并存入redis，返回limit数量的数据
 	if page.Offset == 0 {
 		query, err, errCode := discovery.MakeSquareQueryIn3Day(uid, NumberOfUsersIn3Day, sq)
 		if err != nil {
@@ -137,6 +137,15 @@ func (ss *squareSettingService) GetRandomUsersById(uid int, page *request.Pagina
 		}
 		err = global.App.DB.Where(query).Find(&users).Error
 		resUsers = append(resUsers, discovery.WechatUserToRandomUser(users)...)
+		err = RedisService.SetRandomUsersInSquare(uid, "square", &resUsers)
+		if err != nil {
+			zap.L().Warn("redis stores data failed", zap.Any("create square users in redis err", err))
+		}
+		if page.Limit < len(resUsers) {
+			return resUsers[:page.Limit], nil, 0
+		} else {
+			return resUsers[:], nil, 0
+		}
 	} else {
 
 	}
