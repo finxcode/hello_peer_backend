@@ -2,12 +2,14 @@ package services
 
 import (
 	"errors"
-	"go.uber.org/zap"
-	"gorm.io/gorm"
 	"net/http"
+	"webapp_gin/app/common/request"
 	"webapp_gin/app/models"
 	"webapp_gin/global"
 	"webapp_gin/utils/wechat"
+
+	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 type wechatUserService struct {
@@ -101,8 +103,14 @@ func (wechatUseservice *wechatUserService) SetUserGender(uid, gender int) error 
 	res := global.App.DB.Model(models.WechatUser{}).Where("user_id = ?", uid).Update("gender", gender)
 	if res.Error != nil {
 		return res.Error
-	} else if res.RowsAffected != 1 {
-		return errors.New("数据库记录错误")
+	}
+	return nil
+}
+
+func (wechatUseservice *wechatUserService) SetUserBasicInfo(uid int, reqUser *request.BasicInfo) error {
+	res := global.App.DB.Model(models.WechatUser{}).Where("user_id = ?", uid).Updates(reqUser)
+	if res.Error != nil {
+		return res.Error
 	}
 	return nil
 }
