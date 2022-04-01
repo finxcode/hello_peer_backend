@@ -96,3 +96,13 @@ func (wechatUseservice *wechatUserService) AuthRegister(profile *wechat.UserProf
 	//else, return
 	return wechatUser, nil, 0
 }
+
+func (wechatUseservice *wechatUserService) SetUserGender(uid, gender int) error {
+	res := global.App.DB.Model(models.WechatUser{}).Where("user_id = ?", uid).Update("gender", gender)
+	if res.Error != nil {
+		return res.Error
+	} else if res.RowsAffected != 1 {
+		return errors.New("数据库记录错误")
+	}
+	return nil
+}

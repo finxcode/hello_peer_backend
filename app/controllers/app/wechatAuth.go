@@ -3,9 +3,11 @@ package app
 import (
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
+	"strconv"
 	"webapp_gin/app/common/request"
 	"webapp_gin/app/common/response"
 	"webapp_gin/app/services"
+	"webapp_gin/global"
 	"webapp_gin/utils/wechat"
 )
 
@@ -53,4 +55,25 @@ func AuthLogin(c *gin.Context) {
 
 	response.Success(c, token)
 
+}
+
+func SetUserGender(c *gin.Context) {
+	var userGenderForm request.Gender
+	if err := c.ShouldBindJSON(&userGenderForm); err != nil {
+		response.BadRequest(c)
+		return
+	}
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+	err = services.WechatUserService.SetUserGender(intID, userGenderForm.Gender)
+	if err != nil {
+		response.FailByError(c, global.CustomError{
+			ErrorMsg:  "设置用户性别错误",
+			ErrorCode: 10002,
+		})
+	}
+	response.Success(c, nil)
 }
