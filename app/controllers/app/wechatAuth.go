@@ -75,6 +75,7 @@ func SetUserGender(c *gin.Context) {
 			ErrorMsg:  "设置用户性别错误",
 			ErrorCode: 10002,
 		})
+		return
 	}
 	response.Success(c, nil)
 }
@@ -96,6 +97,7 @@ func SetUSerBasicInfo(c *gin.Context) {
 			ErrorMsg:  "设置用户基础信息错误",
 			ErrorCode: 10002,
 		})
+		return
 	}
 	response.Success(c, nil)
 }

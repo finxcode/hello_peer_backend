@@ -102,6 +102,7 @@ func (wechatUseservice *wechatUserService) AuthRegister(profile *wechat.UserProf
 func (wechatUseservice *wechatUserService) SetUserGender(uid, gender int) error {
 	res := global.App.DB.Model(models.WechatUser{}).Where("user_id = ?", uid).Update("gender", gender)
 	if res.Error != nil {
+		zap.L().Error("set user gender error", zap.Any("database error", res.Error))
 		return res.Error
 	}
 	return nil
