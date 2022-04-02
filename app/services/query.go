@@ -1,15 +1,14 @@
-package discovery
+package services
 
 import (
 	"errors"
 	"fmt"
 	"strconv"
 	"time"
-	"webapp_gin/app/services"
 	"webapp_gin/utils/date"
 )
 
-func MakeSquareQueryIn3Day(uid int, limit int, sq services.SquareSetting) (string, error, int) {
+func MakeSquareQueryIn3Day(uid int, limit int, sq SquareSetting) (string, error, int) {
 	// 拼接sql查询
 	var resQuery string
 	rule, err, errorCode := RuleToQuery(&sq)
@@ -24,7 +23,7 @@ func MakeSquareQueryIn3Day(uid int, limit int, sq services.SquareSetting) (strin
 
 }
 
-func MakeSquareQueryBefore3Day(uid int, limit int, sq services.SquareSetting) (string, error, int) {
+func MakeSquareQueryBefore3Day(uid int, limit int, sq SquareSetting) (string, error, int) {
 	var resQuery string
 	rule, err, errorCode := RuleToQuery(&sq)
 	if err != nil {

@@ -1,14 +1,13 @@
-package discovery
+package services
 
 import (
 	"errors"
 	"net/http"
 	"strconv"
-	"webapp_gin/app/services"
 )
 
 //转写广场筛选规则
-func RuleToQuery(reqSetting *services.SquareSetting) (string, error, int) {
+func RuleToQuery(reqSetting *SquareSetting) (string, error, int) {
 	gender := reqSetting.Gender
 	location := reqSetting.Location
 

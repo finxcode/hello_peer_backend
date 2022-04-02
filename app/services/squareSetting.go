@@ -3,14 +3,12 @@ package services
 import (
 	"errors"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 	"net/http"
 	"webapp_gin/app/common/request"
 	"webapp_gin/app/common/response"
 	"webapp_gin/app/models"
 	"webapp_gin/global"
-	"webapp_gin/utils/discovery"
-
-	"gorm.io/gorm"
 )
 
 type squareSettingService struct {
@@ -120,7 +118,7 @@ func (ss *squareSettingService) GetRandomUsersById(uid int, page *request.Pagina
 
 	// 如果offset = 0， 则从数据库拉取数据，并存入redis，返回limit数量的数据
 	if page.Offset == 0 {
-		query, err, errCode := discovery.MakeSquareQueryIn3Day(uid, NumberOfUsersIn3Day, sq)
+		query, err, errCode := MakeSquareQueryIn3Day(uid, NumberOfUsersIn3Day, sq)
 		if err != nil {
 			return nil, err, errCode
 		}
@@ -128,15 +126,15 @@ func (ss *squareSettingService) GetRandomUsersById(uid int, page *request.Pagina
 		if err != nil {
 			numberOfUserBefore3Day = TotalUser
 		} else {
-			resUsers = append(resUsers, discovery.WechatUserToRandomUser(users)...)
+			resUsers = append(resUsers, WechatUserToRandomUser(users)...)
 			numberOfUserBefore3Day = TotalUser - len(resUsers)
 		}
-		query, err, errCode = discovery.MakeSquareQueryBefore3Day(uid, numberOfUserBefore3Day, sq)
+		query, err, errCode = MakeSquareQueryBefore3Day(uid, numberOfUserBefore3Day, sq)
 		if err != nil {
 			return nil, err, errCode
 		}
 		err = global.App.DB.Where(query).Find(&users).Error
-		resUsers = append(resUsers, discovery.WechatUserToRandomUser(users)...)
+		resUsers = append(resUsers, WechatUserToRandomUser(users)...)
 		err = RedisService.SetRandomUsersInSquare(uid, "square", &resUsers)
 		if err != nil {
 			zap.L().Warn("redis stores data failed", zap.Any("create square users in redis err", err))

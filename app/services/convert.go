@@ -1,4 +1,4 @@
-package discovery
+package services
 
 import (
 	"webapp_gin/app/common/response"
