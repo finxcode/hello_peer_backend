@@ -111,6 +111,7 @@ func (wechatUseservice *wechatUserService) SetUserGender(uid, gender int) error 
 func (wechatUseservice *wechatUserService) SetUserBasicInfo(uid int, reqUser *request.BasicInfo) error {
 	res := global.App.DB.Model(models.WechatUser{}).Where("id = ?", uid).Updates(reqUser)
 	if res.Error != nil {
+		zap.L().Error("set user gender error", zap.Any("database error", res.Error))
 		return res.Error
 	}
 	return nil
