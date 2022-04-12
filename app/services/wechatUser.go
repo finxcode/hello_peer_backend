@@ -90,7 +90,7 @@ func (wechatUseservice *wechatUserService) AuthRegister(profile *wechat.UserProf
 		}
 	}
 
-	res := global.App.DB.Model(models.WechatUser{}).Where("id = ?", session.OpenId).Updates(wechatUser)
+	res := global.App.DB.Model(models.WechatUser{}).Where("open_id = ?", session.OpenId).Updates(wechatUser)
 	if res.Error != nil {
 		return wechatUser, errors.New("internal server error"), http.StatusInternalServerError
 	}
@@ -110,6 +110,15 @@ func (wechatUseservice *wechatUserService) SetUserGender(uid, gender int) error 
 
 func (wechatUseservice *wechatUserService) SetUserBasicInfo(uid int, reqUser *request.BasicInfo) error {
 	res := global.App.DB.Model(models.WechatUser{}).Where("id = ?", uid).Updates(reqUser)
+	if res.Error != nil {
+		zap.L().Error("set user gender error", zap.Any("database error", res.Error))
+		return res.Error
+	}
+	return nil
+}
+
+func (wechatUseservice *wechatUserService) SetUserImage(uid int, url, imageType string) error {
+	res := global.App.DB.Model(models.WechatUser{}).Where("id = ?", uid).Update(imageType, url)
 	if res.Error != nil {
 		zap.L().Error("set user gender error", zap.Any("database error", res.Error))
 		return res.Error

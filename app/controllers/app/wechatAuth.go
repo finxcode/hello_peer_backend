@@ -111,7 +111,7 @@ func SetUserAvatar(c *gin.Context) {
 		response.BusinessFail(c, err.Error())
 		return
 	}
-	file, err := c.FormFile("avatar")
+	file, err := c.FormFile("content")
 
 	// The file cannot be received.
 	if err != nil {
@@ -126,6 +126,44 @@ func SetUserAvatar(c *gin.Context) {
 	// The file is received, so let's save it
 	if err := c.SaveUploadedFile(file, "./storage/static/assets/"+newFileName); err != nil {
 		response.Fail(c, http.StatusInternalServerError, "保存文件错误")
+		return
+	}
+
+	if err = services.WechatUserService.SetUserImage(intID, newFileName, "customized_avatar"); err != nil {
+		response.Fail(c, http.StatusInternalServerError, "数据库错误")
+		return
+	}
+
+	// File saved successfully. Return proper result
+	response.Success(c, nil)
+}
+
+func SetUserCoverImage(c *gin.Context) {
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+	file, err := c.FormFile("content")
+
+	// The file cannot be received.
+	if err != nil {
+		response.Fail(c, http.StatusBadRequest, "接收文件错误")
+		return
+	}
+	// Retrieve file information
+	extension := filepath.Ext(file.Filename)
+	// Generate random file name for the new uploaded file so it doesn't override the old file with same name
+	newFileName := strconv.Itoa(intID) + "_" + strconv.Itoa(int(time.Now().Unix())) + "_" + file.Filename + extension
+
+	// The file is received, so let's save it
+	if err := c.SaveUploadedFile(file, "./storage/static/assets/"+newFileName); err != nil {
+		response.Fail(c, http.StatusInternalServerError, "保存文件错误")
+		return
+	}
+
+	if err = services.WechatUserService.SetUserImage(intID, newFileName, "cover_image"); err != nil {
+		response.Fail(c, http.StatusInternalServerError, "数据库错误")
 		return
 	}
 
