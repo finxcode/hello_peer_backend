@@ -2,6 +2,7 @@ package utils
 
 import (
 	"math/rand"
+	"strings"
 	"time"
 )
 
@@ -13,4 +14,11 @@ func RandString(len int) string {
 		bytes[i] = byte(b)
 	}
 	return string(bytes)
+}
+
+func ParseToArray(strPtr *string, sep string) []string {
+	if len(*strPtr) == 0 {
+		return nil
+	}
+	return strings.Split(*strPtr, sep)
 }

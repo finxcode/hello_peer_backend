@@ -11,6 +11,8 @@ type WechatUser struct {
 	Password         string  `json:"password" gorm:"comment:密码"`
 	Gender           int     `json:"gender" gorm:"comment:性别"`
 	Age              int     `json:"age" gorm:"comment:年龄"`
+	Height           float32 `json:"height" gorm:"comment:身高"`
+	Weight           float32 `json:"weight" gorm:"comment：体重"`
 	Occupation       string  `json:"occupation" gorm:"comment:职业"`
 	Constellation    string  `json:"constellation gorm:comment:星座"`
 	Education        string  `json:"education gorm:comment:学历"`

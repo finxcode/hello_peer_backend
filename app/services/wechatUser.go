@@ -4,6 +4,7 @@ import (
 	"errors"
 	"net/http"
 	"webapp_gin/app/common/request"
+	"webapp_gin/app/common/response"
 	"webapp_gin/app/models"
 	"webapp_gin/global"
 	"webapp_gin/utils/wechat"
@@ -124,4 +125,37 @@ func (wechatUseservice *wechatUserService) SetUserImage(uid int, url, imageType 
 		return res.Error
 	}
 	return nil
+}
+
+func (wechatUseservice *wechatUserService) GetUserDetails(uid int) (*response.UserDetails, error) {
+	var wechatUser models.WechatUser
+	var respUserDetails response.UserDetails
+	err := global.App.DB.Where("id = ?", uid).First(&wechatUser).Error
+
+	if err == gorm.ErrRecordNotFound {
+		return nil, errors.New("数据库无此记录")
+	}
+
+	if err != nil {
+		return nil, errors.New("数据库错误")
+	}
+
+	respUserDetails.UserName = wechatUser.UserName
+	respUserDetails.Age = wechatUser.Age
+	respUserDetails.Location = wechatUser.Location
+	respUserDetails.Constellation = wechatUser.Constellation
+	respUserDetails.Declaration = wechatUser.Declaration
+	respUserDetails.Height = wechatUser.Height
+	respUserDetails.Weight = wechatUser.Weight
+	respUserDetails.Hometown = wechatUser.HomeTown
+	respUserDetails.Education = wechatUser.Education
+	respUserDetails.Hobbies = wechatUser.Hobbies
+	respUserDetails.Occupation = wechatUser.Occupation
+	respUserDetails.SelfDesc = wechatUser.SelfDesc
+	respUserDetails.TheOne = wechatUser.TheOne
+	respUserDetails.Images = wechatUser.Images
+	respUserDetails.Tags = wechatUser.Tags
+
+	return &respUserDetails, nil
+
 }
