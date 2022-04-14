@@ -17,8 +17,9 @@ func RandString(len int) string {
 }
 
 func ParseToArray(strPtr *string, sep string) []string {
-	if len(*strPtr) == 0 {
+	s := strings.Trim(*strPtr, " ")
+	if len(s) == 0 {
 		return nil
 	}
-	return strings.Split(*strPtr, sep)
+	return strings.Split(s, sep)
 }

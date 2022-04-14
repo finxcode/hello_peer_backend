@@ -7,6 +7,7 @@ import (
 	"webapp_gin/app/common/response"
 	"webapp_gin/app/models"
 	"webapp_gin/global"
+	"webapp_gin/utils"
 	"webapp_gin/utils/wechat"
 
 	"go.uber.org/zap"
@@ -153,8 +154,8 @@ func (wechatUseservice *wechatUserService) GetUserDetails(uid int) (*response.Us
 	respUserDetails.Occupation = wechatUser.Occupation
 	respUserDetails.SelfDesc = wechatUser.SelfDesc
 	respUserDetails.TheOne = wechatUser.TheOne
-	respUserDetails.Images = wechatUser.Images
-	respUserDetails.Tags = wechatUser.Tags
+	respUserDetails.Images = utils.ParseToArray(&wechatUser.Images, " ")
+	respUserDetails.Tags = utils.ParseToArray(&wechatUser.Tags, " ")
 
 	return &respUserDetails, nil
 

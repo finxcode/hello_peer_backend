@@ -170,3 +170,19 @@ func SetUserCoverImage(c *gin.Context) {
 	// File saved successfully. Return proper result
 	response.Success(c, nil)
 }
+
+func GetUserDetails(c *gin.Context) {
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	if resp, err := services.WechatUserService.GetUserDetails(intID); err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	} else {
+		response.Success(c, *resp)
+	}
+
+}
