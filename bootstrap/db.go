@@ -51,7 +51,7 @@ func initMySqlGorm() *gorm.DB {
 		sqlDB, _ := db.DB()
 		sqlDB.SetMaxIdleConns(dbConfig.MaxIdleConns)
 		sqlDB.SetMaxOpenConns(dbConfig.MaxOpenConns)
-		//initMySqlTables(db)
+		initMySqlTables(db)
 		return db
 	}
 }
@@ -101,7 +101,7 @@ func getGormLogger() logger.Interface {
 
 func initMySqlTables(db *gorm.DB) {
 	err := db.AutoMigrate(
-		//models.WechatUser{},
+		models.WechatUser{},
 		models.SquareSetting{},
 		models.RecommendSetting{},
 	)
