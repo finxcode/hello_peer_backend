@@ -40,6 +40,7 @@ type UserDetails struct {
 	Hobbies       string   `json:"hobbies" example:"兴趣爱好"`
 	Declaration   string   `json:"declaration" example:"交友宣言"`
 	TheOne        string   `json:"the_one" example:"希望另一半的样子"`
-	Tags          []string `json:"tags" example:"猫控 读书达人 电影爱好者 旅行者"`
+	Tags          []string `json:"tags" example:"猫控,读书达人,电影爱好者,旅行者"`
 	Images        []string `json:"images" example:"www.imgUrl1.com, www.imgUrl2.com"`
+	CoverImage    string   `json:"cover_image" example:"www.imgUrl1.com"`
 }

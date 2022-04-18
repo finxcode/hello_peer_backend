@@ -156,6 +156,7 @@ func (wechatUseservice *wechatUserService) GetUserDetails(uid int) (*response.Us
 	respUserDetails.TheOne = wechatUser.TheOne
 	respUserDetails.Images = utils.ParseToArray(&wechatUser.Images, " ")
 	respUserDetails.Tags = utils.ParseToArray(&wechatUser.Tags, " ")
+	respUserDetails.CoverImage = wechatUser.CoverImage
 
 	return &respUserDetails, nil
 
