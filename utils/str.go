@@ -23,3 +23,19 @@ func ParseToArray(strPtr *string, sep string) []string {
 	}
 	return strings.Split(s, sep)
 }
+
+func ConcatImageUrl(filename, baseUrl string) string {
+	return baseUrl + filename
+}
+
+func ConcatImagesUrl(filenames *[]string, baseUrl string) []string {
+	if len(*filenames) == 0 {
+		return nil
+	}
+	resStr := make([]string, len(*filenames))
+	for i, filename := range *filenames {
+		resStr[i] = ConcatImageUrl(filename, baseUrl)
+	}
+
+	return resStr
+}

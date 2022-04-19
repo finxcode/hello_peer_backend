@@ -141,6 +141,14 @@ func (wechatUseservice *wechatUserService) GetUserDetails(uid int) (*response.Us
 		return nil, errors.New("数据库错误")
 	}
 
+	var imagesConcat []string
+	images := utils.ParseToArray(&wechatUser.Images, " ")
+	if images != nil {
+		imagesConcat = utils.ConcatImagesUrl(&images, global.App.Config.App.AppUrl+":"+global.App.Config.App.Port+"/images/")
+	} else {
+		imagesConcat = nil
+	}
+
 	respUserDetails.UserName = wechatUser.UserName
 	respUserDetails.Age = wechatUser.Age
 	respUserDetails.Location = wechatUser.Location
@@ -154,9 +162,14 @@ func (wechatUseservice *wechatUserService) GetUserDetails(uid int) (*response.Us
 	respUserDetails.Occupation = wechatUser.Occupation
 	respUserDetails.SelfDesc = wechatUser.SelfDesc
 	respUserDetails.TheOne = wechatUser.TheOne
-	respUserDetails.Images = utils.ParseToArray(&wechatUser.Images, " ")
+	respUserDetails.Images = imagesConcat
 	respUserDetails.Tags = utils.ParseToArray(&wechatUser.Tags, " ")
-	respUserDetails.CoverImage = wechatUser.CoverImage
+	respUserDetails.CoverImage = utils.ConcatImageUrl(wechatUser.CoverImage, global.App.Config.App.AppUrl+":"+global.App.Config.App.Port+"/images/")
+	respUserDetails.Gender = wechatUser.Gender
+	respUserDetails.Birthday = wechatUser.Birthday
+	respUserDetails.Marriage = wechatUser.Marriage
+	respUserDetails.Income = wechatUser.Income
+	respUserDetails.Purpose = wechatUser.Purpose
 
 	return &respUserDetails, nil
 

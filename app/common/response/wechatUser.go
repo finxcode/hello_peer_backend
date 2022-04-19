@@ -43,4 +43,9 @@ type UserDetails struct {
 	Tags          []string `json:"tags" example:"猫控,读书达人,电影爱好者,旅行者"`
 	Images        []string `json:"images" example:"www.imgUrl1.com, www.imgUrl2.com"`
 	CoverImage    string   `json:"cover_image" example:"www.imgUrl1.com"`
+	Birthday      string   `json:"birthday" example:"1988-10-2"`
+	Purpose       string   `json:"purpose" example:"交友"`
+	Gender        int      `json:"gender" example:"性别"`
+	Marriage      string   `json:"marriage" example:"婚姻状况"`
+	Income        string   `json:"income" example:"收入"`
 }

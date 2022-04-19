@@ -36,6 +36,10 @@ type WechatUser struct {
 	Hobbies          string  `json:"hobbies" gorm:"comment:兴趣爱好"`
 	Declaration      string  `json:"declaration" gorm:"comment:交友宣言"`
 	TheOne           string  `json:"theOne" gorm:"comment:希望另一半的样子"`
+	Income           string  `json:"income" gorm:"comment:收入"`
+	Verified         int     `json:"verified" gorm:"是否认证"`
+	Purpose          string  `json:"purpose" gorm:"交友目的"`
+	Birthday         string  `json:"birthday" gorm:"生日"`
 	Timestamps
 	SoftDeletes
 }
