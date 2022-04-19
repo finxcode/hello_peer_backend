@@ -196,3 +196,27 @@ func GetUserDetails(c *gin.Context) {
 	}
 
 }
+
+func SetUserDetails(c *gin.Context) {
+	var reqUserInfoForm response.UserDetails
+	if err := c.ShouldBindJSON(&reqUserInfoForm); err != nil {
+		response.BadRequest(c)
+		return
+	}
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	err = services.WechatUserService.SetUserDetails(intID, &reqUserInfoForm)
+	if err != nil {
+		response.FailByError(c, global.CustomError{
+			ErrorMsg:  "设置用户详情错误",
+			ErrorCode: 10002,
+		})
+		return
+	}
+	response.Success(c, nil)
+
+}
