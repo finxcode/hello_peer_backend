@@ -51,23 +51,23 @@ type UserDetails struct {
 }
 
 type UserDetailsUpdate struct {
-	UserName      string   `json:"user_name" example:"豆豆"`
-	Age           int      `json:"age" example:"25"`
-	Occupation    string   `json:"occupation" example:"平面设计师"`
-	Constellation string   `json:"constellation" example:"处女座"`
-	Height        float32  `json:"height" example:"165"`
-	Weight        float32  `json:"weight" example:"43"`
-	Education     string   `json:"education" example:"本科"`
-	Location      string   `json:"location" example:"深圳"`
-	Hometown      string   `json:"hometown" example:"湖南长沙"`
-	SelfDesc      string   `json:"self_desc" example:"自我描述"`
-	Hobbies       string   `json:"hobbies" example:"兴趣爱好"`
-	Declaration   string   `json:"declaration" example:"交友宣言"`
-	TheOne        string   `json:"the_one" example:"希望另一半的样子"`
-	Tags          []string `json:"tags" example:"猫控,读书达人,电影爱好者,旅行者"`
-	Birthday      string   `json:"birthday" example:"1988-10-2"`
-	Purpose       string   `json:"purpose" example:"交友"`
-	Gender        int      `json:"gender" example:"性别"`
-	Marriage      string   `json:"marriage" example:"婚姻状况"`
-	Income        string   `json:"income" example:"收入"`
+	UserName      string  `json:"user_name" example:"豆豆"`
+	Age           int     `json:"age" example:"25"`
+	Occupation    string  `json:"occupation" example:"平面设计师"`
+	Constellation string  `json:"constellation" example:"处女座"`
+	Height        float32 `json:"height" example:"165"`
+	Weight        float32 `json:"weight" example:"43"`
+	Education     string  `json:"education" example:"本科"`
+	Location      string  `json:"location" example:"深圳"`
+	Hometown      string  `json:"hometown" example:"湖南长沙"`
+	SelfDesc      string  `json:"self_desc" example:"自我描述"`
+	Hobbies       string  `json:"hobbies" example:"兴趣爱好"`
+	Declaration   string  `json:"declaration" example:"交友宣言"`
+	TheOne        string  `json:"the_one" example:"希望另一半的样子"`
+	Tags          string  `json:"tags" example:"猫控,读书达人,电影爱好者,旅行者"`
+	Birthday      string  `json:"birthday" example:"1988-10-2"`
+	Purpose       string  `json:"purpose" example:"交友"`
+	Gender        int     `json:"gender" example:"性别"`
+	Marriage      string  `json:"marriage" example:"婚姻状况"`
+	Income        string  `json:"income" example:"收入"`
 }
