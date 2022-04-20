@@ -183,3 +183,20 @@ func (wechatUserService *wechatUserService) SetUserDetails(uid int, userDetails 
 	}
 	return nil
 }
+
+func (wechatUserService *wechatUserService) SetUserImages(uid int, filename string) error {
+	var wechatUser models.WechatUser
+	err := global.App.DB.Where("id = ?", uid).First(&wechatUser).Error
+	if err != nil {
+		zap.L().Error("set user images error", zap.Any("database error", err.Error()))
+		return err
+	}
+	imgs := wechatUser.Images
+	imgs += " " + filename
+	res := global.App.DB.Model(models.WechatUser{}).Where("id = ?", uid).Update("images", imgs)
+	if res.Error != nil {
+		zap.L().Error("set user images error", zap.Any("database error", res.Error))
+		return res.Error
+	}
+	return nil
+}
