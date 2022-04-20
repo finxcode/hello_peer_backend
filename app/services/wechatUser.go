@@ -175,7 +175,7 @@ func (wechatUserService *wechatUserService) GetUserDetails(uid int) (*response.U
 
 }
 
-func (wechatUserService *wechatUserService) SetUserDetails(uid int, userDetails *response.UserDetails) error {
+func (wechatUserService *wechatUserService) SetUserDetails(uid int, userDetails *response.UserDetailsUpdate) error {
 	res := global.App.DB.Model(models.WechatUser{}).Where("id = ?", uid).Updates(userDetails)
 	if res.Error != nil {
 		zap.L().Error("set user details error", zap.Any("database error", res.Error))

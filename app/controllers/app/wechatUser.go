@@ -198,7 +198,7 @@ func GetUserDetails(c *gin.Context) {
 }
 
 func SetUserDetails(c *gin.Context) {
-	var reqUserInfoForm response.UserDetails
+	var reqUserInfoForm response.UserDetailsUpdate
 	if err := c.ShouldBindJSON(&reqUserInfoForm); err != nil {
 		response.BadRequest(c)
 		return
