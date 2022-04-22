@@ -20,7 +20,7 @@ func main() {
 	defer func() {
 		if global.App.DB != nil {
 			db, _ := global.App.DB.DB()
-			db.Close()
+			_ = db.Close()
 		}
 	}()
 
