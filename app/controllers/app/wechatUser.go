@@ -252,3 +252,20 @@ func SetUserImage(c *gin.Context) {
 	// File saved successfully. Return proper result
 	response.Success(c, nil)
 }
+
+func DeleteUserImage(c *gin.Context) {
+	filename := c.Query("filename")
+
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	err = services.WechatUserService.DeleteUserImages(intID, filename)
+	if err != nil {
+		response.Fail(c, 20000, err.Error())
+		return
+	}
+	response.Success(c, nil)
+}
