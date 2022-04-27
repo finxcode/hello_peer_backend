@@ -58,6 +58,8 @@ func SetApiGroupRoutes(router *gin.RouterGroup) {
 		authRouter.POST("/user/deleteUserImage", app.DeleteUserImage)
 		authRouter.GET("/user/pet/getPetDetails", app.GetPetDetails)
 		authRouter.POST("/user/pet/setPetDetails", app.SetPetDetails)
+		authRouter.POST("/user/pet/deletePetImage", app.DeletePetImage)
+		authRouter.POST("/user/pet/setPetImage", app.SetPetImage)
 	}
 
 }
