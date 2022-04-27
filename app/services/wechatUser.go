@@ -141,13 +141,13 @@ func (wechatUserService *wechatUserService) GetUserDetails(uid int) (*response.U
 		return nil, errors.New("数据库错误")
 	}
 
-	var imagesConcat []string
-	images := utils.ParseToArray(&wechatUser.Images, " ")
-	if images != nil {
-		imagesConcat = utils.ConcatImagesUrl(&images, global.App.Config.App.AppUrl+":"+global.App.Config.App.Port+"/images/")
-	} else {
-		imagesConcat = nil
-	}
+	//var imagesConcat []string
+	//images := utils.ParseToArray(&wechatUser.Images, " ")
+	//if images != nil {
+	//	imagesConcat = utils.ConcatImagesUrl(&images, global.App.Config.App.AppUrl+":"+global.App.Config.App.Port+"/images/")
+	//} else {
+	//	imagesConcat = nil
+	//}
 
 	respUserDetails.UserName = wechatUser.UserName
 	respUserDetails.Age = wechatUser.Age
@@ -162,9 +162,11 @@ func (wechatUserService *wechatUserService) GetUserDetails(uid int) (*response.U
 	respUserDetails.Occupation = wechatUser.Occupation
 	respUserDetails.SelfDesc = wechatUser.SelfDesc
 	respUserDetails.TheOne = wechatUser.TheOne
-	respUserDetails.Images = imagesConcat
+	//respUserDetails.Images = imagesConcat
+	respUserDetails.Images = utils.ParseToArray(&wechatUser.Images, " ")
 	respUserDetails.Tags = utils.ParseToArray(&wechatUser.Tags, " ")
-	respUserDetails.CoverImage = utils.ConcatImageUrl(wechatUser.CoverImage, global.App.Config.App.AppUrl+":"+global.App.Config.App.Port+"/images/")
+	//respUserDetails.CoverImage = utils.ConcatImageUrl(wechatUser.CoverImage, global.App.Config.App.AppUrl+":"+global.App.Config.App.Port+"/images/")
+	respUserDetails.CoverImage = wechatUser.CoverImage
 	respUserDetails.Gender = wechatUser.Gender
 	respUserDetails.Birthday = wechatUser.Birthday
 	respUserDetails.Marriage = wechatUser.Marriage
@@ -194,6 +196,34 @@ func (wechatUserService *wechatUserService) SetUserImages(uid int, filename stri
 	imgs := wechatUser.Images
 	imgs += " " + filename
 	res := global.App.DB.Model(models.WechatUser{}).Where("id = ?", uid).Update("images", imgs)
+	if res.Error != nil {
+		zap.L().Error("set user images error", zap.Any("database error", res.Error))
+		return res.Error
+	}
+	return nil
+}
+
+func (wechatUserService *wechatUserService) DeleteUserImages(uid int, filename string) error {
+	var wechatUser models.WechatUser
+	err := global.App.DB.Where("id = ?", uid).First(&wechatUser).Error
+	if err != nil {
+		zap.L().Error("get user info error", zap.Any("database error", err.Error()))
+		return err
+	}
+	imgs := utils.ParseToArray(&wechatUser.Images, " ")
+	if len(imgs) == 0 {
+		return errors.New("Empty list of images")
+	}
+
+	imgStr := ""
+	for _, img := range imgs {
+		if img != filename {
+			imgStr += img + " "
+		} else {
+			continue
+		}
+	}
+	res := global.App.DB.Model(models.WechatUser{}).Where("id = ?", uid).Update("images", imgStr)
 	if res.Error != nil {
 		zap.L().Error("set user images error", zap.Any("database error", res.Error))
 		return res.Error
