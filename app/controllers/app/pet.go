@@ -1,7 +1,6 @@
 package app
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
 	"time"
@@ -10,6 +9,8 @@ import (
 	"webapp_gin/app/models"
 	"webapp_gin/app/services"
 	"webapp_gin/utils"
+
+	"github.com/gin-gonic/gin"
 )
 
 func GetPetDetails(c *gin.Context) {
@@ -63,6 +64,7 @@ func SetPetDetails(c *gin.Context) {
 
 	if err != nil {
 		response.Fail(c, 50001, err.Error())
+		return
 	}
 
 	response.Success(c, nil)

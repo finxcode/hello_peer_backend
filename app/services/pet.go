@@ -2,10 +2,11 @@ package services
 
 import (
 	"errors"
-	"go.uber.org/zap"
 	"webapp_gin/app/models"
 	"webapp_gin/global"
 	"webapp_gin/utils"
+
+	"go.uber.org/zap"
 )
 
 type petService struct {
@@ -23,7 +24,7 @@ func (p *petService) GetPetDetails(uid int) (*models.Pet, error) {
 }
 
 func (p *petService) SetPetDetails(uid int, pet *models.Pet) error {
-	err := global.App.DB.Model(models.Pet{}).Where("user_id", uid).Updates(pet)
+	err := global.App.DB.Model(models.Pet{}).Where("user_id", uid).Updates(pet).Error
 	if err != nil {
 		return errors.New("更新宠物数据库错误")
 	}
