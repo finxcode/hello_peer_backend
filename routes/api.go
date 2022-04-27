@@ -55,6 +55,9 @@ func SetApiGroupRoutes(router *gin.RouterGroup) {
 		authRouter.GET("/user/getUserDetails", app.GetUserDetails)
 		authRouter.Static("/images", "./storage/static/assets")
 		authRouter.POST("/user/setUserDetails", app.SetUserDetails)
+
+		authRouter.GET("/user/pet/getPetDetails", app.GetPetDetails)
+		authRouter.POST("/user/pet/setPetDetails", app.SetPetDetails)
 	}
 
 }
