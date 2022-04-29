@@ -80,4 +80,5 @@ type UserHomepageInfo struct {
 	Stat     models.RelationStat `json:"stat"`
 	PetFood  int                 `json:"pet_food"`
 	PetName  string              `json:"pet_name"`
+	Avatar   string              `json:"avatar"`
 }

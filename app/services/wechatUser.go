@@ -252,6 +252,7 @@ func (wechatUserService *wechatUserService) GetUserHomepageInfo(uid int) (*respo
 
 	userHomepage.UserName = user.UserName
 	userHomepage.Location = user.Location
+	userHomepage.Avatar = user.CoverImage
 
 	pet, err := PetService.GetPetDetails(uid)
 	if err != nil {
