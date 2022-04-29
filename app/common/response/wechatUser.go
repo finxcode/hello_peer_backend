@@ -1,5 +1,7 @@
 package response
 
+import "webapp_gin/app/models"
+
 type RandomUser struct {
 	Uid           int     `json:"uid"`
 	UserName      string  `json:"userName"`
@@ -70,4 +72,12 @@ type UserDetailsUpdate struct {
 	Gender        int     `json:"gender" example:"性别"`
 	Marriage      string  `json:"marriage" example:"婚姻状况"`
 	Income        string  `json:"income" example:"收入"`
+}
+
+type UserHomepageInfo struct {
+	UserName string              `json:"user_name"`
+	Location string              `json:"location"`
+	Stat     models.RelationStat `json:"stat"`
+	PetFood  int                 `json:"pet_food"`
+	PetName  string              `json:"pet_name"`
 }

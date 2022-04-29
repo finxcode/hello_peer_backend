@@ -230,3 +230,40 @@ func (wechatUserService *wechatUserService) DeleteUserImages(uid int, filename s
 	}
 	return nil
 }
+
+func (wechatUserService *wechatUserService) GetUserHomepageInfo(uid int) (*response.UserHomepageInfo, error) {
+	var userHomepage response.UserHomepageInfo
+
+	type userInfo struct {
+		username string
+		location string
+	}
+
+	info := userInfo{}
+	err := global.App.DB.Model(models.WechatUser{}).Select([]string{"user_name", "location"}).Scan(&info).Error
+	if err != nil {
+		zap.L().Error("get user info error", zap.String("database error", err.Error()))
+		return nil, errors.New("获取用户名字错误")
+	}
+
+	userHomepage.UserName = info.username
+	userHomepage.Location = info.location
+
+	pet, err := PetService.GetPetDetails(uid)
+	if err != nil {
+		zap.L().Error("get pet name error", zap.String("database error", err.Error()))
+		userHomepage.PetName = ""
+	}
+	userHomepage.PetName = pet.PetName
+
+	stat, err := RelationService.GetRelationStat(uid)
+	if err != nil {
+		zap.L().Error("get stat info error", zap.String("database error", err.Error()))
+		userHomepage.Stat = models.RelationStat{}
+	}
+
+	userHomepage.Stat = *stat
+	userHomepage.PetFood = 0
+
+	return &userHomepage, nil
+}

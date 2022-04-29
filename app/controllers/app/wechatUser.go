@@ -269,3 +269,19 @@ func DeleteUserImage(c *gin.Context) {
 	}
 	response.Success(c, nil)
 }
+
+func GetUserHomepageInfo(c *gin.Context) {
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	resp, err := services.WechatUserService.GetUserHomepageInfo(intID)
+	if err != nil {
+		response.Fail(c, 60000, err.Error())
+		return
+	}
+
+	response.Success(c, resp)
+}
