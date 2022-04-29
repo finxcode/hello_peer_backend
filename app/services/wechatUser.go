@@ -240,7 +240,7 @@ func (wechatUserService *wechatUserService) GetUserHomepageInfo(uid int) (*respo
 	}
 
 	var info userInfo
-	err := global.App.DB.Model(models.WechatUser{}).Select([]string{"user_name", "location"}).Where("id= ?", uid).Scan(&info).Error
+	err := global.App.DB.Model(models.WechatUser{}).Select([]string{"user_name", "location"}).Where("id= ?", uid).First(&info).Error
 	if err != nil {
 		zap.L().Error("get user info error", zap.String("database error", err.Error()))
 		return nil, errors.New("获取用户名字错误")
