@@ -235,13 +235,7 @@ func (wechatUserService *wechatUserService) GetUserHomepageInfo(uid int) (*respo
 	var userHomepage response.UserHomepageInfo
 	var user models.WechatUser
 
-	type userInfo struct {
-		username string `gorm:"user_name"`
-		location string `gorm:"location"`
-	}
-
-	//var info userInfo
-	err := global.App.DB.Model(models.WechatUser{}).Select("user_name", "location").Where("id= ?", uid).First(&user).Error
+	err := global.App.DB.Model(models.WechatUser{}).Select("user_name", "location", "cover_image").Where("id= ?", uid).First(&user).Error
 	if err != nil {
 		zap.L().Error("get user info error", zap.String("database error", err.Error()))
 		return nil, errors.New("获取用户名字错误")

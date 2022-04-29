@@ -1,11 +1,6 @@
 package bootstrap
 
 import (
-	"go.uber.org/zap"
-	"gopkg.in/natefinch/lumberjack.v2"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 	"io"
 	"log"
 	"os"
@@ -13,6 +8,12 @@ import (
 	"time"
 	"webapp_gin/app/models"
 	"webapp_gin/global"
+
+	"go.uber.org/zap"
+	"gopkg.in/natefinch/lumberjack.v2"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 func InitializeDB() *gorm.DB {
@@ -104,7 +105,7 @@ func initMySqlTables(db *gorm.DB) {
 		//models.WechatUser{},
 		models.SquareSetting{},
 		models.RecommendSetting{},
-		models.Pet{},
+		//models.Pet{},
 		models.KnowMe{},
 		models.FocusOn{},
 		models.View{},
