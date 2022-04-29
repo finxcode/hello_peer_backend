@@ -235,8 +235,8 @@ func (wechatUserService *wechatUserService) GetUserHomepageInfo(uid int) (*respo
 	var userHomepage response.UserHomepageInfo
 
 	type userInfo struct {
-		username string
-		location string
+		username string `gorm:"user_name"`
+		location string `gorm:"location"`
 	}
 
 	var info userInfo
