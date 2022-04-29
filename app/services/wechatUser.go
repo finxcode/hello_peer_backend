@@ -246,6 +246,9 @@ func (wechatUserService *wechatUserService) GetUserHomepageInfo(uid int) (*respo
 		return nil, errors.New("获取用户名字错误")
 	}
 
+	zap.L().Info("get user info error", zap.String("error", info.username))
+	zap.L().Info("get user info error", zap.String("error", info.location))
+
 	userHomepage.UserName = info.username
 	userHomepage.Location = info.location
 
