@@ -203,6 +203,29 @@ func (wechatUserService *wechatUserService) SetUserImages(uid int, filename stri
 	return nil
 }
 
+func (wechatUserService *wechatUserService) SetUserAvatar(uid int, filename string) error {
+	var wechatUser models.WechatUser
+	err := global.App.DB.Where("id = ?", uid).First(&wechatUser).Error
+	if err != nil {
+		zap.L().Error("set user avatar error", zap.Any("database error", err.Error()))
+		return err
+	}
+	images := utils.ParseToArray(&wechatUser.Images, " ")
+	if filename == images[0] {
+		return nil
+	}
+	imgs := filename
+	for _, image := range images {
+		imgs += " " + image
+	}
+	res := global.App.DB.Model(models.WechatUser{}).Where("id = ?", uid).Update("images", imgs)
+	if res.Error != nil {
+		zap.L().Error("set user images error", zap.Any("database error", res.Error))
+		return res.Error
+	}
+	return nil
+}
+
 func (wechatUserService *wechatUserService) DeleteUserImages(uid int, filename string) error {
 	var wechatUser models.WechatUser
 	err := global.App.DB.Where("id = ?", uid).First(&wechatUser).Error

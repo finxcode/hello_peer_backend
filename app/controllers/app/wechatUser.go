@@ -128,6 +128,11 @@ func SetUserAvatar(c *gin.Context) {
 		return
 	}
 
+	if err = services.WechatUserService.SetUserAvatar(intID, newFileName); err != nil {
+		response.Fail(c, http.StatusInternalServerError, "设置头像错误")
+		return
+	}
+
 	if err = services.WechatUserService.SetUserImage(intID, newFileName, "customized_avatar"); err != nil {
 		response.Fail(c, http.StatusInternalServerError, "数据库错误")
 		return
@@ -138,7 +143,6 @@ func SetUserAvatar(c *gin.Context) {
 		return
 	}
 
-	// File saved successfully. Return proper result
 	response.Success(c, nil)
 }
 
