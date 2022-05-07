@@ -21,7 +21,7 @@ func RuleToQuery(reqSetting *SquareSetting) (string, error, int) {
 	}
 
 	if location != "不限" {
-		queryString += "and location=" + location
+		queryString += " and location=" + location
 	}
 
 	return queryString, nil, 0
