@@ -140,7 +140,8 @@ func (ss *squareSettingService) GetRandomUsersById(uid int, page *request.Pagina
 		if err != nil {
 			zap.L().Warn("redis stores data failed", zap.Any("create square users in redis err", err))
 		}
-		if page.Limit < len(resUsers) {
+		if page.Limit <= len(resUsers) {
+			resUsers = resUsers[0:page.Limit]
 			return ptrUsers, nil, 0
 		} else {
 			return ptrUsers, nil, 0
