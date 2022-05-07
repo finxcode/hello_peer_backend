@@ -25,3 +25,18 @@ func (rs *redisService) SetRandomUsersInSquare(uid int, scenario string, users *
 	}
 	return nil
 }
+
+func (rs *redisService) GetRandomUsersInSquare(uid int, scenario string) (*[]response.RandomUser, error) {
+	redis := global.App.Redis
+	key := redis2.GenKey(uid, scenario)
+	val, err := redis.Get(ctx, key).Result()
+	if err != nil {
+		return nil, err
+	}
+	res, err := redis2.UnSerialize(val)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+
+}

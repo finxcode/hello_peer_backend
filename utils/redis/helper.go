@@ -18,3 +18,12 @@ func Serialize(users *[]response.RandomUser) ([]byte, error) {
 	}
 	return res, nil
 }
+
+func UnSerialize(rawUsers string) (*[]response.RandomUser, error) {
+	var users []response.RandomUser
+	err := json.Unmarshal([]byte(rawUsers), &users)
+	if err != nil {
+		return nil, err
+	}
+	return &users, nil
+}

@@ -147,8 +147,17 @@ func (ss *squareSettingService) GetRandomUsersById(uid int, page *request.Pagina
 			return ptrUsers, nil, 0
 		}
 	} else {
+		users, err := RedisService.GetRandomUsersInSquare(uid, "square")
+		if err != nil {
+			zap.L().Warn("redis fetches data failed", zap.Any("get square users in redis err", err))
+		}
+		// condition logic needed to be refined
+		if page.Limit <= len(*users) {
+			resUsers = (*users)[page.Offset*page.Limit : page.Offset*page.Limit+page.Limit]
+			return ptrUsers, nil, 0
+		} else {
 
+			return ptrUsers, nil, 0
+		}
 	}
-
-	return ptrUsers, nil, 0
 }
