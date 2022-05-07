@@ -2,6 +2,7 @@ package app
 
 import (
 	"strconv"
+	"webapp_gin/app/common/request"
 	"webapp_gin/app/common/response"
 	"webapp_gin/app/services"
 
@@ -39,4 +40,24 @@ func SetUserSquareSettings(c *gin.Context) {
 		return
 	}
 	response.Success(c, nil)
+}
+
+func GetRandomSquareUsers(c *gin.Context) {
+	var form request.Pagination
+	if err := c.ShouldBindJSON(&form); err != nil {
+		response.BadRequest(c)
+		return
+	}
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+	users, err, errCode := services.SquareSettingService.GetRandomUsersById(intID, &form)
+	if err != nil {
+		response.Fail(c, errCode, err.Error())
+		return
+	}
+
+	response.Success(c, *users)
 }

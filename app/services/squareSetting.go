@@ -69,7 +69,7 @@ func (ss *squareSettingService) SetSquareSettings(uid int, reqSetting *SquareSet
 	return nil, 0
 }
 
-func (ss *squareSettingService) GetRandomUsersById(uid int, page *request.Pagination) ([]response.RandomUser, error, int) {
+func (ss *squareSettingService) GetRandomUsersById(uid int, page *request.Pagination) (*[]response.RandomUser, error, int) {
 	// 1. 总用户数50
 	// 2. 按时间筛选，3天内20，3天前30
 	// 3. 随机顺序
@@ -79,9 +79,10 @@ func (ss *squareSettingService) GetRandomUsersById(uid int, page *request.Pagina
 	var squareSetting models.SquareSetting
 	var sq SquareSetting
 	var resUsers []response.RandomUser
+	ptrUsers := &resUsers
 	var numberOfUserBefore3Day int
 
-	err := global.App.DB.Where("user_id = ?", uid).First(&user).Error
+	err := global.App.DB.Where("id = ?", uid).First(&user).Error
 	if err == gorm.ErrRecordNotFound {
 		return nil, errors.New("用户不存在"), 40101
 	} else if err != nil {
@@ -140,13 +141,13 @@ func (ss *squareSettingService) GetRandomUsersById(uid int, page *request.Pagina
 			zap.L().Warn("redis stores data failed", zap.Any("create square users in redis err", err))
 		}
 		if page.Limit < len(resUsers) {
-			return resUsers[:page.Limit], nil, 0
+			return ptrUsers, nil, 0
 		} else {
-			return resUsers[:], nil, 0
+			return ptrUsers, nil, 0
 		}
 	} else {
 
 	}
 
-	return resUsers, nil, 0
+	return ptrUsers, nil, 0
 }
