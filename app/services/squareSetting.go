@@ -119,22 +119,22 @@ func (ss *squareSettingService) GetRandomUsersById(uid int, page *request.Pagina
 
 	// 如果offset = 0， 则从数据库拉取数据，并存入redis，返回limit数量的数据
 	if page.Offset == 0 {
-		query, err, errCode := MakeSquareQueryIn3Day(uid, NumberOfUsersIn3Day, sq)
+		query, err, errCode := MakeSquareQueryIn3Day(uid, sq)
 		if err != nil {
 			return nil, err, errCode
 		}
-		err = global.App.DB.Where(query).Find(&users).Error
+		err = global.App.DB.Where(query).Order("rand()").Limit(NumberOfUsersIn3Day).Find(&users).Error
 		if err != nil {
 			numberOfUserBefore3Day = TotalUser
 		} else {
 			resUsers = append(resUsers, WechatUserToRandomUser(users)...)
 			numberOfUserBefore3Day = TotalUser - len(resUsers)
 		}
-		query, err, errCode = MakeSquareQueryBefore3Day(uid, numberOfUserBefore3Day, sq)
+		query, err, errCode = MakeSquareQueryBefore3Day(uid, sq)
 		if err != nil {
 			return nil, err, errCode
 		}
-		err = global.App.DB.Where(query).Find(&users).Error
+		err = global.App.DB.Where(query).Order("rand()").Limit(numberOfUserBefore3Day).Find(&users).Error
 		resUsers = append(resUsers, WechatUserToRandomUser(users)...)
 		err = RedisService.SetRandomUsersInSquare(uid, "square", &resUsers)
 		if err != nil {
