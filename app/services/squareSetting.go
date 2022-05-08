@@ -70,7 +70,7 @@ func (ss *squareSettingService) SetSquareSettings(uid int, reqSetting *SquareSet
 	return nil, 0
 }
 
-func (ss *squareSettingService) GetRandomUsersById(uid int, page *request.Pagination) (*[]response.RandomUser, error, int) {
+func (ss *squareSettingService) GetRandomUsers(uid int, page *request.Pagination) (*[]response.RandomUser, int, error, int) {
 	// 1. 总用户数50
 	// 2. 按时间筛选，3天内20，3天前30
 	// 3. 随机顺序
@@ -82,13 +82,13 @@ func (ss *squareSettingService) GetRandomUsersById(uid int, page *request.Pagina
 	if page.Offset == 0 {
 		ptrUsers, err, errCode := retrieveUsersFromDb(uid)
 		if err != nil {
-			return nil, err, errCode
+			return nil, 0, err, errCode
 		}
 		if page.Limit <= len(*ptrUsers) {
 			resUser := (*ptrUsers)[0:page.Limit]
-			return &resUser, nil, 0
+			return &resUser, len(*ptrUsers), nil, 0
 		} else {
-			return ptrUsers, nil, 0
+			return ptrUsers, len(*ptrUsers), nil, 0
 		}
 	} else {
 		users, err := RedisService.GetRandomUsersInSquare(uid, "square")
@@ -96,27 +96,27 @@ func (ss *squareSettingService) GetRandomUsersById(uid int, page *request.Pagina
 			zap.L().Warn("redis fetches data failed", zap.Any("get square users in redis err", err))
 			ptrUsers, err, errCode := retrieveUsersFromDb(uid)
 			if err != nil {
-				return nil, err, errCode
+				return nil, 0, err, errCode
 			}
 			if (page.Limit*page.Offset + page.Limit) <= len(*ptrUsers) {
 				resUsers := (*ptrUsers)[page.Offset*page.Limit : page.Offset*page.Limit+page.Limit]
-				return &resUsers, nil, 0
+				return &resUsers, len(*ptrUsers), nil, 0
 			} else if page.Limit*page.Offset < len(*ptrUsers) {
 				resUsers := (*ptrUsers)[page.Limit*page.Offset:]
-				return &resUsers, nil, 0
+				return &resUsers, len(*ptrUsers), nil, 0
 			} else {
-				return ptrUsers, nil, 0
+				return ptrUsers, len(*ptrUsers), nil, 0
 			}
 		}
 		// condition logic needed to be refined --done
 		if (page.Limit*page.Offset + page.Limit) <= len(*users) {
 			resUsers := (*users)[page.Offset*page.Limit : page.Offset*page.Limit+page.Limit]
-			return &resUsers, nil, 0
+			return &resUsers, len(*users), nil, 0
 		} else if page.Limit*page.Offset < len(*users) {
 			resUsers := (*users)[page.Limit*page.Offset:]
-			return &resUsers, nil, 0
+			return &resUsers, len(*users), nil, 0
 		} else {
-			return users, nil, 0
+			return users, len(*users), nil, 0
 		}
 	}
 }
