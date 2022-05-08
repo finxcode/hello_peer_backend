@@ -289,3 +289,37 @@ func (wechatUserService *wechatUserService) GetUserHomepageInfo(uid int) (*respo
 
 	return &userHomepage, nil
 }
+
+func (wechatUserService *wechatUserService) GetUserDetailsById(uid int) (*response.UserDetails, error) {
+	var wechatUser models.WechatUser
+	var respUserDetails response.UserDetails
+
+	err := global.App.DB.Model(models.WechatUser{}).Where("id= ?", uid).First(&wechatUser).Error
+	if err != nil {
+		return nil, errors.New("用户查询数据库错误")
+	}
+
+	respUserDetails.UserName = wechatUser.UserName
+	respUserDetails.Age = wechatUser.Age
+	respUserDetails.Location = wechatUser.Location
+	respUserDetails.Constellation = wechatUser.Constellation
+	respUserDetails.Declaration = wechatUser.Declaration
+	respUserDetails.Height = wechatUser.Height
+	respUserDetails.Weight = wechatUser.Weight
+	respUserDetails.Hometown = wechatUser.HomeTown
+	respUserDetails.Education = wechatUser.Education
+	respUserDetails.Hobbies = wechatUser.Hobbies
+	respUserDetails.Occupation = wechatUser.Occupation
+	respUserDetails.SelfDesc = wechatUser.SelfDesc
+	respUserDetails.TheOne = wechatUser.TheOne
+	respUserDetails.Images = utils.ParseToArray(&wechatUser.Images, " ")
+	respUserDetails.Tags = utils.ParseToArray(&wechatUser.Tags, " ")
+	respUserDetails.CoverImage = wechatUser.CoverImage
+	respUserDetails.Gender = wechatUser.Gender
+	respUserDetails.Birthday = wechatUser.Birthday
+	respUserDetails.Marriage = wechatUser.Marriage
+	respUserDetails.Income = wechatUser.Income
+	respUserDetails.Purpose = wechatUser.Purpose
+
+	return &respUserDetails, nil
+}

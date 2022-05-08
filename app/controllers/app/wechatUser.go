@@ -289,3 +289,21 @@ func GetUserHomepageInfo(c *gin.Context) {
 
 	response.Success(c, resp)
 }
+
+func GetUserDetailsById(c *gin.Context) {
+	idStr := c.Query("uid")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		response.BadRequest(c)
+		return
+	}
+
+	user, err := services.WechatUserService.GetUserDetailsById(id)
+
+	if err != nil {
+		response.Fail(c, 40002, err.Error())
+		return
+	}
+
+	response.Success(c, *user)
+}
