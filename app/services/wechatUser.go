@@ -116,6 +116,10 @@ func (wechatUserService *wechatUserService) SetUserBasicInfo(uid int, reqUser *r
 		zap.L().Error("set user basic information error", zap.Any("database error", res.Error))
 		return res.Error
 	}
+
+	err := PetService.InitPet(uid)
+	zap.L().Error("database error", zap.String("create pet failed with error", err.Error()))
+
 	return nil
 }
 

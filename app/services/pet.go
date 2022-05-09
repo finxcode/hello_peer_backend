@@ -6,6 +6,8 @@ import (
 	"webapp_gin/global"
 	"webapp_gin/utils"
 
+	"gorm.io/gorm"
+
 	"go.uber.org/zap"
 )
 
@@ -25,8 +27,28 @@ func (p *petService) GetPetDetails(uid int) (*models.Pet, error) {
 
 func (p *petService) SetPetDetails(uid int, pet *models.Pet) error {
 	err := global.App.DB.Model(models.Pet{}).Where("user_id", uid).Updates(pet).Error
-	if err != nil {
+	if err == gorm.ErrRecordNotFound {
+		err = p.InitPet(uid)
+		if err != nil {
+			return errors.New("更新宠物数据库错误")
+		} else {
+			err = global.App.DB.Model(models.Pet{}).Where("user_id", uid).Updates(pet).Error
+			if err != nil {
+				return errors.New("更新宠物数据库错误")
+			} else {
+				res := global.App.DB.Model(models.WechatUser{}).Where("id = ?", uid).Update("has_pet", "有猫或狗")
+				if res.Error != nil {
+					zap.L().Error("update user table error", zap.String("update user table at adding new pet", res.Error.Error()))
+				}
+			}
+		}
+	} else if err != nil {
 		return errors.New("更新宠物数据库错误")
+	} else {
+		res := global.App.DB.Model(models.WechatUser{}).Where("id = ?", uid).Update("has_pet", "有猫或狗")
+		if res.Error != nil {
+			zap.L().Error("update user table error", zap.String("update user table at adding new pet", res.Error.Error()))
+		}
 	}
 	return nil
 }
@@ -48,17 +70,17 @@ func (p *petService) SetPetImages(uid int, filename string) error {
 	return nil
 }
 
-func (p *petService) AddPet(pet *models.Pet) error {
-	result := global.App.DB.Create(pet)
-	if result.Error != nil {
-		return errors.New("创建宠物数据库错误")
+func (p *petService) InitPet(uid int) error {
+	var petInit models.Pet
+	petInit.UserID = uid
+	res := global.App.DB.Create(&petInit)
+	if res.Error != nil {
+		zap.L().Error("database error", zap.String("create pet failed with error", res.Error.Error()))
+		return res.Error
 	}
 
-	result = global.App.DB.Model(models.WechatUser{}).Where("id = ?", pet.UserID).Update("has_pet", "有猫或狗")
-	if result.Error != nil {
-		zap.L().Error("update user table error", zap.String("update user table at adding new pet", result.Error.Error()))
-	}
 	return nil
+
 }
 
 func (p *petService) DeletePetImages(uid int, filename string) error {
