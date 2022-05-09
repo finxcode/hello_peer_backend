@@ -44,6 +44,7 @@ func SetUserSquareSettings(c *gin.Context) {
 
 func GetRandomSquareUsers(c *gin.Context) {
 	var form request.Pagination
+	var info response.SquareInfo
 	if err := c.ShouldBindJSON(&form); err != nil {
 		response.BadRequest(c)
 		return
@@ -53,11 +54,14 @@ func GetRandomSquareUsers(c *gin.Context) {
 		response.BusinessFail(c, err.Error())
 		return
 	}
-	users, err, errCode := services.SquareSettingService.GetRandomUsersById(intID, &form)
+	users, total, err, errCode := services.SquareSettingService.GetRandomUsers(intID, &form)
 	if err != nil {
 		response.Fail(c, errCode, err.Error())
 		return
 	}
 
-	response.Success(c, *users)
+	info.RandomUsers = *users
+	info.Total = total
+
+	response.Success(c, info)
 }

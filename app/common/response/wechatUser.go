@@ -82,3 +82,8 @@ type UserHomepageInfo struct {
 	PetName  string              `json:"pet_name"`
 	Avatar   string              `json:"avatar"`
 }
+
+type SquareInfo struct {
+	RandomUsers []RandomUser
+	Total       int `json:"total"`
+}
