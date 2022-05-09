@@ -6,7 +6,7 @@ type WechatUser struct {
 	ID
 	WechatName       string  `json:"wechat_name" gorm:"comment:用户名"`
 	UserName         string  `json:"name" gorm:"comment:用户名"`
-	PetId            string  `json:"petId" gorm:"comment:宠物id"`
+	HasPet           string  `json:"hasPet" gorm:"comment:有宠物"`
 	Mobile           string  `json:"mobile" gorm:"index;comment:手机号"`
 	Password         string  `json:"password" gorm:"comment:密码"`
 	Gender           int     `json:"gender" gorm:"comment:性别"`
@@ -26,20 +26,20 @@ type WechatUser struct {
 	City             string  `json:"city" gorm:"comment:用户所在城市"`
 	Province         string  `json:"province" gorm:"comment:用户所在省份"`
 	Country          string  `json:"country" gorm:"comment:用户所在国家"`
-	AvatarURL        string  `json:"avatarUrl" gorm:"用户头像链接"`
-	CustomizedAvatar string  `json:"customized_avatar" gorm:"用户自定义头像"`
-	Language         string  `json:"language" gorm:"用户语言"`
-	CoverImage       string  `json:"coverImage" gorm:"comment:用户封面图url"`
-	Images           string  `json:"images" gorm:"comment:用户上传图片url"`
-	Tags             string  `json:"tags" gorm:"comment:用户标签"`
-	SelfDesc         string  `json:"selfDesc" gorm:"comment:自我描述"`
-	Hobbies          string  `json:"hobbies" gorm:"comment:兴趣爱好"`
-	Declaration      string  `json:"declaration" gorm:"comment:交友宣言"`
-	TheOne           string  `json:"theOne" gorm:"comment:希望另一半的样子"`
+	AvatarURL        string  `json:"avatarUrl" gorm:"type:varchar(500) comment:用户头像链接"`
+	CustomizedAvatar string  `json:"customized_avatar" gorm:"type:varchar(500) comment:用户自定义头像"`
+	Language         string  `json:"language" gorm:"comment:用户语言"`
+	CoverImage       string  `json:"coverImage" gorm:"type:varchar(500) comment:用户封面图url"`
+	Images           string  `json:"images" gorm:"type:varchar(1024) comment:用户上传图片url"`
+	Tags             string  `json:"tags" gorm:"type:varchar(500) comment:用户标签"`
+	SelfDesc         string  `json:"selfDesc" gorm:"type:varchar(1024) comment:自我描述"`
+	Hobbies          string  `json:"hobbies" gorm:"type:varchar(1024) comment:兴趣爱好"`
+	Declaration      string  `json:"declaration" gorm:"type:varchar(1024) comment:交友宣言"`
+	TheOne           string  `json:"theOne" gorm:"type:varchar(1024) comment:希望另一半的样子"`
 	Income           string  `json:"income" gorm:"comment:收入"`
-	Verified         int     `json:"verified" gorm:"是否认证"`
-	Purpose          string  `json:"purpose" gorm:"交友目的"`
-	Birthday         string  `json:"birthday" gorm:"生日"`
+	Verified         int     `json:"verified" gorm:"comment:是否认证"`
+	Purpose          string  `json:"purpose" gorm:"comment:交友目的"`
+	Birthday         string  `json:"birthday" gorm:"comment:生日"`
 	Timestamps
 	SoftDeletes
 }

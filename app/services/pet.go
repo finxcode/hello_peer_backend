@@ -48,6 +48,19 @@ func (p *petService) SetPetImages(uid int, filename string) error {
 	return nil
 }
 
+func (p *petService) AddPet(pet *models.Pet) error {
+	result := global.App.DB.Create(pet)
+	if result.Error != nil {
+		return errors.New("创建宠物数据库错误")
+	}
+
+	result = global.App.DB.Model(models.WechatUser{}).Where("id = ?", pet.UserID).Update("has_pet", "有猫或狗")
+	if result.Error != nil {
+		zap.L().Error("update user table error", zap.String("update user table at adding new pet", result.Error.Error()))
+	}
+	return nil
+}
+
 func (p *petService) DeletePetImages(uid int, filename string) error {
 	var pet models.Pet
 	err := global.App.DB.Where("user_id = ?", uid).First(&pet).Error
