@@ -39,7 +39,7 @@ func RuleToQueryRecommendation(uid int, reqSettings *RecommendSetting) (string, 
 	ageMin := reqSettings.AgeMin
 	ageMax := reqSettings.AgeMax
 	hometown := reqSettings.Hometown
-	//petLover := reqSettings.PetLover
+	petLover := reqSettings.PetLover
 	//tags := reqSettings.Tags
 
 	if gender != 0 && gender != 1 && gender != 2 {
@@ -61,6 +61,10 @@ func RuleToQueryRecommendation(uid int, reqSettings *RecommendSetting) (string, 
 
 	if hometown != "同省优先" {
 		queryString += " and hometown=" + user.HomeTown
+	}
+
+	if petLover != "喜欢就行" {
+		queryString += " and has_pet =" + user.HasPet
 	}
 
 	queryString += fmt.Sprintf(" and age >= %d and age <= %d", ageMin, ageMax)
