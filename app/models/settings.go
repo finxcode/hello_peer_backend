@@ -18,7 +18,7 @@ type RecommendSetting struct {
 	Location string `json:"location" gorm:"comment:地区"`
 	Hometown string `json:"hometown" gorm:"comment:家乡"`
 	PetLover string `json:"pet_lover" gorm:"comment:宠物偏好"`
-	Tags     string `json:"tags" gorm:"type:varchar(500) comment:用户标签"`
+	Tags     string `json:"tags" gorm:"type:varchar(500);comment:用户标签"`
 	Timestamps
 	SoftDeletes
 }
