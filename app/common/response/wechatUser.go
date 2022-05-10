@@ -24,7 +24,7 @@ type RecommendedUser struct {
 	Location      string   `example:"南山区"`
 	Verified      bool     `example:"true"`
 	CoverImageUrl string   `example:"www.coverUrl.com"`
-	Tags          string   `example:"猫控 读书达人 电影爱好者"`
+	Tags          []string `example:"猫控 读书达人 电影爱好者"`
 	Images        []string `example:"www.imgUrl1.com, www.imgUrl2.com"`
 }
 

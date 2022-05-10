@@ -4,6 +4,8 @@ import (
 	"errors"
 	"gorm.io/gorm"
 	"net/http"
+	"webapp_gin/app/common/request"
+	"webapp_gin/app/common/response"
 	"webapp_gin/app/models"
 	"webapp_gin/global"
 )
@@ -77,4 +79,13 @@ func (rs *recommendSettingSercive) SetRecommendSetting(uid int, reqSetting *Reco
 	}
 	return nil, 0
 
+}
+
+func (rs *recommendSettingSercive) GetRecommendedUsers(uid int, page *request.Pagination) (*[]response.RecommendedUser, error, int) {
+	res, err := RedisService.GetRecommendedUsers(uid, "recommend")
+	if err != nil {
+
+	} else {
+
+	}
 }

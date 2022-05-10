@@ -27,3 +27,20 @@ func UnSerialize(rawUsers string) (*[]response.RandomUser, error) {
 	}
 	return &users, nil
 }
+
+func UnSerializeRecommendedUsers(rawUsers string) (*[]response.RecommendedUser, error) {
+	var users []response.RecommendedUser
+	err := json.Unmarshal([]byte(rawUsers), &users)
+	if err != nil {
+		return nil, err
+	}
+	return &users, nil
+}
+
+func SerializeRecommendedUsers(users *[]response.RecommendedUser) ([]byte, error) {
+	res, err := json.Marshal(users)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}
