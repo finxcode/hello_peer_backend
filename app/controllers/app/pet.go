@@ -120,3 +120,18 @@ func SetPetImage(c *gin.Context) {
 	// File saved successfully. Return proper result
 	response.Success(c, nil)
 }
+
+func InitPet(c *gin.Context) {
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	err = services.PetService.InitPet(intID)
+	if err != nil {
+		response.Fail(c, 60000, "初始化宠物错误")
+	}
+
+	response.Success(c, nil)
+}
