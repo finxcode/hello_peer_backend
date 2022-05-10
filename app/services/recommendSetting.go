@@ -2,18 +2,19 @@ package services
 
 import (
 	"errors"
-	"gorm.io/gorm"
 	"net/http"
 	"webapp_gin/app/common/request"
 	"webapp_gin/app/common/response"
 	"webapp_gin/app/models"
 	"webapp_gin/global"
+
+	"gorm.io/gorm"
 )
 
-type recommendSettingSercive struct {
+type recommendSettingService struct {
 }
 
-var RecommendSettingsService = new(recommendSettingSercive)
+var RecommendSettingsService = new(recommendSettingService)
 
 type RecommendSetting struct {
 	Gender   int    `json:"gender"`
@@ -25,7 +26,11 @@ type RecommendSetting struct {
 	Tags     string `json:"tags"`
 }
 
-func (rs *recommendSettingSercive) GetRecommendSetting(uid int) (*RecommendSetting, error, int) {
+const (
+	numberOfRecommendedUsers = 12
+)
+
+func (rs *recommendSettingService) GetRecommendSetting(uid int) (*RecommendSetting, error, int) {
 	var recommendSetting models.RecommendSetting
 	err := global.App.DB.Where("user_id = ?", uid).First(&recommendSetting).Error
 	if err == gorm.ErrRecordNotFound {
@@ -52,7 +57,7 @@ func (rs *recommendSettingSercive) GetRecommendSetting(uid int) (*RecommendSetti
 	}, nil, 0
 }
 
-func (rs *recommendSettingSercive) SetRecommendSetting(uid int, reqSetting *RecommendSetting) (error, int) {
+func (rs *recommendSettingService) SetRecommendSetting(uid int, reqSetting *RecommendSetting) (error, int) {
 	var recommendSetting models.RecommendSetting
 	err := global.App.DB.Where("user_id = ?", uid).First(&recommendSetting).Error
 	if err == gorm.ErrRecordNotFound {
@@ -75,17 +80,29 @@ func (rs *recommendSettingSercive) SetRecommendSetting(uid int, reqSetting *Reco
 	}
 	res := global.App.DB.Model(models.RecommendSetting{}).Where("user_id = ?", uid).Updates(reqSetting)
 	if res.Error != nil {
-		return errors.New("Update recommend setting failed"), http.StatusInternalServerError
+		return errors.New("update recommend setting failed"), http.StatusInternalServerError
 	}
 	return nil, 0
 
 }
 
-func (rs *recommendSettingSercive) GetRecommendedUsers(uid int, page *request.Pagination) (*[]response.RecommendedUser, error, int) {
+func (rs *recommendSettingService) GetRecommendedUsers(uid int, page *request.Pagination) (*[]response.RecommendedUser, error, int) {
 	res, err := RedisService.GetRecommendedUsers(uid, "recommend")
 	if err != nil {
-
+		return res, nil, 0
 	} else {
 
 	}
+
+	return nil, nil, 0
+}
+
+func RetrieveRecommendedUserFromDb(uid int) (*[]response.RecommendedUser, error) {
+	//0. get recommend settings
+	//1. make query rules
+	//2. get 12 random users
+	//3. return
+
+	return nil, nil
+
 }
