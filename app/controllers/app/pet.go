@@ -135,3 +135,34 @@ func InitPet(c *gin.Context) {
 
 	response.Success(c, nil)
 }
+
+func GetPetDetailById(c *gin.Context) {
+	var petResponse response.PetResponse
+	_, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	idStr := c.Query("uid")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		response.BadRequest(c)
+		return
+	}
+
+	resp, err := services.PetService.GetPetDetails(id)
+	if err != nil {
+		response.Fail(c, 50000, err.Error())
+		return
+	}
+
+	petResponse.PetName = resp.PetName
+	petResponse.Sex = resp.Sex
+	petResponse.Birthday = resp.Birthday
+	petResponse.Weight = resp.Weight
+	petResponse.Description = resp.Description
+	petResponse.Images = utils.ParseToArray(&resp.Images, " ")
+
+	response.Success(c, petResponse)
+}
