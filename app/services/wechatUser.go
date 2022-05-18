@@ -177,6 +177,13 @@ func (wechatUserService *wechatUserService) GetUserDetails(uid int) (*response.U
 	respUserDetails.Income = wechatUser.Income
 	respUserDetails.Purpose = wechatUser.Purpose
 
+	resp, err := PetService.GetPetDetails(uid)
+	if err != nil {
+		respUserDetails.PetName = ""
+	} else {
+		respUserDetails.PetName = resp.PetName
+	}
+
 	return &respUserDetails, nil
 
 }
@@ -324,6 +331,13 @@ func (wechatUserService *wechatUserService) GetUserDetailsById(uid int) (*respon
 	respUserDetails.Marriage = wechatUser.Marriage
 	respUserDetails.Income = wechatUser.Income
 	respUserDetails.Purpose = wechatUser.Purpose
+
+	resp, err := PetService.GetPetDetails(uid)
+	if err != nil {
+		respUserDetails.PetName = ""
+	} else {
+		respUserDetails.PetName = resp.PetName
+	}
 
 	return &respUserDetails, nil
 }
