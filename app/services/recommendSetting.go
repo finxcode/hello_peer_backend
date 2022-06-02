@@ -97,11 +97,20 @@ func (rs *recommendSettingService) GetRecommendedUsers(uid int, page *request.Pa
 	return nil, nil, 0
 }
 
-func RetrieveRecommendedUserFromDb(uid int) (*[]response.RecommendedUser, error) {
+func retrieveRecommendedUserFromDb(uid int) (*[]response.RecommendedUser, error) {
 	//0. get recommend settings
 	//1. make query rules
 	//2. get 12 random users
 	//3. return
+	settings, err, _ := RecommendSettingsService.GetRecommendSetting(uid)
+	if err != nil {
+		return nil, errors.New("查询用户推荐设置数据库错误")
+	}
+
+	query, err, _ := RuleToQueryRecommendation(uid, settings)
+	if err != nil {
+		return nil, errors.New("用户查询条件错误")
+	}
 
 	return nil, nil
 
