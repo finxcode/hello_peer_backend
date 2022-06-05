@@ -15,6 +15,7 @@ type RandomUser struct {
 }
 
 type RecommendedUser struct {
+	Uid           int      `json:"uid"`
 	UserName      string   `example:"豆豆"`
 	PetName       string   `example:"Amy"`
 	Age           int      `example:"25"`
@@ -87,4 +88,9 @@ type UserHomepageInfo struct {
 type SquareInfo struct {
 	RandomUsers []RandomUser
 	Total       int `json:"total"`
+}
+
+type RecommendInfo struct {
+	RecommendUsers []RecommendedUser
+	Total          int `json:"total"`
 }

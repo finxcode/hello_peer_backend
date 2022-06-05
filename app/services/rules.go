@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"strconv"
 	"webapp_gin/app/models"
-	"webapp_gin/global"
 )
 
 //转写广场筛选规则
@@ -30,8 +29,7 @@ func RuleToQuery(reqSetting *SquareSetting) (string, error, int) {
 	return queryString, nil, 0
 }
 
-func RuleToQueryRecommendation(uid int, reqSettings *RecommendSetting) (string, error, int) {
-	var user models.WechatUser
+func RuleToQueryRecommendation(reqSettings *RecommendSetting, user *models.WechatUser) (string, error, int) {
 	var queryString string
 
 	gender := reqSettings.Gender
@@ -44,11 +42,6 @@ func RuleToQueryRecommendation(uid int, reqSettings *RecommendSetting) (string, 
 
 	if gender != 0 && gender != 1 && gender != 2 {
 		return queryString, errors.New("parameter error, gender not equal to 0,1 or 2"), http.StatusBadRequest
-	}
-
-	err := global.App.DB.Where("id = ?", uid).First(&user).Error
-	if err != nil {
-		return queryString, errors.New("user cannot be found in DB"), 50000
 	}
 
 	if gender != 0 {
