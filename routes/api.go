@@ -65,6 +65,7 @@ func SetApiGroupRoutes(router *gin.RouterGroup) {
 		authRouter.GET("/user/getRandomUserDetails", app.GetUserDetailsById)
 		authRouter.POST("/user/pet/intiPet", app.InitPet)
 		authRouter.GET("/user/pet/getPetDetailsById", app.GetPetDetailById)
+		authRouter.GET("/user/getRecommededUserList", app.GetRecommendedUsers)
 	}
 
 }

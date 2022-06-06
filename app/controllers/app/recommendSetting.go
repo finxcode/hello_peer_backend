@@ -41,3 +41,23 @@ func SetUserRecommendSettings(c *gin.Context) {
 	response.Success(c, nil)
 
 }
+
+func GetRecommendedUsers(c *gin.Context) {
+	var ri response.RecommendInfo
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	recommenedUsers, err, num := services.RecommendSettingsService.GetRecommendedUsers(intID)
+	if err != nil {
+		response.Fail(c, 50001, err.Error())
+		return
+	}
+
+	ri.RecommendUsers = *recommenedUsers
+	ri.Total = num
+
+	response.Success(c, ri)
+}
