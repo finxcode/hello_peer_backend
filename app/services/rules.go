@@ -62,6 +62,8 @@ func RuleToQueryRecommendation(reqSettings *RecommendSetting, user *models.Wecha
 
 	queryString += fmt.Sprintf(" and age >= %d and age <= %d", ageMin, ageMax)
 
+	queryString += fmt.Sprintf(" and id != %d", user.ID.ID)
+
 	return queryString, nil, 0
 
 }
