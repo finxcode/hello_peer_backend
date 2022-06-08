@@ -60,9 +60,7 @@ func RuleToQueryRecommendation(reqSettings *RecommendSetting, user *models.Wecha
 		queryString += " and has_pet =" + user.HasPet
 	}
 
-	queryString += fmt.Sprintf(" and age >= %d and age <= %d", ageMin, ageMax)
-
-	queryString += fmt.Sprintf(" and id != %d", user.ID.ID)
+	queryString += fmt.Sprintf(" and age >= %d and age <= %d and id != %d", ageMin, ageMax, int(user.ID.ID))
 
 	return queryString, nil, 0
 
