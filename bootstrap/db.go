@@ -106,7 +106,7 @@ func initMySqlTables(db *gorm.DB) {
 		models.SquareSetting{},
 		models.RecommendSetting{},
 		//models.Pet{},
-		//models.KnowMe{},
+		models.KnowMe{},
 		models.FocusOn{},
 		models.View{},
 	)
