@@ -13,7 +13,7 @@ var RelationService = new(relationService)
 func (r *relationService) GetRelationStat(uid int) (*models.RelationStat, error) {
 	stat := models.RelationStat{}
 	var count int64
-	err := global.App.DB.Model(models.KnowMe{}).Where("to = ?", uid).Count(&count).Error
+	err := global.App.DB.Model(models.KnowMe{}).Where("`to` = ?", uid).Count(&count).Error
 	if err != nil {
 		zap.L().Error("Get know me stat total error", zap.String("database error: ", err.Error()))
 		count = 0
