@@ -313,6 +313,7 @@ func GetUserInfoCompleteLevel(c *gin.Context) {
 		level int
 	}
 
+	res := Res{}
 	intID, err := strconv.Atoi(c.Keys["id"].(string))
 	if err != nil {
 		response.BusinessFail(c, err.Error())
@@ -324,7 +325,7 @@ func GetUserInfoCompleteLevel(c *gin.Context) {
 		return
 	}
 
-	response.Success(c, Res{
-		level: level,
-	})
+	res.level = level
+
+	response.Success(c, res)
 }
