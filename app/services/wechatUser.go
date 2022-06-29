@@ -242,8 +242,9 @@ func (wechatUserService *wechatUserService) SetUserAvatar(uid int, filename stri
 	}
 
 	err = wechatUserService.SetUserInfoComplete(uid, 2)
-	zap.L().Error("user info complete level error", zap.String("set user info complete level error", err.Error()))
-
+	if err != nil {
+		zap.L().Error("user info complete level error", zap.String("set user info complete level error", err.Error()))
+	}
 	return nil
 }
 
