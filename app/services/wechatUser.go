@@ -117,7 +117,10 @@ func (wechatUserService *wechatUserService) SetUserBasicInfo(uid int, reqUser *r
 		return res.Error
 	}
 
-	err := PetService.InitPet(uid)
+	err := wechatUserService.SetUserInfoComplete(uid, 1)
+	zap.L().Error("user info complete level error", zap.String("set user info complete level error", err.Error()))
+
+	err = PetService.InitPet(uid)
 	zap.L().Error("database error", zap.String("create pet failed with error", err.Error()))
 
 	return nil
@@ -234,6 +237,10 @@ func (wechatUserService *wechatUserService) SetUserAvatar(uid int, filename stri
 		zap.L().Error("set user images error", zap.Any("database error", res.Error))
 		return res.Error
 	}
+
+	err = wechatUserService.SetUserInfoComplete(uid, 2)
+	zap.L().Error("user info complete level error", zap.String("set user info complete level error", err.Error()))
+
 	return nil
 }
 
@@ -337,4 +344,25 @@ func (wechatUserService *wechatUserService) GetUserDetailsById(uid int) (*respon
 	}
 
 	return &respUserDetails, nil
+}
+
+func (wechatUserService *wechatUserService) GetUserInfoComplete(uid int) (int, error) {
+	var user models.WechatUser
+	var level int
+	res := global.App.DB.Model(models.WechatUser{}).Where("id= ?", uid).First(&user)
+	if res.Error != nil {
+		return -1, res.Error
+	}
+
+	level = user.InfoComplete
+
+	return level, nil
+}
+
+func (wechatUserService *wechatUserService) SetUserInfoComplete(uid, level int) error {
+	res := global.App.DB.Model(models.WechatUser{}).Where("id = ?", uid).Update("info_complete", level)
+	if res.Error != nil {
+		return res.Error
+	}
+	return nil
 }

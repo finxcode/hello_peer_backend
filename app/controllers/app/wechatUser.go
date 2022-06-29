@@ -307,3 +307,24 @@ func GetUserDetailsById(c *gin.Context) {
 
 	response.Success(c, *user)
 }
+
+func GetUserInfoCompleteLevel(c *gin.Context) {
+	type Res struct {
+		level int
+	}
+
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+	level, err := services.WechatUserService.GetUserInfoComplete(intID)
+	if err != nil {
+		response.Fail(c, 50001, err.Error())
+		return
+	}
+
+	response.Success(c, Res{
+		level: level,
+	})
+}
