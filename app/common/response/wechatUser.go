@@ -94,3 +94,7 @@ type RecommendInfo struct {
 	RecommendUsers []RecommendedUser
 	Total          int `json:"total"`
 }
+
+type InfoCompletionLevel struct {
+	Level int
+}

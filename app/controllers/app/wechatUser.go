@@ -309,11 +309,7 @@ func GetUserDetailsById(c *gin.Context) {
 }
 
 func GetUserInfoCompleteLevel(c *gin.Context) {
-	type Res struct {
-		level int
-	}
 
-	res := Res{}
 	intID, err := strconv.Atoi(c.Keys["id"].(string))
 	if err != nil {
 		response.BusinessFail(c, err.Error())
@@ -325,7 +321,9 @@ func GetUserInfoCompleteLevel(c *gin.Context) {
 		return
 	}
 
-	res.level = level
+	res := response.InfoCompletionLevel{
+		Level: level,
+	}
 
 	response.Success(c, res)
 }
