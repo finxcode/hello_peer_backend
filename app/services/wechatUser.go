@@ -118,11 +118,14 @@ func (wechatUserService *wechatUserService) SetUserBasicInfo(uid int, reqUser *r
 	}
 
 	err := wechatUserService.SetUserInfoComplete(uid, 1)
-	zap.L().Error("user info complete level error", zap.String("set user info complete level error", err.Error()))
+	if err != nil {
+		zap.L().Error("user info complete level error", zap.String("set user info complete level error", err.Error()))
+	}
 
 	err = PetService.InitPet(uid)
-	zap.L().Error("database error", zap.String("create pet failed with error", err.Error()))
-
+	if err != nil {
+		zap.L().Error("database error", zap.String("create pet failed with error", err.Error()))
+	}
 	return nil
 }
 
