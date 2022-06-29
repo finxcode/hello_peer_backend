@@ -85,16 +85,19 @@ func (p *petService) SetPetImages(uid int, filename string) error {
 }
 
 func (p *petService) InitPet(uid int) error {
-	var petInit models.Pet
-	petInit.UserID = uid
-	res := global.App.DB.Create(&petInit)
-	if res.Error != nil {
-		zap.L().Error("database error", zap.String("create pet failed with error", res.Error.Error()))
-		return res.Error
+	var pet models.Pet
+	res := global.App.DB.Where("user_id = ?", uid).First(&pet)
+	if res.Error == gorm.ErrRecordNotFound {
+		petInit := models.Pet{}
+		petInit.UserID = uid
+		result := global.App.DB.Create(&petInit)
+		if result.Error != nil {
+			zap.L().Error("database error", zap.String("create pet failed with error", result.Error.Error()))
+			return res.Error
+		}
 	}
 
 	return nil
-
 }
 
 func (p *petService) DeletePetImages(uid int, filename string) error {
