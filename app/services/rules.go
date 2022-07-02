@@ -45,11 +45,11 @@ func RuleToQueryRecommendation(reqSettings *RecommendSetting, user *models.Wecha
 	}
 
 	if gender != 0 {
-		queryString = "gender= " + strconv.Itoa(gender)
+		queryString = "gender= " + strconv.Itoa(gender) + "and"
 	}
 
 	if location != "同城优先" {
-		queryString += " and location=" + user.Location
+		queryString += " location=" + user.Location
 	}
 
 	if hometown != "同省优先" {
