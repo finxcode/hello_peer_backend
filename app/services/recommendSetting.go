@@ -40,8 +40,8 @@ func (rs *recommendSettingService) GetRecommendSetting(uid int) (*RecommendSetti
 			Gender:   0,
 			AgeMin:   18,
 			AgeMax:   50,
-			Location: "只要同城",
-			Hometown: "只要同省",
+			Location: "同城优先",
+			Hometown: "同省优先",
 			PetLover: "喜欢就行",
 			Tags:     "不限",
 		}, nil, 0
