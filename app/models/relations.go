@@ -2,8 +2,8 @@ package models
 
 type KnowMe struct {
 	ID
-	From     int    `json:"from" gorm:"comment:From"`
-	To       int    `json:"to" gorm:"comment:to"`
+	From     string `json:"from" gorm:"comment:From"`
+	To       string `json:"to" gorm:"comment:to"`
 	Question string `json:"question" gorm:"comment:question"`
 	Answer   string `json:"answer" gorm:"comment:answer"`
 	Message  string `json:"message" gorm:"type:varchar(500); comment:message"`
@@ -14,8 +14,8 @@ type KnowMe struct {
 
 type FocusOn struct {
 	ID
-	From   int    `json:"from" gorm:"comment:From"`
-	To     int    `json:"to" gorm:"comment:to"`
+	From   string `json:"from" gorm:"comment:From"`
+	To     string `json:"to" gorm:"comment:to"`
 	Status string `json:"status" gorm:"comment:status"`
 	Timestamps
 	SoftDeletes
@@ -23,8 +23,8 @@ type FocusOn struct {
 
 type View struct {
 	ID
-	From   int    `json:"from" gorm:"comment:From"`
-	To     int    `json:"to" gorm:"comment:to"`
+	From   string `json:"from" gorm:"comment:From"`
+	To     string `json:"to" gorm:"comment:to"`
 	Status string `json:"status" gorm:"comment:status"`
 	Tag    string `json:"tag" gorm:"comment:tag"`
 	Timestamps
