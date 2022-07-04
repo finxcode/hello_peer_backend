@@ -34,14 +34,14 @@ const (
 
 func (rs *recommendSettingService) GetRecommendSetting(uid int) (*RecommendSetting, error, int) {
 	var recommendSetting models.RecommendSetting
-	err := global.App.DB.Where("user_id = ?", uid).First(&recommendSetting).Error
+	err := global.App.DB.Where("id = ?", uid).First(&recommendSetting).Error
 	if err == gorm.ErrRecordNotFound {
 		return &RecommendSetting{
 			Gender:   0,
 			AgeMin:   18,
 			AgeMax:   50,
-			Location: "只要同城",
-			Hometown: "只要同省",
+			Location: "同城优先",
+			Hometown: "同省优先",
 			PetLover: "喜欢就行",
 			Tags:     "不限",
 		}, nil, 0
@@ -61,7 +61,7 @@ func (rs *recommendSettingService) GetRecommendSetting(uid int) (*RecommendSetti
 
 func (rs *recommendSettingService) SetRecommendSetting(uid int, reqSetting *RecommendSetting) (error, int) {
 	var recommendSetting models.RecommendSetting
-	err := global.App.DB.Where("user_id = ?", uid).First(&recommendSetting).Error
+	err := global.App.DB.Where("id = ?", uid).First(&recommendSetting).Error
 	if err == gorm.ErrRecordNotFound {
 		result := global.App.DB.Create(&models.RecommendSetting{
 			UserID:   uid,

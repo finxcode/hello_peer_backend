@@ -118,11 +118,14 @@ func (wechatUserService *wechatUserService) SetUserBasicInfo(uid int, reqUser *r
 	}
 
 	err := wechatUserService.SetUserInfoComplete(uid, 1)
-	zap.L().Error("user info complete level error", zap.String("set user info complete level error", err.Error()))
+	if err != nil {
+		zap.L().Error("user info complete level error", zap.String("set user info complete level error", err.Error()))
+	}
 
 	err = PetService.InitPet(uid)
-	zap.L().Error("database error", zap.String("create pet failed with error", err.Error()))
-
+	if err != nil {
+		zap.L().Error("database error", zap.String("create pet failed with error", err.Error()))
+	}
 	return nil
 }
 
@@ -225,6 +228,16 @@ func (wechatUserService *wechatUserService) SetUserAvatar(uid int, filename stri
 		return err
 	}
 	images := utils.ParseToArray(&wechatUser.Images, " ")
+
+	if images == nil {
+		res := global.App.DB.Model(models.WechatUser{}).Where("id = ?", uid).Update("images", filename)
+		if res.Error != nil {
+			zap.L().Error("set user images error", zap.Any("database error", res.Error))
+			return res.Error
+		}
+		return nil
+	}
+
 	if filename == images[0] {
 		return nil
 	}
@@ -239,8 +252,9 @@ func (wechatUserService *wechatUserService) SetUserAvatar(uid int, filename stri
 	}
 
 	err = wechatUserService.SetUserInfoComplete(uid, 2)
-	zap.L().Error("user info complete level error", zap.String("set user info complete level error", err.Error()))
-
+	if err != nil {
+		zap.L().Error("user info complete level error", zap.String("set user info complete level error", err.Error()))
+	}
 	return nil
 }
 
@@ -365,4 +379,15 @@ func (wechatUserService *wechatUserService) SetUserInfoComplete(uid, level int) 
 		return res.Error
 	}
 	return nil
+}
+
+func (wechatUserService *wechatUserService) getUserGender(uid int) (int, error) {
+	var user models.WechatUser
+	res := global.App.DB.Model(models.WechatUser{}).Where("id= ?", uid).First(&user)
+
+	if res.Error != nil {
+		return -1, res.Error
+	}
+
+	return user.Gender, nil
 }

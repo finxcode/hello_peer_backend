@@ -29,7 +29,7 @@ const (
 
 func (ss *squareSettingService) GetSquareSettings(uid int) (*SquareSetting, error, int) {
 	var squareSetting models.SquareSetting
-	err := global.App.DB.Where("user_id = ?", uid).First(&squareSetting).Error
+	err := global.App.DB.Where("id = ?", uid).First(&squareSetting).Error
 	if err == gorm.ErrRecordNotFound {
 		return &SquareSetting{
 			Gender:   0,
@@ -144,7 +144,7 @@ func retrieveUsersFromDb(uid int) (*[]response.RandomUser, error, int) {
 		defaultGender = 1
 	}
 
-	err = global.App.DB.Where("user_id = ?", uid).First(&squareSetting).Error
+	err = global.App.DB.Where("id = ?", uid).First(&squareSetting).Error
 	if err == gorm.ErrRecordNotFound {
 		sq = SquareSetting{
 			Gender:   defaultGender,
