@@ -1,7 +1,9 @@
 package services
 
 import (
+	"errors"
 	"go.uber.org/zap"
+	"strconv"
 	"webapp_gin/app/models"
 	"webapp_gin/global"
 )
@@ -60,4 +62,28 @@ func (r *relationService) GetRelationStat(uid int) (*models.RelationStat, error)
 	stat.ViewedByNew = int(count)
 
 	return &stat, nil
+}
+
+func (r *relationService) FocusOn(uid, focusedId int) error {
+	var wechatUser models.WechatUser
+	var focusOn models.FocusOn
+	err := global.App.DB.Where("id = ?", uid).First(&wechatUser).Error
+	if err != nil {
+		return errors.New("no user found")
+	}
+
+	err = global.App.DB.Where("id = ?", focusedId).First(&wechatUser).Error
+	if err != nil {
+		return errors.New("no user found")
+	}
+
+	focusOn.To = strconv.Itoa(focusedId)
+	focusOn.From = strconv.Itoa(uid)
+	focusOn.Status = "已关注"
+
+	err = global.App.DB.Create(&focusOn).Error
+	if err != nil {
+		return errors.New("create user relations error")
+	}
+	return nil
 }
