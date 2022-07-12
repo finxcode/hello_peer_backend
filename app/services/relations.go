@@ -64,7 +64,7 @@ func (r *relationService) GetRelationStat(uid int) (*models.RelationStat, error)
 	return &stat, nil
 }
 
-func (r *relationService) FocusOn(uid, focusedId int) error {
+func (r *relationService) SetFocusOn(uid, focusedId int, status string) error {
 	var wechatUser models.WechatUser
 	var focusOn models.FocusOn
 	err := global.App.DB.Where("id = ?", uid).First(&wechatUser).Error
@@ -79,7 +79,7 @@ func (r *relationService) FocusOn(uid, focusedId int) error {
 
 	focusOn.To = strconv.Itoa(focusedId)
 	focusOn.From = strconv.Itoa(uid)
-	focusOn.Status = "已关注"
+	focusOn.Status = status
 
 	err = global.App.DB.Create(&focusOn).Error
 	if err != nil {
