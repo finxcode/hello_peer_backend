@@ -38,6 +38,7 @@ func SetApiGroupRoutes(router *gin.RouterGroup) {
 	router.POST("/auth/login", app.Login)
 	router.POST("/auth/autologin", app.AutoLogin)
 	router.POST("/auth/authlogin", app.AuthLogin)
+	router.Static("/images", "./storage/static/assets")
 
 	authRouter := router.Group("").Use(middleware.JWTAuth(services.AppGuardName))
 	{
@@ -53,7 +54,7 @@ func SetApiGroupRoutes(router *gin.RouterGroup) {
 		authRouter.POST("/user/upload/setUserCover", app.SetUserCoverImage)
 		authRouter.POST("/user/upload/setUserImage", app.SetUserImage)
 		authRouter.GET("/user/getUserDetails", app.GetUserDetails)
-		authRouter.Static("/images", "./storage/static/assets")
+		//authRouter.Static("/images", "./storage/static/assets")
 		authRouter.POST("/user/setUserDetails", app.SetUserDetails)
 		authRouter.POST("/user/deleteUserImage", app.DeleteUserImage)
 		authRouter.GET("/user/pet/getPetDetails", app.GetPetDetails)
