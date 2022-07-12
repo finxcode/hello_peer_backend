@@ -304,8 +304,9 @@ func (wechatUserService *wechatUserService) GetUserHomepageInfo(uid int) (*respo
 	if err != nil {
 		zap.L().Error("get pet name error", zap.String("database error", err.Error()))
 		userHomepage.PetName = ""
+	} else {
+		userHomepage.PetName = pet.PetName
 	}
-	userHomepage.PetName = pet.PetName
 
 	stat, err := RelationService.GetRelationStat(uid)
 	if err != nil {
