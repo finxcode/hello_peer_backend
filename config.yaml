@@ -44,3 +44,9 @@ redis:
 wechat:
   api_key: wx75514881fe2c7854
   api_secret: e2065f88893c149723ee6645cc5ed7b5
+
+im:
+  sdk_app_id: 1400696589
+  app_name: hello peer
+  key: 67f696305505c96f5ce63b36a1878c3652e2661e8859dd0d5412f90248fef8d9
+  expiry: 186624000 #180天有效期

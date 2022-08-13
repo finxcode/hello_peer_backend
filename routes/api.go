@@ -68,6 +68,7 @@ func SetApiGroupRoutes(router *gin.RouterGroup) {
 		authRouter.GET("/user/pet/getPetDetailsById", app.GetPetDetailById)
 		authRouter.GET("/user/getRecommendedUserList", app.GetRecommendedUsers)
 		authRouter.GET("/user/getUserInfoCompleteLevel", app.GetUserInfoCompleteLevel)
+		authRouter.GET("/user/tencent/getUserIMSig", app.GetIMSig)
 	}
 
 }
