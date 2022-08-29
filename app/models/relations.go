@@ -8,6 +8,7 @@ type KnowMe struct {
 	Answer   string `json:"answer" gorm:"comment:answer"`
 	Message  string `json:"message" gorm:"type:varchar(500); comment:message"`
 	Status   string `json:"status" gorm:"comment:status"`
+	Method   int    `json:"method" gorm:"comment:method"`
 	Timestamps
 	SoftDeletes
 }
