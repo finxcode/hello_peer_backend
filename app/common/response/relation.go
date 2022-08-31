@@ -12,5 +12,5 @@ type Fan struct {
 	Location   string `json:"location" gorm:"column:location"`
 	Occupation string `json:"occupation" gorm:"column:occupation"`
 	Images     string `json:"coverImage" gorm:"column:images"`
-	Status     string `json:"status"`
+	//Status     string `json:"status"`
 }
