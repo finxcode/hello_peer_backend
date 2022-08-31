@@ -6,7 +6,7 @@ type MyFans struct {
 
 type Fan struct {
 	Id         int    `json:"uid" gorm:"column:id"`
-	Username   string `json:"username" gorm:"column:user_name"`
+	UserName   string `json:"username" gorm:"column:user_name"`
 	PetName    string `json:"petName" gorm:"column:pet_name"`
 	Age        int    `json:"age" gorm:"column:age"`
 	Location   string `json:"location" gorm:"column:location"`
