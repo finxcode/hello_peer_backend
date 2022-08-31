@@ -94,11 +94,24 @@ func (r *relationService) GetFans(uid int) (*[]response.MyFans, int, error) {
 	var fans []response.MyFans
 	res := global.App.DB.Where("focus_to = ?", uid).Find(&focus)
 	if res.Error != nil {
-		zap.L().Error("database error", zap.String("looking for fans error", res.Error.Error()))
+		zap.L().Error("database error", zap.String("looking for user info error", res.Error.Error()))
 		return nil, -1, errors.New("looking for fans DB error")
 	}
 	if res.RowsAffected == 0 {
 		return nil, 0, nil
+	}
+
+	err := global.App.DB.Table("wechat_users").
+		Select("wechat_users.id as uid, wechat_users.user_name, pets.pet_name, wechat_users.age, wechat_user.location,"+
+			"wechat_users.occupation, wechat_users.images as coverImage").
+		Joins("inner join pets on wechat_users.id = pets.user_id").
+		Joins("inner join focus_ons on focus_ons.focus_to = wechat_users.id").
+		Where("focus_ons.focus_to = ?", uid).
+		Scan(&fans).Error
+
+	if err != nil {
+		zap.L().Error("database error", zap.String("looking for fans error", res.Error.Error()))
+		return nil, -1, errors.New("looking for fans DB error")
 	}
 
 	return &fans, 0, nil

@@ -70,6 +70,7 @@ func SetApiGroupRoutes(router *gin.RouterGroup) {
 		authRouter.GET("/user/getUserInfoCompleteLevel", app.GetUserInfoCompleteLevel)
 		authRouter.GET("/user/tencent/getUserIMSig", app.GetIMSig)
 		authRouter.POST("/user/relation/setFocusOn", app.SetFocusOn)
+		authRouter.GET("/user/relation/getFans", app.GetFans)
 	}
 
 }

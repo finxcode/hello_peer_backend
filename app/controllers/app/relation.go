@@ -36,3 +36,20 @@ func SetFocusOn(c *gin.Context) {
 	response.Success(c, nil)
 
 }
+
+func GetFans(c *gin.Context) {
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	fans, _, err := services.RelationService.GetFans(intID)
+
+	if err != nil {
+		response.Fail(c, 80002, err.Error())
+		return
+	}
+
+	response.Success(c, *fans)
+}
