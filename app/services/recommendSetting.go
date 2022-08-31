@@ -92,22 +92,27 @@ func (rs *recommendSettingService) GetRecommendedUsers(uid int) (*[]response.Rec
 	res, err := RedisService.GetRecommendedUsers(uid, "recommend")
 	if err != nil {
 		zap.L().Warn("redis get failed", zap.String("get recommend users to redis failed with error", err.Error()))
-		recommendedUsers, err, num := retrieveRecommendedUserFromDb(uid)
+		recommendedUsersSwitched, switched := switchUser(uid)
+		if !switched {
+			recommendedUsers, err, num := retrieveRecommendedUserFromDb(uid)
 
-		if err != nil {
-			return nil, errors.New("查询数据库错误"), 0
+			if err != nil {
+				return nil, errors.New("查询数据库错误"), 0
+			}
+
+			if num == 0 {
+				return nil, errors.New("没有符合要求的用户"), 0
+			}
+
+			err = RedisService.SetRecommendedUsers(uid, "recommend", recommendedUsers)
+			if err != nil {
+				zap.L().Warn("redis set failed", zap.String("set recommend users to redis failed with error", err.Error()))
+			}
+
+			return recommendedUsers, nil, len(*recommendedUsers)
+		} else {
+			return recommendedUsersSwitched, nil, len(*recommendedUsersSwitched)
 		}
-
-		if num == 0 {
-			return nil, errors.New("没有符合要求的用户"), 0
-		}
-
-		err = RedisService.SetRecommendedUsers(uid, "recommend", recommendedUsers)
-		if err != nil {
-			zap.L().Warn("redis set failed", zap.String("set recommend users to redis failed with error", err.Error()))
-		}
-
-		return recommendedUsers, nil, len(*recommendedUsers)
 	} else if len(*res) == 0 {
 		recommendedUsers, err, num := retrieveRecommendedUserFromDb(uid)
 
@@ -202,4 +207,23 @@ func userToRecommendedUser(users *[]models.WechatUser) *[]response.RecommendedUs
 	}
 
 	return &recommendedUsers
+}
+
+func switchUser(uid int) (*[]response.RecommendedUser, bool) {
+	var users []models.WechatUser
+	if uid == 1 {
+		_ = global.App.DB.Where("id in (87,88)").Order("rand()").Limit(numberOfRecommendedUsers).Find(&users).Error
+		recommendedUsers := userToRecommendedUser(&users)
+		return recommendedUsers, true
+	} else if uid == 87 {
+		_ = global.App.DB.Where("id in (1,88)").Order("rand()").Limit(numberOfRecommendedUsers).Find(&users).Error
+		recommendedUsers := userToRecommendedUser(&users)
+		return recommendedUsers, true
+	} else if uid == 88 {
+		_ = global.App.DB.Where("id in (1,87)").Order("rand()").Limit(numberOfRecommendedUsers).Find(&users).Error
+		recommendedUsers := userToRecommendedUser(&users)
+		return recommendedUsers, true
+	} else {
+		return nil, false
+	}
 }
