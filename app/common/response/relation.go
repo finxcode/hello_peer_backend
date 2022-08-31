@@ -5,12 +5,12 @@ type MyFans struct {
 }
 
 type Fan struct {
-	Uid        int    `json:"uid"`
+	Id         int    `json:"uid"`
 	Username   string `json:"username"`
 	PetName    string `json:"petName"`
 	Age        int    `json:"age"`
 	Location   string `json:"location"`
 	Occupation string `json:"occupation"`
-	CoverImage string `json:"coverImage"`
+	Images     string `json:"coverImage"`
 	Status     string `json:"status"`
 }

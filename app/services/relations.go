@@ -103,7 +103,7 @@ func (r *relationService) GetFans(uid int) (*[]response.MyFans, int, error) {
 
 	err := global.App.DB.Table("wechat_users").
 		Select("wechat_users.id as uid, wechat_users.user_name, pets.pet_name, wechat_users.age, wechat_users.location,"+
-			"wechat_users.occupation, wechat_users.images as coverImage").
+			"wechat_users.occupation, wechat_users.images").
 		Joins("inner join pets on wechat_users.id = pets.user_id").
 		Joins("inner join focus_ons on focus_ons.focus_to = wechat_users.id").
 		Where("focus_ons.focus_to = ?", uid).
