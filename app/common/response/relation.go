@@ -1,7 +1,7 @@
 package response
 
 type MyFans struct {
-	Fans []Fan `json:"fans"`
+	Fans []Fan `json:"fans" gorm:"-"`
 }
 
 type Fan struct {

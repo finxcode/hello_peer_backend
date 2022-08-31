@@ -89,9 +89,9 @@ func (r *relationService) SetFocusOn(uid, focusedId int, status string) error {
 	return nil
 }
 
-func (r *relationService) GetFans(uid int) (*[]response.MyFans, int, error) {
+func (r *relationService) GetFans(uid int) (*response.MyFans, int, error) {
 	var focus []models.FocusOn
-	var fans []response.MyFans
+	var fans []response.Fan
 	res := global.App.DB.Where("focus_to = ?", uid).Find(&focus)
 	if res.Error != nil {
 		zap.L().Error("database error", zap.String("looking for user info error", res.Error.Error()))
@@ -119,5 +119,9 @@ func (r *relationService) GetFans(uid int) (*[]response.MyFans, int, error) {
 		return nil, -1, errors.New("looking for fans DB error")
 	}
 
-	return &fans, 0, nil
+	myFans := response.MyFans{
+		Fans: fans,
+	}
+
+	return &myFans, 0, nil
 }
