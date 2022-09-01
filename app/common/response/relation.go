@@ -5,12 +5,12 @@ type MyFans struct {
 }
 
 type Fan struct {
-	Id         int    `json:"uid" gorm:"-"`
-	UserName   string `json:"username" gorm:"-"`
-	PetName    string `json:"petName" gorm:"-"`
-	Age        int    `json:"age" gorm:"-"`
-	Location   string `json:"location" gorm:"-"`
-	Occupation string `json:"occupation" gorm:"-"`
-	Images     string `json:"coverImage" gorm:"-"`
-	//Status     string `json:"status"`
+	Id         int    `json:"uid"`
+	UserName   string `json:"username"`
+	PetName    string `json:"petName"`
+	Age        int    `json:"age"`
+	Location   string `json:"location"`
+	Occupation string `json:"occupation"`
+	Images     string `json:"coverImage"`
+	Status     string `json:"status"`
 }
