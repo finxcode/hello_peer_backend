@@ -101,18 +101,19 @@ func (r *relationService) GetFans(uid int) (*response.MyFans, int, error) {
 		return nil, 0, nil
 	}
 
-	//err := global.App.DB.Table("wechat_users").
-	//	Select("wechat_users.id, wechat_users.user_name, pets.pet_name, wechat_users.age, wechat_users.location,"+
-	//		"wechat_users.occupation, wechat_users.images").
-	//	Joins("inner join pets on wechat_users.id = pets.user_id").
-	//	Joins("inner join focus_ons on focus_ons.focus_to = wechat_users.id").
-	//	Where("focus_ons.focus_to = ?", uid).
-	//	Scan(&fans).Error
-	err := global.App.DB.Raw("SELECT wechat_users.id, wechat_users.user_name, pets.pet_name, "+
-		"wechat_users.age, wechat_users.location,wechat_users.occupation, wechat_users.images FROM `wechat_users` "+
-		"inner join pets on wechat_users.id = pets.user_id "+
-		"inner join focus_ons on focus_ons.focus_to = wechat_users.id "+
-		"WHERE focus_ons.focus_to = ?", uid).Scan(&fans).Error
+	err := global.App.DB.Table("wechat_users").
+		Select("wechat_users.id, wechat_users.user_name, pets.pet_name, wechat_users.age, wechat_users.location,"+
+			"wechat_users.occupation, wechat_users.images").
+		Joins("inner join pets on wechat_users.id = pets.user_id").
+		Joins("inner join focus_ons on focus_ons.focus_from = wechat_users.id").
+		Where("focus_ons.focus_to = ?", uid).
+		Where("focus_ons.status != 0").
+		Scan(&fans).Error
+	//err := global.App.DB.Raw("SELECT wechat_users.id, wechat_users.user_name, pets.pet_name, "+
+	//	"wechat_users.age, wechat_users.location,wechat_users.occupation, wechat_users.images FROM `wechat_users` "+
+	//	"inner join pets on wechat_users.id = pets.user_id "+
+	//	"inner join focus_ons on focus_ons.focus_to = wechat_users.id "+
+	//	"WHERE focus_ons.focus_to = ?", uid).Scan(&fans).Error
 
 	if err != nil {
 		zap.L().Error("database error", zap.String("looking for fans error", err.Error()))
