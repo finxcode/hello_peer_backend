@@ -71,6 +71,7 @@ func SetApiGroupRoutes(router *gin.RouterGroup) {
 		authRouter.GET("/user/tencent/getUserIMSig", app.GetIMSig)
 		authRouter.POST("/user/relation/setFocusOn", app.SetFocusOn)
 		authRouter.GET("/user/relation/getFans", app.GetFans)
+		authRouter.GET("/user/relation/getFansToOthers", app.GetFansToOthers)
 	}
 
 }
