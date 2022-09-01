@@ -3,10 +3,13 @@ package services
 import (
 	"errors"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 	"strconv"
 	"webapp_gin/app/common/response"
 	"webapp_gin/app/models"
+	"webapp_gin/app/services/dto"
 	"webapp_gin/global"
+	"webapp_gin/utils"
 )
 
 type relationService struct{}
@@ -91,7 +94,7 @@ func (r *relationService) SetFocusOn(uid, focusedId int, status string) error {
 
 func (r *relationService) GetFans(uid int) (*response.MyFans, int, error) {
 	var focus []models.FocusOn
-	var fans []response.Fan
+	var fans []dto.FanDto
 	res := global.App.DB.Where("focus_to = ?", uid).Find(&focus)
 	if res.Error != nil {
 		zap.L().Error("database error", zap.String("looking for user info error", res.Error.Error()))
@@ -102,8 +105,8 @@ func (r *relationService) GetFans(uid int) (*response.MyFans, int, error) {
 	}
 
 	err := global.App.DB.Table("wechat_users").
-		Select("wechat_users.id, wechat_users.user_name, pets.pet_name, wechat_users.age, wechat_users.location,"+
-			"wechat_users.occupation, wechat_users.images").
+		Select("wechat_users.id, wechat_users.user_name, wechat_users.wechat_name,pets.pet_name, wechat_users.age, "+
+			"wechat_users.location,wechat_users.occupation, wechat_users.avatar_url, wechat_users.images").
 		Joins("inner join pets on wechat_users.id = pets.user_id").
 		Joins("inner join focus_ons on focus_ons.focus_from = wechat_users.id").
 		Where("focus_ons.focus_to = ?", uid).
@@ -121,8 +124,63 @@ func (r *relationService) GetFans(uid int) (*response.MyFans, int, error) {
 	}
 
 	myFans := response.MyFans{
-		Fans: fans,
+		Fans: fanDtoToFan(&fans, uid),
 	}
 
 	return &myFans, 0, nil
+}
+
+func fanDtoToFan(fanDtos *[]dto.FanDto, uid int) []response.Fan {
+	var fans []response.Fan
+	for _, fanDto := range *fanDtos {
+		var username string
+		var image string
+		var status int
+
+		if fanDto.UserName == "" {
+			username = fanDto.WechatName
+		}
+
+		if fanDto.Images == "" {
+			image = fanDto.AvatarUrl
+		} else {
+			image = utils.ParseToArray(&fanDto.Images, " ")[0]
+		}
+
+		if RelationService.IsFan(uid, fanDto.Id) {
+			status = 1
+		} else {
+			status = 0
+		}
+
+		fan := response.Fan{
+			Id:         fanDto.Id,
+			UserName:   username,
+			PetName:    fanDto.PetName,
+			Age:        fanDto.Age,
+			Location:   fanDto.Location,
+			Occupation: fanDto.Occupation,
+			Images:     image,
+			Status:     status,
+		}
+
+		fans = append(fans, fan)
+
+	}
+
+	return fans
+}
+
+func (r *relationService) IsFan(from, to int) bool {
+	var focusOn models.FocusOn
+	res := global.App.DB.Where("focus_from = ? and focus_to = ?", from, to).Find(&focusOn)
+	if res.Error == gorm.ErrRecordNotFound {
+		return false
+	}
+
+	if res.Error != nil {
+		return false
+	}
+
+	return true
 }
