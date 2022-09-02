@@ -128,7 +128,7 @@ func (r *relationService) GetFans(uid int) (*response.MyFans, int, error) {
 	}
 
 	myFans := response.MyFans{
-		Fans: fanDtoToFan(&fans, uid, 1),
+		Fans: fanDtoToFan(&fans, uid, 0),
 	}
 
 	return &myFans, 0, nil
@@ -168,7 +168,7 @@ func (r *relationService) GetFansToOthers(uid int) (*response.MyFans, int, error
 	}
 
 	myFans := response.MyFans{
-		Fans: fanDtoToFan(&fans, uid, 0),
+		Fans: fanDtoToFan(&fans, uid, 1),
 	}
 
 	return &myFans, 0, nil
