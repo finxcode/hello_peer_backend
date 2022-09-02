@@ -76,7 +76,7 @@ func (r *relationService) SetFocusOn(uid, focusedId int, status int) error {
 		return errors.New("no user found")
 	}
 
-	res := global.App.DB.Where("focus_from = ? and focus_to = ?", uid, focusedId).Update("status", status)
+	res := global.App.DB.Model(&models.FocusOn{}).Where("focus_from = ? and focus_to = ?", uid, focusedId).Update("status", status)
 	if res.RowsAffected == 0 {
 		focusOn.FocusTo = strconv.Itoa(focusedId)
 		focusOn.FocusFrom = strconv.Itoa(uid)
