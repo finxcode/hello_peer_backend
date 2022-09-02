@@ -32,14 +32,14 @@ func (r *relationService) GetRelationStat(uid int) (*models.RelationStat, error)
 	}
 	stat.KnowMeNew = int(count)
 
-	err = global.App.DB.Model(&models.FocusOn{}).Where("focus_from = ?", uid).Count(&count).Error
+	err = global.App.DB.Model(&models.FocusOn{}).Where("focus_from = ? and status != 0", uid).Count(&count).Error
 	if err != nil {
 		zap.L().Error("Get focus on stat total error", zap.String("database error: ", err.Error()))
 		count = 0
 	}
 	stat.FocusOnTotal = int(count)
 
-	err = global.App.DB.Model(&models.FocusOn{}).Where("focus_to = ?", uid).Count(&count).Error
+	err = global.App.DB.Model(&models.FocusOn{}).Where("focus_to = ? and status != 0", uid).Count(&count).Error
 	if err != nil {
 		zap.L().Error("Get focused by stat total error", zap.String("database error: ", err.Error()))
 		count = 0
