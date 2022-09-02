@@ -51,7 +51,11 @@ func GetFans(c *gin.Context) {
 		return
 	}
 
-	response.Success(c, *fans)
+	if fans != nil {
+		response.Success(c, *fans)
+	} else {
+		response.Success(c, nil)
+	}
 }
 
 func GetFansToOthers(c *gin.Context) {
@@ -68,5 +72,9 @@ func GetFansToOthers(c *gin.Context) {
 		return
 	}
 
-	response.Success(c, *fans)
+	if fans != nil {
+		response.Success(c, *fans)
+	} else {
+		response.Success(c, nil)
+	}
 }
