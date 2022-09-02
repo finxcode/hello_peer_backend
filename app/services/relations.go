@@ -225,7 +225,7 @@ func fanDtoToFan(fanDtos *[]dto.FanDto, uid, direction int) []response.Fan {
 
 func (r *relationService) IsFan(from, to int) bool {
 	var focusOn models.FocusOn
-	res := global.App.DB.Where("focus_from = ? and focus_to = ? and status != 0", from, to).Find(&focusOn)
+	res := global.App.DB.Where("focus_from = ? and focus_to = ? and status != 0", from, to).First(&focusOn)
 	if res.Error == gorm.ErrRecordNotFound {
 		zap.L().Info("record not found", zap.String("db info", "no relation found"))
 		return false
