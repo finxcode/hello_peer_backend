@@ -68,7 +68,7 @@ func (r *relationService) GetRelationStat(uid int) (*models.RelationStat, error)
 	return &stat, nil
 }
 
-func (r *relationService) SetFocusOn(uid, focusedId int, status string) error {
+func (r *relationService) SetFocusOn(uid, focusedId int, status int) error {
 	var wechatUser models.WechatUser
 	var focusOn models.FocusOn
 	err := global.App.DB.Where("id = ?", uid).First(&wechatUser).Error
@@ -76,19 +76,21 @@ func (r *relationService) SetFocusOn(uid, focusedId int, status string) error {
 		return errors.New("no user found")
 	}
 
-	err = global.App.DB.Where("id = ?", focusedId).First(&wechatUser).Error
-	if err != nil {
+	res := global.App.DB.Where("focus_from = ? and focus_to = ?", uid, focusedId).Update("status", status)
+	if res.RowsAffected == 0 {
+		focusOn.FocusTo = strconv.Itoa(focusedId)
+		focusOn.FocusFrom = strconv.Itoa(uid)
+		focusOn.Status = status
+
+		err = global.App.DB.Create(&focusOn).Error
+
+		if err != nil {
+			return errors.New("create user relations error")
+		}
+	} else if res.Error != nil {
 		return errors.New("no user found")
 	}
 
-	focusOn.FocusTo = strconv.Itoa(focusedId)
-	focusOn.FocusFrom = strconv.Itoa(uid)
-	focusOn.Status = status
-
-	err = global.App.DB.Create(&focusOn).Error
-	if err != nil {
-		return errors.New("create user relations error")
-	}
 	return nil
 }
 
