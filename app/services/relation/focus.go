@@ -1,23 +1,24 @@
-package services
+package relation
 
 import (
 	"errors"
-	"go.uber.org/zap"
-	"gorm.io/gorm"
 	"strconv"
 	"webapp_gin/app/common/response"
 	"webapp_gin/app/models"
 	"webapp_gin/app/services/dto"
 	"webapp_gin/global"
 	"webapp_gin/utils"
+
+	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 type relationService struct{}
 
-var RelationService = new(relationService)
+var Service = new(relationService)
 
-func (r *relationService) GetRelationStat(uid int) (*models.RelationStat, error) {
-	stat := models.RelationStat{}
+func (r *relationService) GetRelationStat(uid int) (*response.RelationStat, error) {
+	stat := response.RelationStat{}
 	var count int64
 	err := global.App.DB.Model(&models.KnowMe{}).Where("know_to = ?", uid).Count(&count).Error
 	if err != nil {
@@ -58,7 +59,7 @@ func (r *relationService) GetRelationStat(uid int) (*models.RelationStat, error)
 		count = 0
 	}
 	stat.ViewedByTotal = int(count)
-	err = global.App.DB.Model(&models.View{}).Where("view_to = ? and status = 1", uid).Count(&count).Error
+	err = global.App.DB.Model(&models.View{}).Where("view_to = ? and status = 0", uid).Count(&count).Error
 	if err != nil {
 		zap.L().Error("Get focused by stat new error", zap.String("database error: ", err.Error()))
 		count = 0
@@ -192,13 +193,13 @@ func fanDtoToFan(fanDtos *[]dto.FanDto, uid, direction int) []response.Fan {
 		}
 
 		if direction == 0 {
-			if RelationService.IsFan(uid, fanDto.Id) {
+			if Service.IsFan(uid, fanDto.Id) {
 				status = 1
 			} else {
 				status = 0
 			}
 		} else {
-			if RelationService.IsFan(fanDto.Id, uid) {
+			if Service.IsFan(fanDto.Id, uid) {
 				status = 1
 			} else {
 				status = 0

@@ -24,20 +24,19 @@ type FocusOn struct {
 
 type View struct {
 	ID
-	ViewFrom string `json:"from" gorm:"comment:From"`
-	ViewTo   string `json:"to" gorm:"comment:to"`
-	Status   int    `json:"status" gorm:"comment:status"`
-	Tag      string `json:"tag" gorm:"comment:tag"`
+	ViewFrom   string `json:"from" gorm:"comment:From"`
+	ViewTo     string `json:"to" gorm:"comment:to"`
+	Status     int    `json:"status" gorm:"comment:status"`
+	ViewInfoId string `json:"tag" gorm:"comment:viewInfoId"`
+	Counter    int    `json:"counter" gorm:"comment:counter"`
 	Timestamps
 	SoftDeletes
 }
 
-type RelationStat struct {
-	KnowMeTotal    int `json:"know_me_total"`
-	KnowMeNew      int `json:"know_me_new"`
-	FocusOnTotal   int `json:"focus_on_total"`
-	FocusedByTotal int `json:"focused_by_total"`
-	FocusByNew     int `json:"focus_by_new"`
-	ViewedByTotal  int `json:"viewed_by_total"`
-	ViewedByNew    int `json:"viewed_by_new"`
+type ViewInfo struct {
+	ID
+	Message   string `json:"message" gorm:"comment:message"`
+	Highlight string `json:"highlight" gorm:"comment:highlight"`
+	Timestamps
+	SoftDeletes
 }

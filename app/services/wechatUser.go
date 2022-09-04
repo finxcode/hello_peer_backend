@@ -6,6 +6,7 @@ import (
 	"webapp_gin/app/common/request"
 	"webapp_gin/app/common/response"
 	"webapp_gin/app/models"
+	"webapp_gin/app/services/relation"
 	"webapp_gin/global"
 	"webapp_gin/utils"
 	"webapp_gin/utils/wechat"
@@ -273,7 +274,7 @@ func (wechatUserService *wechatUserService) DeleteUserImages(uid int, filename s
 	}
 	imgs := utils.ParseToArray(&wechatUser.Images, " ")
 	if len(imgs) == 0 {
-		return errors.New("Empty list of images")
+		return errors.New("empty list of images")
 	}
 
 	imgStr := ""
@@ -314,10 +315,10 @@ func (wechatUserService *wechatUserService) GetUserHomepageInfo(uid int) (*respo
 		userHomepage.PetName = pet.PetName
 	}
 
-	stat, err := RelationService.GetRelationStat(uid)
+	stat, err := relation.Service.GetRelationStat(uid)
 	if err != nil {
 		zap.L().Error("get stat info error", zap.String("database error", err.Error()))
-		userHomepage.Stat = models.RelationStat{}
+		userHomepage.Stat = response.RelationStat{}
 	}
 
 	userHomepage.Stat = *stat
