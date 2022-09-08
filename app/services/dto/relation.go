@@ -2,7 +2,7 @@ package dto
 
 type FanDto struct {
 	Id         int    `json:"uid"`
-	UserName   string `json:"username"`
+	UserName   string `json:"userName"`
 	WechatName string `json:"wechatName"`
 	PetName    string `json:"petName"`
 	Age        int    `json:"age"`
