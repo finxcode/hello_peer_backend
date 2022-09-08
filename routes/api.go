@@ -74,6 +74,8 @@ func SetApiGroupRoutes(router *gin.RouterGroup) {
 		authRouter.GET("/user/relation/getFansToOthers", app.GetFansToOthers)
 		authRouter.POST("/user/relation/addViewOn", app.AddViewOn)
 		authRouter.POST("/user/relation/setViewRevealed", app.SetViewRevealed)
+		authRouter.POST("/user/relation/updateAllNewViewStatus", app.UpdateAllNewViewStatus)
+		authRouter.POST("/user/relation/updateAllNewFocusStatus", app.UpdateAllNewFocusStatus)
 	}
 
 }

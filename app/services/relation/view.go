@@ -2,6 +2,8 @@ package relation
 
 import (
 	"errors"
+	"fmt"
+	"go.uber.org/zap"
 	"strconv"
 	"webapp_gin/app/models"
 	"webapp_gin/global"
@@ -45,5 +47,21 @@ func (r *relationService) SetViewStatus(uid, viewOn, status int) error {
 	if res.Error != nil {
 		return errors.New("update view status error")
 	}
+	return nil
+}
+
+func (r *relationService) UpdateAllNewViewStatus(uid int) error {
+	res := global.App.DB.Model(&models.View{}).
+		Where("view_to = ? and status = 0", uid).
+		Update("status", 1)
+	if res.RowsAffected == 0 {
+		zap.L().Info("no new views to update", zap.String("db info", "no new views record found to update"))
+		return nil
+	}
+
+	if res.Error != nil {
+		return errors.New(fmt.Sprintf("update new views status failed with error, %s", res.Error.Error()))
+	}
+
 	return nil
 }

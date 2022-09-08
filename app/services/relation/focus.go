@@ -2,6 +2,7 @@ package relation
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 	"webapp_gin/app/common/response"
 	"webapp_gin/app/models"
@@ -237,4 +238,20 @@ func (r *relationService) IsFan(from, to int) bool {
 	}
 
 	return true
+}
+
+func (r *relationService) UpdateAllNewFocusStatus(uid int) error {
+	res := global.App.DB.Model(&models.FocusOn{}).
+		Where("focus_to = ? and status = 2", uid).
+		Update("status", 1)
+	if res.RowsAffected == 0 {
+		zap.L().Info("no new focus to update", zap.String("db info", "no new focuses record found to update"))
+		return nil
+	}
+
+	if res.Error != nil {
+		return errors.New(fmt.Sprintf("update new focuses status failed with error, %s", res.Error.Error()))
+	}
+
+	return nil
 }

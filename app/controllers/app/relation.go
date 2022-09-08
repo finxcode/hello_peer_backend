@@ -135,3 +135,35 @@ func SetViewRevealed(c *gin.Context) {
 
 	response.Success(c, nil)
 }
+
+func UpdateAllNewViewStatus(c *gin.Context) {
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	err = relation.Service.UpdateAllNewViewStatus(intID)
+	if err != nil {
+		response.Fail(c, 80006, err.Error())
+		return
+	}
+
+	response.Success(c, nil)
+}
+
+func UpdateAllNewFocusStatus(c *gin.Context) {
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	err = relation.Service.UpdateAllNewFocusStatus(intID)
+	if err != nil {
+		response.Fail(c, 80007, err.Error())
+		return
+	}
+
+	response.Success(c, nil)
+}
