@@ -127,7 +127,7 @@ func SetViewRevealed(c *gin.Context) {
 		return
 	}
 
-	err = relation.Service.SetViewStatus(intID, on, 2)
+	err = relation.Service.SetViewStatus(on, intID, 2)
 	if err != nil {
 		response.Fail(c, 80005, err.Error())
 		return
