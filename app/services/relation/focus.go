@@ -185,6 +185,8 @@ func fanDtoToFan(fanDtos *[]dto.FanDto, uid, direction int) []response.Fan {
 
 		if fanDto.UserName == "" {
 			username = fanDto.WechatName
+		} else {
+			username = fanDto.UserName
 		}
 
 		if fanDto.Images == "" {
