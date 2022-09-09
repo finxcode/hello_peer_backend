@@ -24,6 +24,7 @@ func (r *relationService) AddViewOn(uid, viewOn int) error {
 		if err != nil {
 			return errors.New("create user views error")
 		}
+		return nil
 	} else if res.Error != nil {
 		return errors.New("find user views record error")
 	}
@@ -62,6 +63,11 @@ func (r *relationService) UpdateAllNewViewStatus(uid int) error {
 	if res.Error != nil {
 		return errors.New(fmt.Sprintf("update new views status failed with error, %s", res.Error.Error()))
 	}
+
+	return nil
+}
+
+func (r *relationService) GetViewMe(uid int) error {
 
 	return nil
 }

@@ -24,17 +24,19 @@ type FocusOn struct {
 
 type View struct {
 	ID
-	ViewFrom   string `json:"from" gorm:"comment:From"`
-	ViewTo     string `json:"to" gorm:"comment:to"`
-	Status     int    `json:"status" gorm:"comment:status"`
-	ViewInfoId string `json:"tag" gorm:"comment:viewInfoId"`
-	Counter    int    `json:"counter" gorm:"comment:counter"`
+	ViewFrom string `json:"from" gorm:"comment:From"`
+	ViewTo   string `json:"to" gorm:"comment:to"`
+	Status   int    `json:"status" gorm:"comment:status"`
+	Counter  int    `json:"counter" gorm:"comment:counter"`
 	Timestamps
 	SoftDeletes
 }
 
 type ViewInfo struct {
 	ID
+	ViewFrom  string `json:"viewFrom" gorm:"comment:from"`
+	ViewTo    string `json:"viewTo" gorm:"comment:to"`
+	Rank      int    `json:"rank" gorm:"comment:rank"`
 	Message   string `json:"message" gorm:"comment:message"`
 	Highlight string `json:"highlight" gorm:"comment:highlight"`
 	Timestamps
