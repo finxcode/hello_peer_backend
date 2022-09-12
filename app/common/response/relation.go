@@ -28,6 +28,10 @@ type View struct {
 	Highlight  string `json:"highlight"`
 }
 
+type MyViews struct {
+	Views []View `json:"views" gorm:"-"`
+}
+
 type RelationStat struct {
 	KnowMeTotal    int `json:"know_me_total"`
 	KnowMeNew      int `json:"know_me_new"`

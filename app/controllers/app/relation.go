@@ -167,3 +167,23 @@ func UpdateAllNewFocusStatus(c *gin.Context) {
 
 	response.Success(c, nil)
 }
+
+func GetViewList(c *gin.Context) {
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	views, _, err := relation.Service.GetViewMe(intID)
+	if err != nil {
+		response.Fail(c, 80008, err.Error())
+		return
+	}
+	if views != nil {
+		response.Success(c, *views)
+	} else {
+		response.Success(c, nil)
+	}
+
+}

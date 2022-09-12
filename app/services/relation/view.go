@@ -3,10 +3,14 @@ package relation
 import (
 	"errors"
 	"fmt"
-	"go.uber.org/zap"
 	"strconv"
+	"webapp_gin/app/common/response"
 	"webapp_gin/app/models"
+	"webapp_gin/app/services/dto"
 	"webapp_gin/global"
+	"webapp_gin/utils"
+
+	"go.uber.org/zap"
 )
 
 func (r *relationService) AddViewOn(uid, viewOn int) error {
@@ -67,7 +71,78 @@ func (r *relationService) UpdateAllNewViewStatus(uid int) error {
 	return nil
 }
 
-func (r *relationService) GetViewMe(uid int) error {
+func (r *relationService) GetViewMe(uid int) (*response.MyViews, int, error) {
+	var views []models.View
+	var viewsDto []dto.ViewDto
+	res := global.App.DB.Where("focus_to = ?", uid).Find(&views)
 
-	return nil
+	if res.RowsAffected == 0 {
+		return nil, 0, nil
+	}
+
+	if res.Error != nil {
+		zap.L().Error("database error", zap.String("looking for user views info error", res.Error.Error()))
+		return nil, -1, errors.New("looking for views DB error")
+	}
+
+	err := global.App.DB.Table("wechat_users").
+		Select("wechat_users.id, wechat_users.user_name, wechat_users.wechat_name,pets.pet_name, wechat_users.age, "+
+			"wechat_users.location,wechat_users.occupation, wechat_users.avatar_url, wechat_users.images").
+		Joins("inner join pets on wechat_users.id = pets.user_id").
+		Joins("inner join views on views.view_to = wechat_users.id").
+		Where("views.view_to = ?", uid).
+		Scan(&viewsDto).Error
+	//err := global.App.DB.Raw("SELECT wechat_users.id, wechat_users.user_name, pets.pet_name, "+
+	//	"wechat_users.age, wechat_users.location,wechat_users.occupation, wechat_users.images FROM `wechat_users` "+
+	//	"inner join pets on wechat_users.id = pets.user_id "+
+	//	"inner join focus_ons on focus_ons.focus_to = wechat_users.id "+
+	//	"WHERE focus_ons.focus_to = ?", uid).Scan(&fans).Error
+
+	if err != nil {
+		zap.L().Error("database error", zap.String("looking for fans error", err.Error()))
+		return nil, -1, errors.New("looking for fans DB error")
+	}
+
+	myViews := response.MyViews{
+		Views: viewDtoToViews(&viewsDto),
+	}
+
+	return &myViews, 0, nil
+}
+
+func viewDtoToViews(viewDtos *[]dto.ViewDto) []response.View {
+	var views []response.View
+	for _, viewDto := range *viewDtos {
+		var username string
+		var image string
+		var status int
+
+		if viewDto.UserName == "" {
+			username = viewDto.WechatName
+		} else {
+			username = viewDto.UserName
+		}
+
+		if viewDto.Images == "" {
+			image = viewDto.AvatarUrl
+		} else {
+			image = utils.ParseToArray(&viewDto.Images, " ")[0]
+		}
+
+		view := response.View{
+			Id:         viewDto.Id,
+			UserName:   username,
+			PetName:    viewDto.PetName,
+			Age:        viewDto.Age,
+			Location:   viewDto.Location,
+			Occupation: viewDto.Occupation,
+			Images:     image,
+			Status:     status,
+			Message:    "Ta好像对你很感兴趣",
+			Highlight:  "感兴趣",
+		}
+
+		views = append(views, view)
+	}
+	return views
 }
