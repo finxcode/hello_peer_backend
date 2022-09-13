@@ -74,15 +74,15 @@ func (r *relationService) UpdateAllNewViewStatus(uid int) error {
 func (r *relationService) GetViewMe(uid int) (*response.MyViews, int, error) {
 	var views []models.View
 	var viewsDto []dto.ViewDto
-	res := global.App.DB.Where("focus_to = ?", uid).Find(&views)
-
-	if res.RowsAffected == 0 {
-		return nil, 0, nil
-	}
+	res := global.App.DB.Where("view_to = ?", uid).Find(&views)
 
 	if res.Error != nil {
 		zap.L().Error("database error", zap.String("looking for user views info error", res.Error.Error()))
 		return nil, -1, errors.New("looking for views DB error")
+	}
+
+	if res.RowsAffected == 0 {
+		return nil, 0, nil
 	}
 
 	err := global.App.DB.Table("wechat_users").
