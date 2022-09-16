@@ -1,7 +1,7 @@
 package response
 
 type MyFans struct {
-	Fans []Fan `json:"fans" gorm:"-"`
+	Fans []Fan `json:"fans"`
 }
 
 type Fan struct {
@@ -28,8 +28,23 @@ type View struct {
 	Highlight  string `json:"highlight"`
 }
 
+type ViewTo struct {
+	Id         int    `json:"uid"`
+	UserName   string `json:"username"`
+	PetName    string `json:"petName"`
+	Age        int    `json:"age"`
+	Location   string `json:"location"`
+	Occupation string `json:"occupation"`
+	Images     string `json:"coverImage"`
+	Status     int    `json:"status"`
+}
+
+type ViewsTo struct {
+	ViewsTo []ViewTo `json:"viewsTo"`
+}
+
 type MyViews struct {
-	Views []View `json:"views" gorm:"-"`
+	Views []View `json:"views"`
 }
 
 type RelationStat struct {

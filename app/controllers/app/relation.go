@@ -187,3 +187,24 @@ func GetViewList(c *gin.Context) {
 	}
 
 }
+
+func GetViewToList(c *gin.Context) {
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	views, _, err := relation.Service.GetViewTo(intID)
+	if err != nil {
+		response.Fail(c, 80009, err.Error())
+		return
+	}
+
+	if views != nil {
+		response.Success(c, *views)
+	} else {
+		response.Success(c, nil)
+	}
+
+}
