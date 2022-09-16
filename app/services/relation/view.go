@@ -128,7 +128,7 @@ func (r *relationService) GetViewTo(uid int) (*response.ViewsTo, int, error) {
 		Select("wechat_users.id, wechat_users.user_name, wechat_users.wechat_name,pets.pet_name, wechat_users.age, "+
 			"wechat_users.location,wechat_users.occupation, wechat_users.avatar_url, wechat_users.images, views.status").
 		Joins("inner join pets on wechat_users.id = pets.user_id").
-		Joins("inner join views on views.view_from = wechat_users.id").
+		Joins("inner join views on views.view_to = wechat_users.id").
 		Where("views.view_from = ?", uid).
 		Scan(&viewsDto).Error
 	//err := global.App.DB.Raw("SELECT wechat_users.id, wechat_users.user_name, pets.pet_name, "+
