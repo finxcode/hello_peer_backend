@@ -39,12 +39,26 @@ type ViewTo struct {
 	Status     int    `json:"status"`
 }
 
+type Know struct {
+	Id       int    `json:"uid"`
+	UserName string `json:"username"`
+	PetName  string `json:"petName"`
+	Images   string `json:"coverImage"`
+	Message  string `json:"message"`
+	Status   int    `json:"status"`
+	State    int    `json:"state"` //state: -1 - 没有记录 0 - 待处理 1 - 已婉拒 2 - 过期自动拒绝 3 - 已同意
+}
+
 type ViewsTo struct {
 	ViewsTo []ViewTo `json:"viewsTo"`
 }
 
 type MyViews struct {
 	Views []View `json:"views"`
+}
+
+type Knows struct {
+	MyKnow []Know `json:"knows"`
 }
 
 type RelationStat struct {

@@ -8,3 +8,8 @@ type FocusRequest struct {
 type ViewRequest struct {
 	On string `json:"on,omitempty"`
 }
+
+type ContactRequest struct {
+	On      string `json:"on"`
+	Message string `json:"message"`
+}
