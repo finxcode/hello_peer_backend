@@ -87,7 +87,7 @@ func (r *relationService) GetViewMe(uid int) (*response.MyViews, int, error) {
 
 	err := global.App.DB.Table("wechat_users").
 		Select("wechat_users.id, wechat_users.user_name, wechat_users.wechat_name,pets.pet_name, wechat_users.age, "+
-			"wechat_users.location,wechat_users.occupation, wechat_users.avatar_url, wechat_users.images").
+			"wechat_users.location,wechat_users.occupation, wechat_users.avatar_url, wechat_users.images,views.status").
 		Joins("inner join pets on wechat_users.id = pets.user_id").
 		Joins("inner join views on views.view_from = wechat_users.id").
 		Where("views.view_to = ?", uid).
