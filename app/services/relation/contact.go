@@ -3,12 +3,13 @@ package relation
 import (
 	"errors"
 	"fmt"
-	"go.uber.org/zap"
-	"gorm.io/gorm"
 	"strconv"
 	"time"
 	"webapp_gin/app/models"
 	"webapp_gin/global"
+
+	"go.uber.org/zap"
+	"gorm.io/gorm"
 )
 
 //AddNewContact
@@ -97,22 +98,42 @@ func (r *relationService) ApproveFriendRequest(from, to int) error {
 		return errors.New("relation state is not 'ready for approval'")
 	}
 
-	global.App.DB.Transaction(func(tx *gorm.DB) error {
+	return updateStateAndFriend(global.App.DB, from, to)
 
-		err := global.App.DB.Model(&models.KnowMe{}).
-			Where("id = (select temp.id from (select id from know_me where know_from = ? and know_to = ? "+
-				"order by created_at desc limit 1) as temp", from, to).
-			Update("state", 3).Error
-		if err != nil {
-			zap.L().Warn("knowMe db error", zap.String("update state error", fmt.Sprintf("from: %v to: %v", from, to)))
-			return errors.New(fmt.Sprintf("update state failed with db error: %s", err.Error()))
-		}
-
-		return nil
-	})
-	return nil
 }
 
-func updateStateAndFriend() {
+func updateStateAndFriend(db *gorm.DB, from, to int) error {
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
 
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	err := tx.Model(&models.KnowMe{}).
+		Where("id = (select temp.id from (select id from know_me where know_from = ? and know_to = ? "+
+			"order by created_at desc limit 1) as temp", from, to).
+		Update("state", 3).Error
+
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	var friends = []models.Friend{
+		{FriendFrom: strconv.Itoa(from), FriendTo: strconv.Itoa(to)},
+		{FriendFrom: strconv.Itoa(to), FriendTo: strconv.Itoa(from)},
+	}
+
+	err = tx.Model(&models.Friend{}).Create(&friends).Error
+
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	return tx.Commit().Error
 }

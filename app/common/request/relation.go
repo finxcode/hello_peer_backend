@@ -13,3 +13,7 @@ type ContactRequest struct {
 	On      string `json:"on"`
 	Message string `json:"message"`
 }
+
+type ContactApproveRequest struct {
+	On string `json:"on"`
+}
