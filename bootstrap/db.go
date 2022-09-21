@@ -110,6 +110,7 @@ func initMySqlTables(db *gorm.DB) {
 		models.FocusOn{},
 		models.View{},
 		models.ViewInfo{},
+		models.Friend{},
 	)
 	if err != nil {
 		global.App.Log.Error("migrate table failed", zap.Any("err", err))

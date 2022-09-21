@@ -12,7 +12,7 @@ import (
 )
 
 //AddNewContact
-//state: 0 - 待处理 1 - 已婉拒 2 - 过期自动拒绝 3 - 已同意
+//state: 0 - 待处理 1 - 已婉拒 2 - 过期自动拒绝 3 - 已同意 4 - 已解除
 //status: 0 - 新认识 1 - 已查看
 func (r *relationService) AddNewContact(from, to int, message string) error {
 	var knowMe models.KnowMe
@@ -44,10 +44,14 @@ func (r *relationService) AddNewContact(from, to int, message string) error {
 
 	if knowMe.State == 0 {
 		if time.Now().Sub(knowMe.CreatedAt) > 7*24*60*time.Minute {
-			err := global.App.DB.Model(&models.KnowMe{}).Where("know_from = ? and know_to = ?", from, to).Update("state", 2).Error
+			err := global.App.DB.Model(&models.KnowMe{}).
+				Where("id = (select temp.id from (select id from know_me where know_from = ? and know_to = ? "+
+					"order by created_at desc limit 1) as temp", from, to).
+				Update("state", 2).Error
 			if err != nil {
 				zap.L().Warn("knowMe db error", zap.String("update state error", fmt.Sprintf("from: %v to: %v", from, to)))
 			}
+			knowMe := models.KnowMe{}
 			knowMe.KnowFrom = strconv.Itoa(from)
 			knowMe.KnowTo = strconv.Itoa(to)
 			knowMe.Status = 0
@@ -60,9 +64,55 @@ func (r *relationService) AddNewContact(from, to int, message string) error {
 				return nil
 			}
 		} else {
-
+			return errors.New("previous request still valid")
 		}
+	} else if knowMe.State == 2 || knowMe.State == 3 {
+		knowMe := models.KnowMe{}
+		knowMe.KnowFrom = strconv.Itoa(from)
+		knowMe.KnowTo = strconv.Itoa(to)
+		knowMe.Status = 0
+		knowMe.Status = 0
+		knowMe.Message = message
+		err = global.App.DB.Create(&knowMe).Error
+		if err != nil {
+			return errors.New(fmt.Sprintf("create contact record db error: %s", err.Error()))
+		} else {
+			return nil
+		}
+	} else {
+		return errors.New("previous request still valid")
+	}
+}
+
+func (r *relationService) ApproveFriendRequest(from, to int) error {
+	var knowMe models.KnowMe
+	res := global.App.DB.Model(&models.KnowMe{}).Where("know_from = ? and know_to = ?", from, to).Order("created_at desc").First(&knowMe)
+	if res.Error == gorm.ErrRecordNotFound {
+		return errors.New("no relation record found in db")
+	} else if res.Error != nil {
+		return errors.New(fmt.Sprintf("query relation db failed woth error: %s", res.Error.Error()))
 	}
 
+	if knowMe.State != 0 {
+		return errors.New("relation state is not 'ready for approval'")
+	}
+
+	global.App.DB.Transaction(func(tx *gorm.DB) error {
+
+		err := global.App.DB.Model(&models.KnowMe{}).
+			Where("id = (select temp.id from (select id from know_me where know_from = ? and know_to = ? "+
+				"order by created_at desc limit 1) as temp", from, to).
+			Update("state", 3).Error
+		if err != nil {
+			zap.L().Warn("knowMe db error", zap.String("update state error", fmt.Sprintf("from: %v to: %v", from, to)))
+			return errors.New(fmt.Sprintf("update state failed with db error: %s", err.Error()))
+		}
+
+		return nil
+	})
 	return nil
+}
+
+func updateStateAndFriend() {
+
 }

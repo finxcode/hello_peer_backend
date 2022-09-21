@@ -43,3 +43,11 @@ type ViewInfo struct {
 	Timestamps
 	SoftDeletes
 }
+
+type Friend struct {
+	ID
+	FriendFrom string `json:"FriendFrom" gorm:"from"`
+	FriendTo   string `json:"FriendTo" gorm:"to"`
+	Timestamps
+	SoftDeletes
+}

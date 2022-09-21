@@ -208,3 +208,30 @@ func GetViewToList(c *gin.Context) {
 	}
 
 }
+
+func SendFriendRequest(c *gin.Context) {
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	var contact request.ContactRequest
+	if err := c.ShouldBindJSON(&contact); err != nil {
+		response.BadRequest(c)
+		return
+	}
+	on, _ := strconv.Atoi(contact.On)
+	err = relation.Service.AddNewContact(intID, on, contact.Message)
+
+	if err.Error() == "previous request still valid" {
+		response.Fail(c, -1, "用户暂无资格发起新的请求")
+		return
+	} else if err != nil {
+		response.Fail(c, 80010, err.Error())
+		return
+	}
+
+	response.Success(c, nil)
+
+}
