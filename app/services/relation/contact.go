@@ -50,7 +50,7 @@ func (r *relationService) AddNewContact(from, to int, message string) error {
 	if knowMe.State == 0 {
 		if time.Now().Sub(knowMe.CreatedAt) > 7*24*60*time.Minute {
 			err := global.App.DB.Model(&models.KnowMe{}).
-				Where("id = (select temp.id from (select id from know_me where know_from = ? and know_to = ? "+
+				Where("id = (select temp.id from (select id from know_mes where know_from = ? and know_to = ? "+
 					"order by created_at desc limit 1) as temp", from, to).
 				Update("state", 2).Error
 			if err != nil {
@@ -178,7 +178,7 @@ func updateStateAndCreateFriend(db *gorm.DB, from, to int) error {
 	}
 
 	err := tx.Model(&models.KnowMe{}).
-		Where("id = (select temp.id from (select id from know_me where know_from = ? and know_to = ? "+
+		Where("id = (select temp.id from (select id from know_mes where know_from = ? and know_to = ? "+
 			"order by created_at desc limit 1) as temp", from, to).
 		Update("state", 3).Error
 
@@ -214,7 +214,7 @@ func updateStateAndDeleteFriend(db *gorm.DB, from, to int) error {
 	}
 
 	err := tx.Model(&models.KnowMe{}).
-		Where("id = (select temp.id from (select id from know_me where know_from = ? and know_to = ? "+
+		Where("id = (select temp.id from (select id from know_mes where know_from = ? and know_to = ? "+
 			"order by created_at desc limit 1) as temp", from, to).
 		Update("state", 5).Error
 
