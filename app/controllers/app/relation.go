@@ -224,12 +224,14 @@ func SendFriendRequest(c *gin.Context) {
 	on, _ := strconv.Atoi(contact.On)
 	err = relation.Service.AddNewContact(intID, on, contact.Message)
 
-	if err.Error() == "previous request still valid" {
-		response.Fail(c, -1, "用户暂无资格发起新的请求")
-		return
-	} else if err != nil {
-		response.Fail(c, 80010, err.Error())
-		return
+	if err != nil {
+		if err.Error() == "previous request still valid" {
+			response.Fail(c, -1, "用户暂无资格发起新的请求")
+			return
+		} else {
+			response.Fail(c, 80010, err.Error())
+			return
+		}
 	}
 
 	response.Success(c, nil)
@@ -252,11 +254,13 @@ func ApproveFriendRequest(c *gin.Context) {
 
 	err = relation.Service.ApproveFriendRequest(intID, on)
 
-	if err.Error() == "relation state is not 'ready for approval'" {
-		response.Fail(c, -1, err.Error())
-	} else if err != nil {
-		response.Fail(c, 80011, err.Error())
-		return
+	if err != nil {
+		if err.Error() == "relation state is not 'ready for approval'" {
+			response.Fail(c, -1, err.Error())
+		} else {
+			response.Fail(c, 80011, err.Error())
+			return
+		}
 	}
 
 	response.Success(c, nil)
@@ -278,11 +282,13 @@ func ReleaseFriendRelation(c *gin.Context) {
 
 	err = relation.Service.ReleaseFriendRelation(intID, on)
 
-	if err.Error() == "relation state is not 'ready for releasing'" {
-		response.Fail(c, -1, err.Error())
-	} else if err != nil {
-		response.Fail(c, 80012, err.Error())
-		return
+	if err != nil {
+		if err.Error() == "relation state is not 'ready for releasing'" {
+			response.Fail(c, -1, err.Error())
+		} else {
+			response.Fail(c, 80012, err.Error())
+			return
+		}
 	}
 
 	response.Success(c, nil)
