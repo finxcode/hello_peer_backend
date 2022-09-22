@@ -84,3 +84,20 @@ type Friend struct {
 type Friends struct {
 	MyFriends []Friend `json:"MyFriends"`
 }
+
+type FriendToMeResponse struct {
+	Id       int    `json:"uid"`
+	UserName string `json:"username"`
+	PetName  string `json:"petName"`
+	Images   string `json:"coverImage"`
+	Message  string `json:"message"`
+	State    int    `json:"state"`
+}
+
+type FriendsToMes struct {
+	FriendsToMe []FriendToMeResponse `json:"friendsToMe"`
+}
+
+type MesToFriends struct {
+	MeToFriends []FriendToMeResponse `json:"meToFriends"`
+}

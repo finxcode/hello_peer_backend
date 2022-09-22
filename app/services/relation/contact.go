@@ -165,6 +165,12 @@ func (r *relationService) GetFriendList(uid int) (*response.Friends, error) {
 
 }
 
+//func (r *relationService) GetRequestedFriendToMe(uid int) (*response.FriendsToMes, error) {
+//	var friends []models.Friend
+//	var friendDto []dto.FriendDto
+//
+//}
+
 func updateStateAndCreateFriend(db *gorm.DB, from, to int) error {
 	tx := db.Begin()
 	defer func() {
