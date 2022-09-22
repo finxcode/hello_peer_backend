@@ -80,6 +80,7 @@ func SetApiGroupRoutes(router *gin.RouterGroup) {
 		authRouter.GET("/user/relation/getViewToList", app.GetViewToList)
 		authRouter.POST("/user/relation/sendFriendRequest", app.SendFriendRequest)
 		authRouter.POST("/user/relation/approveFriendRequest", app.ApproveFriendRequest)
+		authRouter.POST("/user/relation/releaseFriendRelation", app.ReleaseFriendRelation)
 	}
 
 }

@@ -1,5 +1,6 @@
 package relation
 
+import "C"
 import (
 	"errors"
 	"fmt"
@@ -29,7 +30,7 @@ func (r *relationService) AddNewContact(from, to int, message string) error {
 		knowMe.KnowFrom = strconv.Itoa(from)
 		knowMe.KnowTo = strconv.Itoa(to)
 		knowMe.Status = 0
-		knowMe.Status = 0
+		knowMe.State = 0
 		knowMe.Message = message
 		err = global.App.DB.Create(&knowMe).Error
 		if err != nil {
@@ -56,7 +57,7 @@ func (r *relationService) AddNewContact(from, to int, message string) error {
 			knowMe.KnowFrom = strconv.Itoa(from)
 			knowMe.KnowTo = strconv.Itoa(to)
 			knowMe.Status = 0
-			knowMe.Status = 0
+			knowMe.State = 0
 			knowMe.Message = message
 			err = global.App.DB.Create(&knowMe).Error
 			if err != nil {
@@ -72,7 +73,7 @@ func (r *relationService) AddNewContact(from, to int, message string) error {
 		knowMe.KnowFrom = strconv.Itoa(from)
 		knowMe.KnowTo = strconv.Itoa(to)
 		knowMe.Status = 0
-		knowMe.Status = 0
+		knowMe.State = 0
 		knowMe.Message = message
 		err = global.App.DB.Create(&knowMe).Error
 		if err != nil {
@@ -87,7 +88,10 @@ func (r *relationService) AddNewContact(from, to int, message string) error {
 
 func (r *relationService) ApproveFriendRequest(from, to int) error {
 	var knowMe models.KnowMe
-	res := global.App.DB.Model(&models.KnowMe{}).Where("know_from = ? and know_to = ?", from, to).Order("created_at desc").First(&knowMe)
+	res := global.App.DB.Model(&models.KnowMe{}).
+		Where("know_from = ? and know_to = ?", from, to).
+		Order("created_at desc").
+		First(&knowMe)
 	if res.Error == gorm.ErrRecordNotFound {
 		return errors.New("no relation record found in db")
 	} else if res.Error != nil {
@@ -98,11 +102,30 @@ func (r *relationService) ApproveFriendRequest(from, to int) error {
 		return errors.New("relation state is not 'ready for approval'")
 	}
 
-	return updateStateAndFriend(global.App.DB, from, to)
+	return updateStateAndCreateFriend(global.App.DB, from, to)
 
 }
 
-func updateStateAndFriend(db *gorm.DB, from, to int) error {
+func (r *relationService) ReleaseFriendRelation(from, to int) error {
+	var knowMe models.KnowMe
+	res := global.App.DB.Model(&models.KnowMe{}).
+		Where("know_from = ? and know_to = ?", from, to).
+		Order("created_at desc").
+		First(&knowMe)
+	if res.Error == gorm.ErrRecordNotFound {
+		return errors.New("no relation record found in db")
+	} else if res.Error != nil {
+		return errors.New(fmt.Sprintf("query relation db failed woth error: %s", res.Error.Error()))
+	}
+
+	if knowMe.State != 3 {
+		return errors.New("relation state is not 'ready for releasing'")
+	}
+
+	return updateStateAndDeleteFriend(global.App.DB, from, to)
+}
+
+func updateStateAndCreateFriend(db *gorm.DB, from, to int) error {
 	tx := db.Begin()
 	defer func() {
 		if r := recover(); r != nil {
@@ -135,5 +158,50 @@ func updateStateAndFriend(db *gorm.DB, from, to int) error {
 		tx.Rollback()
 		return err
 	}
+	return tx.Commit().Error
+}
+
+func updateStateAndDeleteFriend(db *gorm.DB, from, to int) error {
+	tx := db.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err := tx.Error; err != nil {
+		return err
+	}
+
+	err := tx.Model(&models.KnowMe{}).
+		Where("id = (select temp.id from (select id from know_me where know_from = ? and know_to = ? "+
+			"order by created_at desc limit 1) as temp", from, to).
+		Update("state", 5).Error
+
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	deletedAt := time.Now()
+
+	err = tx.Model(&models.Friend{}).
+		Where("friend_from = ? and friend_to = ?", from, to).
+		Update("deleted_at", deletedAt).Error
+
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
+	err = tx.Model(&models.Friend{}).
+		Where("friend_from = ? and friend_to = ?", to, from).
+		Update("deleted_at", deletedAt).Error
+
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+
 	return tx.Commit().Error
 }
