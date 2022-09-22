@@ -293,3 +293,23 @@ func ReleaseFriendRelation(c *gin.Context) {
 
 	response.Success(c, nil)
 }
+
+func GetFriendList(c *gin.Context) {
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	myFriends, err := relation.Service.GetFriendList(intID)
+	if err != nil {
+		response.Fail(c, 80013, err.Error())
+		return
+	}
+
+	if myFriends != nil {
+		response.Success(c, *myFriends)
+	} else {
+		response.Success(c, nil)
+	}
+}

@@ -70,3 +70,17 @@ type RelationStat struct {
 	ViewedByTotal  int `json:"viewed_by_total"`
 	ViewedByNew    int `json:"viewed_by_new"`
 }
+
+type Friend struct {
+	Id         int    `json:"uid"`
+	UserName   string `json:"username"`
+	PetName    string `json:"petName"`
+	Age        int    `json:"age"`
+	Location   string `json:"location"`
+	Occupation string `json:"occupation"`
+	Images     string `json:"coverImage"`
+}
+
+type Friends struct {
+	MyFriends []Friend `json:"MyFriends"`
+}

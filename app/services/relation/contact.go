@@ -6,8 +6,11 @@ import (
 	"fmt"
 	"strconv"
 	"time"
+	"webapp_gin/app/common/response"
 	"webapp_gin/app/models"
+	"webapp_gin/app/services/dto"
 	"webapp_gin/global"
+	"webapp_gin/utils"
 
 	"go.uber.org/zap"
 	"gorm.io/gorm"
@@ -125,6 +128,43 @@ func (r *relationService) ReleaseFriendRelation(from, to int) error {
 	return updateStateAndDeleteFriend(global.App.DB, from, to)
 }
 
+func (r *relationService) GetFriendList(uid int) (*response.Friends, error) {
+	var friends []models.Friend
+	var friendDto []dto.FriendDto
+	res := global.App.DB.Where("friend_to = ?", uid).Find(&friends)
+
+	if res.Error == gorm.ErrRecordNotFound {
+		return nil, nil
+	} else if res.Error != nil {
+		zap.L().Error("database error", zap.String("looking for user friend error", res.Error.Error()))
+		return nil, errors.New(fmt.Sprintf("looking for user's friend failed with db error: %s", res.Error.Error()))
+	}
+
+	err := global.App.DB.Table("wechat_users").
+		Select("wechat_users.id, wechat_users.user_name, wechat_users.wechat_name,pets.pet_name, wechat_users.age, "+
+			"wechat_users.location,wechat_users.occupation, wechat_users.avatar_url, wechat_users.images").
+		Joins("inner join pets on wechat_users.id = pets.user_id").
+		Joins("inner join friends on friends.friend_from = wechat_users.id").
+		Where("friends.friend_to = ?", uid).
+		Where("friends.deleted_at = null").
+		Scan(&friendDto).Error
+
+	if err != nil {
+		zap.L().Error("database error", zap.String("looking for user friend error", res.Error.Error()))
+		return nil, errors.New(fmt.Sprintf("looking for user's friend failed when fetch info from "+
+			"other tabls with db error: %s", res.Error.Error()))
+	}
+
+	friendsRes := friendDtoToFriendResponse(&friendDto)
+
+	myFriends := response.Friends{
+		MyFriends: friendsRes,
+	}
+
+	return &myFriends, nil
+
+}
+
 func updateStateAndCreateFriend(db *gorm.DB, from, to int) error {
 	tx := db.Begin()
 	defer func() {
@@ -204,4 +244,39 @@ func updateStateAndDeleteFriend(db *gorm.DB, from, to int) error {
 	}
 
 	return tx.Commit().Error
+}
+
+func friendDtoToFriendResponse(friendsDtos *[]dto.FriendDto) []response.Friend {
+	var friends []response.Friend
+	for _, friendDto := range *friendsDtos {
+		var username string
+		var image string
+
+		if friendDto.UserName == "" {
+			username = friendDto.WechatName
+		} else {
+			username = friendDto.UserName
+		}
+
+		if friendDto.Images == "" {
+			image = friendDto.AvatarUrl
+		} else {
+			image = utils.ParseToArray(&friendDto.Images, " ")[0]
+		}
+
+		friend := response.Friend{
+			Id:         friendDto.Id,
+			UserName:   username,
+			PetName:    friendDto.PetName,
+			Age:        friendDto.Age,
+			Location:   friendDto.Location,
+			Occupation: friendDto.Occupation,
+			Images:     image,
+		}
+
+		friends = append(friends, friend)
+
+	}
+
+	return friends
 }
