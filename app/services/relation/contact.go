@@ -146,7 +146,7 @@ func (r *relationService) GetFriendList(uid int) (*response.Friends, error) {
 		Joins("inner join pets on wechat_users.id = pets.user_id").
 		Joins("inner join friends on friends.friend_from = wechat_users.id").
 		Where("friends.friend_to = ?", uid).
-		Where("friends.deleted_at = null").
+		Where("friends.deleted_at is null").
 		Scan(&friendDto).Error
 
 	if err != nil {
