@@ -285,6 +285,7 @@ func ReleaseFriendRelation(c *gin.Context) {
 	if err != nil {
 		if err.Error() == "relation state is not 'ready for releasing'" {
 			response.Fail(c, -1, err.Error())
+			return
 		} else {
 			response.Fail(c, 80012, err.Error())
 			return

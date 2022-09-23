@@ -110,6 +110,7 @@ func (r *relationService) ApproveFriendRequest(from, to int) error {
 }
 
 func (r *relationService) ReleaseFriendRelation(from, to int) error {
+	//todo: bi-directional search know_mes table
 	var knowMe models.KnowMe
 	res := global.App.DB.Model(&models.KnowMe{}).
 		Where("know_from = ? and know_to = ?", from, to).
@@ -165,11 +166,28 @@ func (r *relationService) GetFriendList(uid int) (*response.Friends, error) {
 
 }
 
-//func (r *relationService) GetRequestedFriendToMe(uid int) (*response.FriendsToMes, error) {
-//	var friends []models.Friend
-//	var friendDto []dto.FriendDto
-//
-//}
+func (r *relationService) GetRequestedFriendToMe(uid int) (*response.FriendsToMes, error) {
+	var friends []models.Friend
+	var friendDto []dto.FriendDto
+
+	err := global.App.DB.Table("wechat_users").
+		Select("wechat_users.id, wechat_users.user_name, wechat_users.wechat_name,pets.pet_name, wechat_users.age, "+
+			"wechat_users.location,wechat_users.occupation, wechat_users.avatar_url, wechat_users.images").
+		Joins("inner join pets on wechat_users.id = pets.user_id").
+		Joins("inner join know_mes on know_mes.know_from = wechat_users.id").
+		Where("know_mes.know_to = ?", uid).
+		Where("know_mes.state != 5").
+		Scan(&friendDto).Error
+
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		} else {
+			return nil, errors.New(fmt.Sprintf("query requested friend list failed with db error: %s", err.Error()))
+		}
+	}
+
+}
 
 func updateStateAndCreateFriend(db *gorm.DB, from, to int) error {
 	tx := db.Begin()

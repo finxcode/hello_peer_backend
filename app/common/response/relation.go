@@ -95,7 +95,8 @@ type FriendToMeResponse struct {
 }
 
 type FriendsToMes struct {
-	FriendsToMe []FriendToMeResponse `json:"friendsToMe"`
+	FriendsInSevenDays  []FriendToMeResponse `json:"friendsToMe"`
+	FriendsOutSevenDays []FriendToMeResponse `json:"friendsOutSevenDays"`
 }
 
 type MesToFriends struct {
