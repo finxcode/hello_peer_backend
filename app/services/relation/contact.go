@@ -174,10 +174,10 @@ func (r *relationService) GetRequestedFriendToMe(uid int) (*response.FriendsToMe
 	sevenDays := time.Now().Add(7 * d)
 
 	err := global.App.DB.Model(&models.KnowMe{}).
-		Update("state", 2).
 		Where("know_to", uid).
 		Where("created_at < ?", d).
-		Where("state = 0").Error
+		Where("state = 0").
+		Update("state", 2).Error
 
 	if err != nil {
 		zap.L().Error("db know_mes table error", zap.String("update state to 2 faile with error: ", err.Error()))
