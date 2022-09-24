@@ -167,25 +167,65 @@ func (r *relationService) GetFriendList(uid int) (*response.Friends, error) {
 }
 
 func (r *relationService) GetRequestedFriendToMe(uid int) (*response.FriendsToMes, error) {
-	var friends []models.Friend
 	var friendDto []dto.FriendDto
+	var friendsToMes response.FriendsToMes
 
-	err := global.App.DB.Table("wechat_users").
+	d, _ := time.ParseDuration("-24h")
+	sevenDays := time.Now().Add(7 * d)
+
+	err := global.App.DB.Model(&models.KnowMe{}).
+		Update("state", 2).
+		Where("know_to", uid).
+		Where("created_at < ?", d).
+		Where("state = 0").Error
+
+	if err != nil {
+		zap.L().Error("db know_mes table error", zap.String("update state to 2 faile with error: ", err.Error()))
+	}
+
+	err = global.App.DB.Table("wechat_users").
 		Select("wechat_users.id, wechat_users.user_name, wechat_users.wechat_name,pets.pet_name, wechat_users.age, "+
-			"wechat_users.location,wechat_users.occupation, wechat_users.avatar_url, wechat_users.images").
+			"wechat_users.location,wechat_users.occupation, wechat_users.avatar_url, wechat_users.images, "+
+			"know_mes.message, know_mes.state").
 		Joins("inner join pets on wechat_users.id = pets.user_id").
 		Joins("inner join know_mes on know_mes.know_from = wechat_users.id").
 		Where("know_mes.know_to = ?", uid).
 		Where("know_mes.state != 5").
+		Where("know_mes.created_at > ?", sevenDays).
 		Scan(&friendDto).Error
 
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
-			return nil, nil
+			friendsToMes.FriendsInSevenDays = nil
 		} else {
 			return nil, errors.New(fmt.Sprintf("query requested friend list failed with db error: %s", err.Error()))
 		}
 	}
+
+	friendsToMes.FriendsInSevenDays = friendDtoToFriendToMeResponse(&friendDto)
+
+	err = global.App.DB.Table("wechat_users").
+		Select("wechat_users.id, wechat_users.user_name, wechat_users.wechat_name,pets.pet_name, wechat_users.age, "+
+			"wechat_users.location,wechat_users.occupation, wechat_users.avatar_url, wechat_users.images, "+
+			"know_mes.message, know_mes.state").
+		Joins("inner join pets on wechat_users.id = pets.user_id").
+		Joins("inner join know_mes on know_mes.know_from = wechat_users.id").
+		Where("know_mes.know_to = ?", uid).
+		Where("know_mes.state != 5").
+		Where("know_mes.created_at <= ?", sevenDays).
+		Scan(&friendDto).Error
+
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			friendsToMes.FriendsOutSevenDays = nil
+		} else {
+			return nil, errors.New(fmt.Sprintf("query requested friend list failed with db error: %s", err.Error()))
+		}
+	}
+
+	friendsToMes.FriendsOutSevenDays = friendDtoToFriendToMeResponse(&friendDto)
+
+	return &friendsToMes, nil
 
 }
 
@@ -296,6 +336,41 @@ func friendDtoToFriendResponse(friendsDtos *[]dto.FriendDto) []response.Friend {
 			Location:   friendDto.Location,
 			Occupation: friendDto.Occupation,
 			Images:     image,
+		}
+
+		friends = append(friends, friend)
+
+	}
+
+	return friends
+}
+
+func friendDtoToFriendToMeResponse(friendsDtos *[]dto.FriendDto) []response.FriendToMeResponse {
+	var friends []response.FriendToMeResponse
+
+	for _, friendDto := range *friendsDtos {
+		var username string
+		var image string
+
+		if friendDto.UserName == "" {
+			username = friendDto.WechatName
+		} else {
+			username = friendDto.UserName
+		}
+
+		if friendDto.Images == "" {
+			image = friendDto.AvatarUrl
+		} else {
+			image = utils.ParseToArray(&friendDto.Images, " ")[0]
+		}
+
+		friend := response.FriendToMeResponse{
+			Id:       friendDto.Id,
+			UserName: username,
+			PetName:  friendDto.PetName,
+			Images:   image,
+			Message:  friendDto.Message,
+			State:    friendDto.State,
 		}
 
 		friends = append(friends, friend)

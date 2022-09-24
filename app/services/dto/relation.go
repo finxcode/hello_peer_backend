@@ -36,4 +36,6 @@ type FriendDto struct {
 	Occupation string `json:"occupation"`
 	AvatarUrl  string `json:"avatarUrl"`
 	Images     string `json:"coverImage"`
+	Message    string `json:"message"`
+	State      int    `json:"state"`
 }

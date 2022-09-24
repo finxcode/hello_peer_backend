@@ -314,3 +314,21 @@ func GetFriendList(c *gin.Context) {
 		response.Success(c, nil)
 	}
 }
+
+func GetRequestedFriendToMe(c *gin.Context) {
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	friends, err := relation.Service.GetRequestedFriendToMe(intID)
+
+	if err != nil {
+		response.Fail(c, 80014, err.Error())
+		return
+	}
+
+	response.Success(c, &friends)
+
+}
