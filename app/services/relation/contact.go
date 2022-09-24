@@ -175,7 +175,7 @@ func (r *relationService) GetRequestedFriendToMe(uid int) (*response.FriendsToMe
 
 	err := global.App.DB.Model(&models.KnowMe{}).
 		Where("know_to", uid).
-		Where("created_at < ?", d).
+		Where("created_at < ?", sevenDays).
 		Where("state = 0").
 		Update("state", 2).Error
 
