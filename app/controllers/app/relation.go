@@ -332,3 +332,39 @@ func GetRequestedFriendToMe(c *gin.Context) {
 	response.Success(c, &friends)
 
 }
+
+func GetFriendsInSevenDays(c *gin.Context) {
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	friends, err := relation.Service.GetFriendsInSevenDays(intID)
+
+	if err != nil {
+		response.Fail(c, 80014, err.Error())
+		return
+	}
+
+	response.Success(c, &friends.FriendsInSevenDays)
+
+}
+
+func GetFriendsOutOfSevenDays(c *gin.Context) {
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	friends, err := relation.Service.GetFriendsOutOfSevenDays(intID)
+
+	if err != nil {
+		response.Fail(c, 80015, err.Error())
+		return
+	}
+
+	response.Success(c, &friends.FriendsOutSevenDays)
+
+}
