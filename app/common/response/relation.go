@@ -100,7 +100,7 @@ type MyFriendRequest struct {
 	PetName   string `json:"petName"`
 	Images    string `json:"images"`
 	State     int    `json:"state"`
-	CreatedAt string `json:"createAt"`
+	CreatedAt string `json:"createdAt"`
 }
 
 type FriendsToMes struct {
