@@ -327,7 +327,7 @@ func (wechatUserService *wechatUserService) GetUserHomepageInfo(uid int) (*respo
 	return &userHomepage, nil
 }
 
-func (wechatUserService *wechatUserService) GetUserDetailsById(uid int) (*response.UserDetails, error) {
+func (wechatUserService *wechatUserService) GetUserDetailsById(uid, from int) (*response.UserDetails, error) {
 	var wechatUser models.WechatUser
 	var respUserDetails response.UserDetails
 
@@ -364,6 +364,14 @@ func (wechatUserService *wechatUserService) GetUserDetailsById(uid int) (*respon
 	} else {
 		respUserDetails.PetName = resp.PetName
 	}
+
+	if relation.Service.IsFan(from, uid) {
+		respUserDetails.FocusStatus = 1
+	} else {
+		respUserDetails.FocusStatus = 0
+	}
+
+	respUserDetails.FriendStatus = relation.Service.GetFriendStatus(from, uid)
 
 	return &respUserDetails, nil
 }

@@ -50,6 +50,8 @@ type UserDetails struct {
 	Marriage      string   `json:"marriage" example:"婚姻状况"`
 	Income        string   `json:"income" example:"收入"`
 	PetName       string   `json:"pet_name"`
+	FocusStatus   int      `json:"focusStatus"`
+	FriendStatus  int      `json:"friendStatus"`
 }
 
 type UserDetailsUpdate struct {

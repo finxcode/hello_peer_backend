@@ -119,7 +119,7 @@ func SetUserAvatar(c *gin.Context) {
 	}
 	// Retrieve file information
 	// extension := filepath.Ext(file.Filename)
-	// Generate random file name for the new uploaded file so it doesn't override the old file with same name
+	// Generate random file name for the new uploaded file, so it doesn't override the old file with same name
 	newFileName := strconv.Itoa(intID) + "_" + strconv.Itoa(int(time.Now().Unix())) + "_" + file.Filename
 
 	// The file is received, so let's save it
@@ -161,7 +161,7 @@ func SetUserCoverImage(c *gin.Context) {
 	}
 	// Retrieve file information
 	// extension := filepath.Ext(file.Filename)
-	// Generate random file name for the new uploaded file so it doesn't override the old file with same name
+	// Generate random file name for the new uploaded file, so it doesn't override the old file with same name
 	newFileName := strconv.Itoa(intID) + "_" + strconv.Itoa(int(time.Now().Unix())) + "_" + file.Filename
 
 	// The file is received, so let's save it
@@ -239,7 +239,7 @@ func SetUserImage(c *gin.Context) {
 	}
 	// Retrieve file information
 	// extension := filepath.Ext(file.Filename)
-	// Generate random file name for the new uploaded file so it doesn't override the old file with same name
+	// Generate random file name for the new uploaded file, so it doesn't override the old file with same name
 	newFileName := strconv.Itoa(intID) + "_" + strconv.Itoa(int(time.Now().Unix())) + "_" + file.Filename
 
 	// The file is received, so let's save it
@@ -298,7 +298,13 @@ func GetUserDetailsById(c *gin.Context) {
 		return
 	}
 
-	user, err := services.WechatUserService.GetUserDetailsById(id)
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	user, err := services.WechatUserService.GetUserDetailsById(id, intID)
 
 	if err != nil {
 		response.Fail(c, 40002, err.Error())

@@ -353,6 +353,49 @@ func (r *relationService) GetMyFriendRequest(uid int) (*response.MesToFriends, e
 	return &friends, nil
 }
 
+//GetFriendStatus
+//friendStatus -1-想认识ta 0-已申请 1-发消息 2-去同意
+func (r *relationService) GetFriendStatus(from, to int) int {
+	var state int
+	res := global.App.DB.Model(&models.KnowMe{}).
+		Select("state").
+		Where("know_from = ? and know_to = ? ", from, to).
+		Order("created_at desc").
+		Limit(1).
+		First(&state)
+	if res.Error == gorm.ErrRecordNotFound {
+		resRev := global.App.DB.Model(&models.KnowMe{}).
+			Select("state").
+			Where("know_from = ? and know_to = ? ", to, from).
+			Order("created_at desc").
+			Limit(1).
+			First(&state)
+		if resRev.Error == gorm.ErrRecordNotFound {
+			return -1
+		} else if res.Error != nil {
+			return -1
+		}
+
+		if state == 0 {
+			return 2
+		} else if state == 2 {
+			return 1
+		} else {
+			return -1
+		}
+	} else if res.Error != nil {
+		return -1
+	}
+
+	if state == 0 {
+		return 0
+	} else if state == 2 {
+		return 1
+	} else {
+		return -1
+	}
+}
+
 func updateStateAndCreateFriend(db *gorm.DB, from, to int) error {
 	tx := db.Begin()
 	defer func() {
