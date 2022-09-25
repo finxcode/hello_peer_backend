@@ -338,6 +338,8 @@ func (r *relationService) GetMyFriendRequest(uid int) (*response.MesToFriends, e
 		Where("know_mes.state != 5").
 		Scan(&friendDto).Error
 
+	zap.L().Info("debugging on created_at", zap.String("created_at = ", friendDto[0].CreateAt.String()))
+
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, nil
