@@ -338,7 +338,7 @@ func (r *relationService) GetMyFriendRequest(uid int) (*response.MesToFriends, e
 		Where("know_mes.state != 5").
 		Scan(&friendDto).Error
 
-	zap.L().Info("debugging on created_at", zap.String("created_at = ", friendDto[0].CreateAt.String()))
+	zap.L().Info("debugging on created_at", zap.String("created_at = ", friendDto[0].CreateAt))
 
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
@@ -529,7 +529,7 @@ func friendDtoToFriendToMyFriendRequest(friendsDtos *[]dto.FriendDto) []response
 			PetName:  friendDto.PetName,
 			Images:   image,
 			State:    friendDto.State,
-			CreateAt: friendDto.CreateAt,
+			//CreateAt: friendDto.CreateAt,
 		}
 
 		friends = append(friends, friend)
