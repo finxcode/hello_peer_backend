@@ -368,3 +368,20 @@ func GetFriendsOutOfSevenDays(c *gin.Context) {
 	response.Success(c, &friends.FriendsOutSevenDays)
 
 }
+
+func GetMyFriendRequests(c *gin.Context) {
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	friends, err := relation.Service.GetMyFriendRequest(intID)
+
+	if err != nil {
+		response.Fail(c, 80016, err.Error())
+		return
+	}
+
+	response.Success(c, &friends)
+}

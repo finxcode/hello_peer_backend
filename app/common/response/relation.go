@@ -1,5 +1,7 @@
 package response
 
+import "time"
+
 type MyFans struct {
 	Fans []Fan `json:"fans"`
 }
@@ -94,11 +96,20 @@ type FriendToMeResponse struct {
 	State    int    `json:"state"`
 }
 
+type MyFriendRequest struct {
+	Id       int       `json:"id"`
+	UserName string    `json:"userName"`
+	PetName  string    `json:"petName"`
+	Images   string    `json:"images"`
+	State    int       `json:"state"`
+	CreateAt time.Time `json:"createAt"`
+}
+
 type FriendsToMes struct {
 	FriendsInSevenDays  []FriendToMeResponse `json:"friendsInSevenDays"`
 	FriendsOutSevenDays []FriendToMeResponse `json:"friendsOutSevenDays"`
 }
 
 type MesToFriends struct {
-	MeToFriends []FriendToMeResponse `json:"meToFriends"`
+	MyFriendRequests []MyFriendRequest `json:"myFriendRequests"`
 }
