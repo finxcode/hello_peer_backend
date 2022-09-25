@@ -383,5 +383,5 @@ func GetMyFriendRequests(c *gin.Context) {
 		return
 	}
 
-	response.Success(c, &friends)
+	response.Success(c, &friends.MyFriendRequests)
 }
