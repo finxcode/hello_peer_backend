@@ -529,7 +529,7 @@ func friendDtoToFriendToMyFriendRequest(friendsDtos *[]dto.FriendDto) []response
 			PetName:   friendDto.PetName,
 			Images:    image,
 			State:     friendDto.State,
-			CreatedAt: friendDto.CreatedAt.String(),
+			CreatedAt: friendDto.CreatedAt.String()[0:9],
 		}
 
 		friends = append(friends, friend)
