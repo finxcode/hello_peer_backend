@@ -1,5 +1,7 @@
 package response
 
+import "time"
+
 type MyFans struct {
 	Fans []Fan `json:"fans"`
 }
@@ -95,12 +97,12 @@ type FriendToMeResponse struct {
 }
 
 type MyFriendRequest struct {
-	Id        int    `json:"id"`
-	UserName  string `json:"userName"`
-	PetName   string `json:"petName"`
-	Images    string `json:"images"`
-	State     int    `json:"state"`
-	CreatedAt string `json:"createdAt"`
+	Id        int       `json:"id"`
+	UserName  string    `json:"userName"`
+	PetName   string    `json:"petName"`
+	Images    string    `json:"images"`
+	State     int       `json:"state"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 type FriendsToMes struct {
