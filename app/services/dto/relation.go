@@ -38,5 +38,5 @@ type FriendDto struct {
 	Images     string `json:"coverImage"`
 	Message    string `json:"message"`
 	State      int    `json:"state"`
-	CreateAt   string `json:"createAt"`
+	CreateAt   string `json:"createdAt"`
 }
