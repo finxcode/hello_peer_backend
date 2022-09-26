@@ -255,7 +255,7 @@ func (r *relationService) GetFriendsInSevenDays(uid int) (*response.FriendsToMes
 		Where("know_mes.know_to = ?", uid).
 		Where("know_mes.state != 5").
 		Where("know_mes.created_at > ?", sevenDays).
-		Order("created_at desc").
+		Order("know_mes.created_at desc").
 		Scan(&friendDto).Error
 
 	if err != nil {
@@ -297,7 +297,7 @@ func (r *relationService) GetFriendsOutOfSevenDays(uid int) (*response.FriendsTo
 		Where("know_mes.know_to = ?", uid).
 		Where("know_mes.state != 5").
 		Where("know_mes.created_at <= ?", sevenDays).
-		Order("created_at desc").
+		Order("know_mes.created_at desc").
 		Scan(&friendDto).Error
 
 	if err != nil {
