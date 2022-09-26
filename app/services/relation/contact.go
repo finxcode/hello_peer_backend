@@ -338,6 +338,7 @@ func (r *relationService) GetMyFriendRequest(uid int) (*response.MesToFriends, e
 		Joins("inner join know_mes on know_mes.know_to = wechat_users.id").
 		Where("know_mes.know_from = ?", uid).
 		Where("know_mes.state != 5").
+		Order("know_mes.created_at desc").
 		Scan(&friendDto).Error
 
 	zap.L().Info("debugging on created_at", zap.String("created_at = ", friendDto[0].CreatedAt.String()))
@@ -516,11 +517,11 @@ func friendDtoToFriendResponse(friendsDtos *[]dto.FriendDto) []response.Friend {
 
 func friendDtoToFriendToMeResponse(friendsDtos *[]dto.FriendDto) []response.FriendToMeResponse {
 	var friends []response.FriendToMeResponse
+	var ids []int
 
 	for _, friendDto := range *friendsDtos {
 		var username string
 		var image string
-		var ids []int
 
 		if utils.Contains(ids, friendDto.Id) {
 			continue
@@ -558,10 +559,17 @@ func friendDtoToFriendToMeResponse(friendsDtos *[]dto.FriendDto) []response.Frie
 
 func friendDtoToFriendToMyFriendRequest(friendsDtos *[]dto.FriendDto) []response.MyFriendRequest {
 	var friends []response.MyFriendRequest
+	var ids []int
 
 	for _, friendDto := range *friendsDtos {
 		var username string
 		var image string
+
+		if utils.Contains(ids, friendDto.Id) {
+			continue
+		}
+
+		ids = append(ids, friendDto.Id)
 
 		if friendDto.UserName == "" {
 			username = friendDto.WechatName
