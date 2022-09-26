@@ -221,6 +221,12 @@ func SendFriendRequest(c *gin.Context) {
 		response.BadRequest(c)
 		return
 	}
+
+	if contact.Message == "" {
+		response.BadRequest(c)
+		return
+	}
+
 	on, _ := strconv.Atoi(contact.On)
 	err = relation.Service.AddNewContact(intID, on, contact.Message)
 

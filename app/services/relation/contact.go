@@ -71,7 +71,7 @@ func (r *relationService) AddNewContact(from, to int, message string) error {
 		} else {
 			return errors.New("previous request still valid")
 		}
-	} else if knowMe.State == 2 || knowMe.State == 3 {
+	} else if knowMe.State == 1 || knowMe.State == 2 {
 		knowMe := models.KnowMe{}
 		knowMe.KnowFrom = strconv.Itoa(from)
 		knowMe.KnowTo = strconv.Itoa(to)
@@ -255,6 +255,7 @@ func (r *relationService) GetFriendsInSevenDays(uid int) (*response.FriendsToMes
 		Where("know_mes.know_to = ?", uid).
 		Where("know_mes.state != 5").
 		Where("know_mes.created_at > ?", sevenDays).
+		Order("created_at desc").
 		Scan(&friendDto).Error
 
 	if err != nil {
@@ -296,6 +297,7 @@ func (r *relationService) GetFriendsOutOfSevenDays(uid int) (*response.FriendsTo
 		Where("know_mes.know_to = ?", uid).
 		Where("know_mes.state != 5").
 		Where("know_mes.created_at <= ?", sevenDays).
+		Order("created_at desc").
 		Scan(&friendDto).Error
 
 	if err != nil {
@@ -518,6 +520,13 @@ func friendDtoToFriendToMeResponse(friendsDtos *[]dto.FriendDto) []response.Frie
 	for _, friendDto := range *friendsDtos {
 		var username string
 		var image string
+		var ids []int
+
+		if utils.Contains(ids, friendDto.Id) {
+			continue
+		}
+
+		ids = append(ids, friendDto.Id)
 
 		if friendDto.UserName == "" {
 			username = friendDto.WechatName
