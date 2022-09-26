@@ -258,7 +258,7 @@ func ApproveFriendRequest(c *gin.Context) {
 	}
 	on, _ := strconv.Atoi(contact.On)
 
-	err = relation.Service.ApproveFriendRequest(intID, on)
+	err = relation.Service.ApproveFriendRequest(on, intID)
 
 	if err != nil {
 		if err.Error() == "relation state is not 'ready for approval'" {
