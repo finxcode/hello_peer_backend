@@ -33,6 +33,8 @@ type FriendDto struct {
 	UserName   string    `json:"username"`
 	WechatName string    `json:"wechatName"`
 	PetName    string    `json:"petName"`
+	PetType    int       `json:"petType"`
+	Gender     int       `json:"gender"`
 	Age        int       `json:"age"`
 	Location   string    `json:"location"`
 	Occupation string    `json:"occupation"`

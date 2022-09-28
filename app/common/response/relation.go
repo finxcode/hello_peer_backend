@@ -75,6 +75,8 @@ type Friend struct {
 	Id         int    `json:"uid"`
 	UserName   string `json:"username"`
 	PetName    string `json:"petName"`
+	PetType    int    `json:"petType"`
+	Gender     int    `json:"gender"`
 	Age        int    `json:"age"`
 	Location   string `json:"location"`
 	Occupation string `json:"occupation"`
