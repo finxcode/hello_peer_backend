@@ -143,7 +143,7 @@ func (r *relationService) GetFriendList(uid int) (*response.Friends, error) {
 
 	err := global.App.DB.Table("wechat_users").
 		Select("distinct(wechat_users.id), wechat_users.user_name, wechat_users.wechat_name,pets.pet_name, pets.pet_type,"+
-			"wechat_user.gender, wechat_users.age, wechat_users.location,wechat_users.occupation, "+
+			"wechat_users.gender, wechat_users.age, wechat_users.location,wechat_users.occupation, "+
 			"wechat_users.avatar_url, wechat_users.images").
 		Joins("inner join pets on wechat_users.id = pets.user_id").
 		Joins("inner join friends on friends.friend_from = wechat_users.id").
