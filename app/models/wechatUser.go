@@ -41,6 +41,7 @@ type WechatUser struct {
 	Purpose          string  `json:"purpose" gorm:"comment:交友目的"`
 	Birthday         string  `json:"birthday" gorm:"comment:生日"`
 	InfoComplete     int     `json:"infoComplete" gorm:"comment:信息完成度"`
+	HelloId          string  `json:"helloId" gorm:"comment:用户应用ID"`
 	Timestamps
 	SoftDeletes
 }
