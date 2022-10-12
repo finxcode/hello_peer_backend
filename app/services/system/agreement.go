@@ -2,22 +2,28 @@ package system
 
 import (
 	"errors"
+	"webapp_gin/app/common/response"
 	"webapp_gin/app/models"
 	"webapp_gin/global"
 
 	"gorm.io/gorm"
 )
 
-func GetAgreement(name string) (models.Agreement, error) {
+func GetAgreement(name string) (response.Agreement, error) {
 	var agreement models.Agreement
+	var resAgreement response.Agreement
 	res := global.App.DB.Model(models.Agreement{}).Where("name", name).First(&agreement)
 	if res.Error == gorm.ErrRecordNotFound {
-		return models.Agreement{}, errors.New("no record found")
+		return response.Agreement{}, errors.New("no record found")
 	}
 
 	if res.Error != nil {
-		return models.Agreement{}, errors.New("db error")
+		return response.Agreement{}, errors.New("db error")
 	}
 
-	return agreement, nil
+	resAgreement.Name = agreement.Name
+	resAgreement.Title = agreement.Title
+	resAgreement.Content = agreement.Content
+
+	return resAgreement, nil
 }
