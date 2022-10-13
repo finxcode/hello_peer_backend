@@ -400,6 +400,22 @@ func (r *relationService) GetFriendStatus(from, to int) int {
 	}
 }
 
+func (r *relationService) UpdateAllNewFriendRequestStatus(uid int) error {
+	res := global.App.DB.Model(&models.KnowMe{}).
+		Where("know_to = ? and status = 0", uid).
+		Update("status", 1)
+	if res.RowsAffected == 0 {
+		zap.L().Info("no new friend request to update", zap.String("db info", "no new friend request record found to update"))
+		return nil
+	}
+
+	if res.Error != nil {
+		return errors.New(fmt.Sprintf("update new friend request status failed with error, %s", res.Error.Error()))
+	}
+
+	return nil
+}
+
 func updateStateAndCreateFriend(db *gorm.DB, from, to int) error {
 	tx := db.Begin()
 	defer func() {
