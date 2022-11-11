@@ -2,6 +2,7 @@ package services
 
 import (
 	"errors"
+	"log"
 	"net/http"
 	"webapp_gin/app/common/response"
 	"webapp_gin/app/models"
@@ -210,20 +211,23 @@ func userToRecommendedUser(users *[]models.WechatUser) *[]response.RecommendedUs
 }
 
 func switchUser(uid int) (*[]response.RecommendedUser, bool) {
-	var users []models.WechatUser
-	if uid == 1 {
-		_ = global.App.DB.Where("id in (87,88)").Order("rand()").Limit(numberOfRecommendedUsers).Find(&users).Error
-		recommendedUsers := userToRecommendedUser(&users)
-		return recommendedUsers, true
-	} else if uid == 87 {
-		_ = global.App.DB.Where("id in (1,88)").Order("rand()").Limit(numberOfRecommendedUsers).Find(&users).Error
-		recommendedUsers := userToRecommendedUser(&users)
-		return recommendedUsers, true
-	} else if uid == 88 {
-		_ = global.App.DB.Where("id in (1,87)").Order("rand()").Limit(numberOfRecommendedUsers).Find(&users).Error
-		recommendedUsers := userToRecommendedUser(&users)
-		return recommendedUsers, true
-	} else {
-		return nil, false
-	}
+	log.Print(uid)
+	return nil, false
+	//var users []models.WechatUser
+	//
+	//if uid == 1 {
+	//	_ = global.App.DB.Where("id in (87,88)").Order("rand()").Limit(numberOfRecommendedUsers).Find(&users).Error
+	//	recommendedUsers := userToRecommendedUser(&users)
+	//	return recommendedUsers, true
+	//} else if uid == 87 {
+	//	_ = global.App.DB.Where("id in (1,88)").Order("rand()").Limit(numberOfRecommendedUsers).Find(&users).Error
+	//	recommendedUsers := userToRecommendedUser(&users)
+	//	return recommendedUsers, true
+	//} else if uid == 88 {
+	//	_ = global.App.DB.Where("id in (1,87)").Order("rand()").Limit(numberOfRecommendedUsers).Find(&users).Error
+	//	recommendedUsers := userToRecommendedUser(&users)
+	//	return recommendedUsers, true
+	//} else {
+	//	return nil, false
+	//}
 }

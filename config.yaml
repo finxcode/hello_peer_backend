@@ -2,7 +2,7 @@ App:
   env: debug
   port: 8686
   app_name: Hello Peer Backend
-  app_url: http://localhost #http://1.12.243.73
+  app_url: dummy
 
 Log:
   Level: info
@@ -17,11 +17,11 @@ Log:
 
 database:
   driver: mysql # database driver
-  host: 1.12.243.73 #host: 127.0.0.1
+  host: dummy
   port: 3306
-  database: hellopeers
-  username: root
-  password: Start2021@
+  database: dummy
+  username: dummy
+  password: dummy
   charset: utf8mb4
   max_idle_conns: 10
   max_open_conns: 100
@@ -30,23 +30,23 @@ database:
   log_filename: sql.log
 
 jwt:
-  secret: 3Bde3BGEbYqtqyEUzW3ry8jKFcaPH17fRmTmqE7MDr05Lwj95uruRKrrkb44TJ4s
+  secret: dummy
   jwt_ttl: 186624000  #180天有效期
   jwt_blacklist_grace_period: 10
   refresh_grace_period: 1800
 
 redis:
-  host: 1.12.243.73 #host: 127.0.0.1
+  host: dummy
   port: 6379
   db: 0
-  password: Start2021@
+  password: dummy
 
 wechat:
-  api_key: wx75514881fe2c7854
-  api_secret: e2065f88893c149723ee6645cc5ed7b5
+  api_key: dummy
+  api_secret: dummy
 
 im:
-  sdk_app_id: 1400696589
-  app_name: hello peer
-  key: 67f696305505c96f5ce63b36a1878c3652e2661e8859dd0d5412f90248fef8d9
+  sdk_app_id: dummy
+  app_name: dummy
+  key: dummy
   expiry: 186624000 #180天有效期
