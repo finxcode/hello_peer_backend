@@ -97,12 +97,12 @@ func (rs *recommendSettingService) GetRecommendedUsers(uid int) (*[]response.Rec
 		if !switched {
 			recommendedUsers, err, num := retrieveRecommendedUserFromDb(uid)
 
-			if err != nil {
-				return nil, errors.New("查询数据库错误"), 0
-			}
-
 			if num == 0 {
 				return nil, errors.New("没有符合要求的用户"), 0
+			}
+
+			if err != nil {
+				return nil, errors.New("查询数据库错误"), 0
 			}
 
 			err = RedisService.SetRecommendedUsers(uid, "recommend", recommendedUsers)
