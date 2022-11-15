@@ -109,6 +109,26 @@ func (r *relationService) ApproveFriendRequest(from, to int) error {
 
 }
 
+func (r *relationService) RejectFriendRequest(from, to int) error {
+	var knowMe models.KnowMe
+	res := global.App.DB.Model(&models.KnowMe{}).
+		Where("know_from = ? and know_to = ?", from, to).
+		Order("created_at desc").
+		First(&knowMe)
+	if res.Error == gorm.ErrRecordNotFound {
+		return errors.New("no relation record found in db")
+	} else if res.Error != nil {
+		return errors.New(fmt.Sprintf("query relation db failed woth error: %s", res.Error.Error()))
+	}
+
+	if knowMe.State != 0 {
+		return errors.New("relation state is not 'ready for reject'")
+	}
+
+	return updateState(from, to, 1)
+
+}
+
 func (r *relationService) ReleaseFriendRelation(from, to int) error {
 	//todo: bi-directional search know_mes table
 	var knowMe models.KnowMe
@@ -413,6 +433,18 @@ func (r *relationService) UpdateAllNewFriendRequestStatus(uid int) error {
 		return errors.New(fmt.Sprintf("update new friend request status failed with error, %s", res.Error.Error()))
 	}
 
+	return nil
+}
+
+//general method to update user's contact state
+func updateState(from, to, state int) error {
+	err := global.App.DB.Model(&models.KnowMe{}).
+		Where("id = (select temp.id from (select id from know_mes where know_from = ? and know_to = ? "+
+			"order by created_at desc limit 1) as temp)", from, to).
+		Update("state", state).Error
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

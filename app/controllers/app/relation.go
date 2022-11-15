@@ -288,6 +288,34 @@ func ApproveFriendRequest(c *gin.Context) {
 	response.Success(c, nil)
 }
 
+func RejectFriendRequest(c *gin.Context) {
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	var contact request.ContactApproveRequest
+	if err := c.ShouldBindJSON(&contact); err != nil {
+		response.BadRequest(c)
+		return
+	}
+	on, _ := strconv.Atoi(contact.On)
+
+	err = relation.Service.RejectFriendRequest(on, intID)
+
+	if err != nil {
+		if err.Error() == "relation state is not 'ready for reject'" {
+			response.Fail(c, -1, err.Error())
+		} else {
+			response.Fail(c, 80017, err.Error())
+			return
+		}
+	}
+
+	response.Success(c, nil)
+}
+
 func ReleaseFriendRelation(c *gin.Context) {
 	intID, err := strconv.Atoi(c.Keys["id"].(string))
 	if err != nil {
