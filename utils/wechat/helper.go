@@ -61,7 +61,8 @@ func Get(url string) (int, []byte) {
 }
 
 var (
-	ErrAppIDNotMatch       = errors.New("app id not match")
+	// ErrInvalidBlockSize 11.08 weichat changed the getUserInfo api, remove the ability to get user wechat name and avatar
+	//ErrAppIDNotMatch       = errors.New("app id not match")
 	ErrInvalidBlockSize    = errors.New("invalid block size")
 	ErrInvalidPKCS7Data    = errors.New("invalid PKCS7 data")
 	ErrInvalidPKCS7Padding = errors.New("invalid padding on input")
@@ -128,11 +129,13 @@ func (w *WechatUserDataCrypt) Decrypt(encryptedData, iv string) (*UnencryptUserD
 	if err != nil {
 		return nil, err
 	}
-	zap.L().Info("decrypted user info appId", zap.String("id= ", userInfo.Watermark.AppID))
-	zap.L().Info("decrypted user info appId", zap.String("id= ", userInfo.NickName))
-	if userInfo.Watermark.AppID != global.App.Config.Wechat.ApiKey {
-		return nil, ErrAppIDNotMatch
-	}
+
+	//11.08 weichat changed the getUserInfo api, remove the ability to get user wechat name and avatar
+	//zap.L().Info("decrypted user info appId", zap.String("id= ", userInfo.Watermark.AppID))
+	//zap.L().Info("decrypted user info appId", zap.String("id= ", userInfo.NickName))
+	//if userInfo.Watermark.AppID != global.App.Config.Wechat.ApiKey {
+	//	return nil, ErrAppIDNotMatch
+	//}
 	return &userInfo, nil
 }
 
