@@ -128,6 +128,7 @@ func (w *WechatUserDataCrypt) Decrypt(encryptedData, iv string) (*UnencryptUserD
 	if err != nil {
 		return nil, err
 	}
+	zap.L().Warn("user info appId", zap.String("id= ", userInfo.Watermark.AppID))
 	if userInfo.Watermark.AppID != global.App.Config.Wechat.ApiKey {
 		return nil, ErrAppIDNotMatch
 	}
