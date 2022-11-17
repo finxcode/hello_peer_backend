@@ -244,8 +244,8 @@ func (r *relationService) IsFan(from, to int) bool {
 
 func (r *relationService) UpdateAllNewFocusStatus(uid int) error {
 	res := global.App.DB.Model(&models.FocusOn{}).
-		Where("focus_to = ? and status = 2", uid).
-		Update("status", 1)
+		Where("focus_to = ? and status = 1", uid).
+		Update("status", 2)
 	if res.RowsAffected == 0 {
 		zap.L().Info("no new focus to update", zap.String("db info", "no new focuses record found to update"))
 		return nil
