@@ -36,7 +36,7 @@ func CreateFile(path, filename string) (bool, error) {
 
 func WriteFile(path, filename, content string) error {
 	s := []byte(content)
-	f, err := os.Open(path + filename)
+	f, err := os.OpenFile(path+filename, os.O_WRONLY, os.ModePerm)
 	if err != nil {
 		return err
 	}
