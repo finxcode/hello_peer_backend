@@ -44,9 +44,14 @@ redis:
 wechat:
   api_key: dummy
   api_secret: dummy
+  access_grant_type: client_credential
 
 im:
   sdk_app_id: dummy
   app_name: dummy
   key: dummy
   expiry: 186624000 #180天有效期
+
+secret:
+  path: ./storage/secret/
+  access_token: access_token.txt

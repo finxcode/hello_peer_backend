@@ -89,6 +89,7 @@ func SetApiGroupRoutes(router *gin.RouterGroup) {
 		authRouter.GET("/user/relation/getFriendsOutOfSevenDays", app.GetFriendsOutOfSevenDays)
 		authRouter.GET("/user/relation/getMyFriendRequests", app.GetMyFriendRequests)
 		authRouter.GET("/user/setting/getUserSettings", app.GetUserSettings)
+		authRouter.GET("/user/setting/getPhoneNumber", app.GetUserPhoneNumber)
 
 		authRouter.GET("/sys/getUserTerms", app.GetUserTerms)
 		authRouter.GET("/sys/getPrivacyPolicy", app.GetPrivacyPolicy)

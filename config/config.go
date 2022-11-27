@@ -8,4 +8,5 @@ type Configuration struct {
 	Redis    Redis    `mapstructure:"redis" json:"redis" yaml:"redis"`
 	Wechat   Wechat   `mapstructure:"wechat" json:"wechat" yaml:"wechat"`
 	IM       IM       `mapstructure:"im" json:"im" yaml:"im"`
+	Secret   Secret   `mapstructure:"secret" json:"secret" yaml:"secret"`
 }

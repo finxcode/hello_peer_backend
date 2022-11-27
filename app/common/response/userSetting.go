@@ -8,3 +8,7 @@ type UserSetting struct {
 	Phone        string `json:"phone"`
 	WechatName   string `json:"wechatName"`
 }
+
+type UserPhoneNumber struct {
+	PhoneNumber string `json:"phoneNumber"`
+}

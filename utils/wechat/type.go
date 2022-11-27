@@ -32,3 +32,32 @@ type UnencryptUserData struct {
 		AppID     string `json:"appid"`
 	} `json:"watermark"`
 }
+
+type PhoneResponse struct {
+	ErrCode   int    `json:"errcode"`
+	ErrMsg    string `json:"errmsg"`
+	PhoneInfo `json:"phone_info"`
+}
+
+type PhoneInfo struct {
+	PhoneNumber     string `json:"phoneNumber,omitempty"`
+	PurePhoneNumber string `json:"purePhoneNumber"`
+	CountryCode     string `json:"countryCode"`
+	Watermark
+}
+
+type Watermark struct {
+	AppId     string `json:"appId"`
+	Timestamp int    `json:"timestamp"`
+}
+
+type PhoneNumberRequest struct {
+	Code string `json:"code"`
+}
+
+type AccessTokenResponse struct {
+	AccessToken string `json:"access_token"`
+	ExpiresIn   int    `json:"expires_in"`
+	ErrCode     int    `json:"errcode"`
+	ErrMsg      string `json:"errmsg"`
+}

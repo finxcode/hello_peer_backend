@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"webapp_gin/bootstrap"
 	"webapp_gin/global"
+	"webapp_gin/utils/wechat"
 
 	"go.uber.org/zap"
 )
@@ -26,5 +28,12 @@ func main() {
 
 	bootstrap.InitializeValidator()
 	global.App.Redis = bootstrap.InitializeRedis()
+
+	err := bootstrap.InitSecret()
+	if err != nil {
+		log.Fatal("initial acquiring access token failed")
+	}
+	wechat.UpdateAccessToken()
 	bootstrap.RunServer()
+
 }
