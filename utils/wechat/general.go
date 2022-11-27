@@ -58,7 +58,7 @@ func saveAccessToken(accessToken string) error {
 
 func UpdateAccessToken() {
 	c := cron.New()
-	freq := "* */1 * * * *"
+	freq := "59 59 */1 * * *"
 	c.AddFunc(freq, func() {
 		counterReq := 0
 		for {

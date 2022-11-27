@@ -63,7 +63,7 @@ type UserDetailsUpdate struct {
 	Weight        float32 `json:"weight" example:"43"`
 	Education     string  `json:"education" example:"本科"`
 	Location      string  `json:"location" example:"深圳"`
-	Hometown      string  `json:"hometown" example:"湖南长沙"`
+	Hometown      string  `json:"hometown" gorm:"column:home_town" example:"湖南长沙"`
 	SelfDesc      string  `json:"self_desc" example:"自我描述"`
 	Hobbies       string  `json:"hobbies" example:"兴趣爱好"`
 	Declaration   string  `json:"declaration" example:"交友宣言"`

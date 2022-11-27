@@ -409,3 +409,18 @@ func (wechatUserService *wechatUserService) getUserGender(uid int) (int, error) 
 
 	return user.Gender, nil
 }
+
+func (wechatUserService *wechatUserService) SetUserPosition(uid int, lat, lng float32) error {
+	res := global.App.DB.Model(models.WechatUser{}).
+		Where("id = ?", uid).
+		Updates(models.WechatUser{
+			Lat: lat,
+			Lng: lng,
+		})
+	if res.Error != nil {
+		zap.L().Error("update user position error",
+			zap.String("update user position failed with error: ", res.Error.Error()))
+		return errors.New("update user position failed")
+	}
+	return nil
+}

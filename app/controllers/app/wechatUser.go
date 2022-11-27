@@ -333,3 +333,26 @@ func GetUserInfoCompleteLevel(c *gin.Context) {
 
 	response.Success(c, res)
 }
+
+func SetUserPosition(c *gin.Context) {
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+
+	var pos request.Position
+	if err := c.ShouldBindJSON(&pos); err != nil {
+		response.BadRequest(c)
+		return
+	}
+
+	err = services.WechatUserService.SetUserPosition(intID, pos.Lat, pos.Lng)
+	if err != nil {
+		response.Fail(c, 10005, err.Error())
+		return
+	}
+
+	response.Success(c, nil)
+
+}
