@@ -413,7 +413,7 @@ func (r *relationService) GetFriendStatus(from, to int) int {
 
 	if state == 0 {
 		return 0
-	} else if state == 2 {
+	} else if state == 3 {
 		return 1
 	} else {
 		return -1

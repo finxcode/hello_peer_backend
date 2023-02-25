@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"webapp_gin/app/common/response"
 	"webapp_gin/app/models"
+	"webapp_gin/app/services/helper"
 	"webapp_gin/global"
 	"webapp_gin/utils"
 
@@ -171,13 +172,13 @@ func retrieveRecommendedUserFromDb(uid int) (*[]response.RecommendedUser, error,
 		return nil, errors.New("没有符合条件的用户"), 0
 	}
 
-	recommendedUsers := userToRecommendedUser(&users)
+	recommendedUsers := userToRecommendedUser(&users, user.Lng, user.Lat)
 
 	return recommendedUsers, nil, len(*recommendedUsers)
 
 }
 
-func userToRecommendedUser(users *[]models.WechatUser) *[]response.RecommendedUser {
+func userToRecommendedUser(users *[]models.WechatUser, lng, lat float32) *[]response.RecommendedUser {
 	if len(*users) == 0 {
 		return nil
 	}
@@ -204,6 +205,15 @@ func userToRecommendedUser(users *[]models.WechatUser) *[]response.RecommendedUs
 			recommendedUsers[i].PetName = ""
 		} else {
 			recommendedUsers[i].PetName = pet.PetName
+		}
+		if helper.NewPosition(lng, lat) == nil {
+			recommendedUsers[i].Distance = 0
+		} else if helper.NewPosition(user.Lng, user.Lat) == nil {
+			recommendedUsers[i].Distance = 0
+		} else {
+			p := helper.NewPosition(lng, lat)
+			to := helper.NewPosition(user.Lng, user.Lat)
+			recommendedUsers[i].Distance = p.GetDistance(to)
 		}
 	}
 

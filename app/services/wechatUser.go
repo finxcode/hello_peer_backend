@@ -424,3 +424,44 @@ func (wechatUserService *wechatUserService) SetUserPosition(uid int, lat, lng fl
 	}
 	return nil
 }
+
+func (wechatUserService *wechatUserService) SetPassword(uid int, password string) error {
+	var weChatUser models.WechatUser
+	res := global.App.DB.Model(models.WechatUser{}).Where("id = ?", uid).First(&weChatUser)
+	if res.RowsAffected != 0 {
+		zap.L().Warn("no user found",
+			zap.String("no user found when set password", res.Error.Error()))
+		return errors.New("no user found")
+	}
+	if weChatUser.Password != "" {
+		zap.L().Warn("password already set",
+			zap.String("password already set", res.Error.Error()))
+		return errors.New("password already set")
+	}
+
+	res = global.App.DB.Model(models.WechatUser{}).
+		Where("id = ?", uid).
+		Update("password", utils.BcryptMake([]byte(password)))
+
+	if res.Error != nil {
+		zap.L().Error("set use password failed",
+			zap.String("set use password failed with error: ", res.Error.Error()))
+		return errors.New("set user password failed")
+	}
+
+	return nil
+}
+
+func (wechatUserService *wechatUserService) HasPassword(uid int) (bool, error) {
+	var weChatUser models.WechatUser
+	res := global.App.DB.Model(models.WechatUser{}).Where("id = ?", uid).First(&weChatUser)
+	if res.RowsAffected != 0 {
+		zap.L().Warn("no user found",
+			zap.String("no user found when check password", res.Error.Error()))
+		return false, errors.New("no user found")
+	}
+	if weChatUser.Password != "" {
+		return true, nil
+	}
+	return false, nil
+}

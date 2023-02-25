@@ -10,21 +10,23 @@ type RandomUser struct {
 	Lat           float32 `json:"lat"`
 	Location      string  `json:"location"`
 	CoverImageUrl string  `json:"coverImageUrl"`
+	Distance      int     `json:"distance"`
 }
 
 type RecommendedUser struct {
-	Uid           int      `json:"uid"`
-	UserName      string   `example:"豆豆"`
-	PetName       string   `example:"Amy"`
-	Age           int      `example:"25"`
-	Occupation    string   `example:"平面设计师"`
-	Lng           float32  `example:"113.95"`
-	Lat           float32  `example:"22.51"`
-	Location      string   `example:"南山区"`
-	Verified      bool     `example:"true"`
-	CoverImageUrl string   `example:"www.coverUrl.com"`
-	Tags          []string `example:"猫控 读书达人 电影爱好者"`
-	Images        []string `example:"www.imgUrl1.com, www.imgUrl2.com"`
+	Uid           int      `json:"uid" json:"uid"`
+	UserName      string   `example:"豆豆" json:"user_name"`
+	PetName       string   `example:"Amy" json:"pet_name"`
+	Age           int      `example:"25" json:"age"`
+	Occupation    string   `example:"平面设计师" json:"occupation"`
+	Lng           float32  `example:"113.95" json:"lng"`
+	Lat           float32  `example:"22.51" json:"lat"`
+	Location      string   `example:"南山区" json:"location"`
+	Verified      bool     `example:"true" json:"verified"`
+	CoverImageUrl string   `example:"www.coverUrl.com" json:"cover_image_url"`
+	Tags          []string `example:"猫控 读书达人 电影爱好者" json:"tags"`
+	Images        []string `example:"www.imgUrl1.com, www.imgUrl2.com" json:"images"`
+	Distance      int      `json:"distance,omitempty"`
 }
 
 type UserDetails struct {

@@ -6,6 +6,7 @@ import (
 	"webapp_gin/app/common/request"
 	"webapp_gin/app/common/response"
 	"webapp_gin/app/models"
+	"webapp_gin/app/services/helper"
 	"webapp_gin/global"
 
 	"go.uber.org/zap"
@@ -144,6 +145,9 @@ func retrieveUsersFromDb(uid int) (*[]response.RandomUser, error, int) {
 		defaultGender = 1
 	}
 
+	//poition
+	p := helper.NewPosition(user.Lng, user.Lat)
+
 	err = global.App.DB.Where("id = ?", uid).First(&squareSetting).Error
 	if err == gorm.ErrRecordNotFound {
 		sq = SquareSetting{
@@ -181,6 +185,17 @@ func retrieveUsersFromDb(uid int) (*[]response.RandomUser, error, int) {
 	err = RedisService.SetRandomUsersInSquare(uid, "square", &resUsers)
 	if err != nil {
 		zap.L().Warn("redis stores data failed", zap.Any("create square users in redis err", err))
+	}
+
+	if p != nil {
+		for i := 0; i < len(resUsers); i++ {
+			to := helper.NewPosition(resUsers[i].Lng, resUsers[i].Lat)
+			if to == nil {
+				continue
+			} else {
+				resUsers[i].Distance = p.GetDistance(to)
+			}
+		}
 	}
 
 	return ptrUsers, nil, 0

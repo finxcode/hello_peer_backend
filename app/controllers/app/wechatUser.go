@@ -356,3 +356,17 @@ func SetUserPosition(c *gin.Context) {
 	response.Success(c, nil)
 
 }
+
+func HasPassword(c *gin.Context) {
+	intID, err := strconv.Atoi(c.Keys["id"].(string))
+	if err != nil {
+		response.BusinessFail(c, err.Error())
+		return
+	}
+	has, err := services.WechatUserService.HasPassword(intID)
+	if err != nil {
+		response.Fail(c, 10006, "check password failed")
+		return
+	}
+	response.Success(c, has)
+}
