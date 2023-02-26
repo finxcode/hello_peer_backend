@@ -15,18 +15,18 @@ type RandomUser struct {
 
 type RecommendedUser struct {
 	Uid           int      `json:"uid" json:"uid"`
-	UserName      string   `example:"豆豆" json:"userName"`
-	PetName       string   `example:"Amy" json:"petName"`
-	Age           int      `example:"25" json:"age"`
-	Occupation    string   `example:"平面设计师" json:"occupation"`
-	Lng           float32  `example:"113.95" json:"lng"`
-	Lat           float32  `example:"22.51" json:"lat"`
-	Location      string   `example:"南山区" json:"location"`
-	Verified      bool     `example:"true" json:"verified"`
-	CoverImageUrl string   `example:"www.coverUrl.com" json:"coverImageUrl"`
-	Tags          []string `example:"猫控 读书达人 电影爱好者" json:"tags"`
-	Images        []string `example:"www.imgUrl1.com, www.imgUrl2.com" json:"images"`
-	Distance      int      `json:"distance,omitempty"`
+	UserName      string   `example:"豆豆" json:"UserName"`
+	PetName       string   `example:"Amy" json:"PetName"`
+	Age           int      `example:"25" json:"Age"`
+	Occupation    string   `example:"平面设计师" json:"Occupation"`
+	Lng           float32  `example:"113.95" json:"Lng"`
+	Lat           float32  `example:"22.51" json:"Lat"`
+	Location      string   `example:"南山区" json:"Location"`
+	Verified      bool     `example:"true" json:"Verified"`
+	CoverImageUrl string   `example:"www.coverUrl.com" json:"CoverImageUrl"`
+	Tags          []string `example:"猫控 读书达人 电影爱好者" json:"Tags"`
+	Images        []string `example:"www.imgUrl1.com, www.imgUrl2.com" json:"Images"`
+	Distance      int      `json:"Distance,omitempty"`
 }
 
 type UserDetails struct {
