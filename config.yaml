@@ -3,6 +3,7 @@ App:
   port: 8686
   app_name: Hello Peer Backend
   app_url: dummy
+  version: b_0.1
 
 Log:
   Level: info

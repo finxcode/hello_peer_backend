@@ -39,6 +39,7 @@ func SetApiGroupRoutes(router *gin.RouterGroup) {
 	router.POST("/auth/autologin", app.AutoLogin)
 	router.POST("/auth/authlogin", app.AuthLogin)
 	router.Static("/images", "./storage/static/assets")
+	router.GET("/sys/getVersion", app.GetVersion)
 
 	authRouter := router.Group("").Use(middleware.JWTAuth(services.AppGuardName))
 	{
