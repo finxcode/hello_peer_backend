@@ -33,6 +33,7 @@ type TokenOutPut struct {
 	AccessToken string `json:"access_token"`
 	ExpiresIn   int    `json:"expires_in"`
 	TokenType   string `json:"token_type"`
+	UserId      string `json:"user_id"`
 }
 
 func (jwtService *jwtService) CreateToken(GuardName string, user JwtUser) (tokenData TokenOutPut, err error, token *jwt.Token) {
@@ -54,6 +55,7 @@ func (jwtService *jwtService) CreateToken(GuardName string, user JwtUser) (token
 		tokenStr,
 		int(global.App.Config.Jwt.JwtTtl),
 		TokenType,
+		user.GetUid(),
 	}
 	return
 }
