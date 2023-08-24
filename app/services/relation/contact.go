@@ -362,8 +362,6 @@ func (r *relationService) GetMyFriendRequest(uid int) (*response.MesToFriends, e
 		Order("know_mes.created_at desc").
 		Scan(&friendDto).Error
 
-	zap.L().Info("debugging on created_at", zap.String("created_at = ", friendDto[0].CreatedAt.String()))
-
 	if err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, nil
@@ -371,6 +369,8 @@ func (r *relationService) GetMyFriendRequest(uid int) (*response.MesToFriends, e
 			return nil, errors.New(fmt.Sprintf("query requested friend list failed with db error: %s", err.Error()))
 		}
 	}
+
+	zap.L().Info("debugging on created_at", zap.String("created_at = ", friendDto[0].CreatedAt.String()))
 
 	friends.MyFriendRequests = friendDtoToFriendToMyFriendRequest(&friendDto)
 
