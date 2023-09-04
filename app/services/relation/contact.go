@@ -48,7 +48,7 @@ func (r *relationService) AddNewContact(from, to int, message string) error {
 	}
 
 	if knowMe.State == 0 {
-		if time.Now().Sub(knowMe.CreatedAt) > 7*24*60*time.Minute {
+		if time.Now().Sub(knowMe.CreatedAt) > 1*time.Minute {
 			err := global.App.DB.Model(&models.KnowMe{}).
 				Where("id = (select temp.id from (select id from know_mes where know_from = ? and know_to = ? "+
 					"order by created_at desc limit 1) as temp)", from, to).
@@ -71,7 +71,7 @@ func (r *relationService) AddNewContact(from, to int, message string) error {
 		} else {
 			return errors.New("previous request still valid")
 		}
-	} else if knowMe.State == 1 || knowMe.State == 2 || knowMe.State == 4 {
+	} else if knowMe.State == 1 || knowMe.State == 2 {
 		knowMe := models.KnowMe{}
 		knowMe.KnowFrom = strconv.Itoa(from)
 		knowMe.KnowTo = strconv.Itoa(to)
