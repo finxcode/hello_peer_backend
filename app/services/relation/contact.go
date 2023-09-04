@@ -71,7 +71,7 @@ func (r *relationService) AddNewContact(from, to int, message string) error {
 		} else {
 			return errors.New("previous request still valid")
 		}
-	} else if knowMe.State == 1 || knowMe.State == 2 {
+	} else if knowMe.State == 1 || knowMe.State == 2 || knowMe.State == 4 {
 		knowMe := models.KnowMe{}
 		knowMe.KnowFrom = strconv.Itoa(from)
 		knowMe.KnowTo = strconv.Itoa(to)
