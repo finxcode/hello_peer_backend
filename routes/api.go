@@ -94,6 +94,9 @@ func SetApiGroupRoutes(router *gin.RouterGroup) {
 		authRouter.GET("/user/setting/getPhoneNumber", app.GetUserPhoneNumber)
 		authRouter.POST("/user/setPosition", app.SetUserPosition)
 
+		authRouter.POST("/user/serUserAvatar", app.SetUserAvatar)
+		authRouter.POST("/user/setUserImage", app.SetUserImage)
+
 		authRouter.GET("/user/setting/hasPassword", app.HasPassword)
 
 		authRouter.GET("/sys/getUserTerms", app.GetUserTerms)

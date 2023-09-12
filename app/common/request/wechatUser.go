@@ -25,3 +25,7 @@ type Position struct {
 	Lat float32 `json:"lat"`
 	Lng float32 `json:"lng"`
 }
+
+type Image struct {
+	Url string `json:"url"`
+}
