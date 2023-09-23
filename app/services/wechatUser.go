@@ -219,7 +219,7 @@ func (wechatUserService *wechatUserService) SetUserImages(uid int, filename []st
 		zap.L().Error("set users images error", zap.Any("database error", err.Error()))
 		return err
 	}
-	imgs := wechatUser.Images
+	imgs := ""
 	for _, url := range filename {
 		imgs += " " + url
 	}
