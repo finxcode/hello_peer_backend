@@ -212,7 +212,7 @@ func (wechatUserService *wechatUserService) SetUserDetails(uid int, userDetails 
 	return nil
 }
 
-func (wechatUserService *wechatUserService) SetUserImages(uid int, filename string) error {
+func (wechatUserService *wechatUserService) SetUserImages(uid int, filename []string) error {
 	var wechatUser models.WechatUser
 	err := global.App.DB.Where("id = ?", uid).First(&wechatUser).Error
 	if err != nil {
@@ -220,7 +220,9 @@ func (wechatUserService *wechatUserService) SetUserImages(uid int, filename stri
 		return err
 	}
 	imgs := wechatUser.Images
-	imgs += " " + filename
+	for _, url := range filename {
+		imgs += " " + url
+	}
 	res := global.App.DB.Model(models.WechatUser{}).Where("id = ?", uid).Update("images", imgs)
 	if res.Error != nil {
 		zap.L().Error("set users images error", zap.Any("database error", res.Error))

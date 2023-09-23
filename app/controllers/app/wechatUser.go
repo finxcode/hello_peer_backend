@@ -105,8 +105,8 @@ func SetUSerBasicInfo(c *gin.Context) {
 }
 
 func SetUserAvatar(c *gin.Context) {
-	var imageUrl request.Image
-	if err := c.ShouldBindJSON(&imageUrl); err != nil {
+	var imageUrls request.Image
+	if err := c.ShouldBindJSON(&imageUrls); err != nil {
 		response.BadRequest(c)
 		return
 	}
@@ -136,17 +136,17 @@ func SetUserAvatar(c *gin.Context) {
 	//	return
 	//}
 
-	if err = services.WechatUserService.SetUserAvatar(intID, imageUrl.Url); err != nil {
+	if err = services.WechatUserService.SetUserAvatar(intID, imageUrls.Urls[0]); err != nil {
 		response.Fail(c, http.StatusInternalServerError, "设置头像错误")
 		return
 	}
 
-	if err = services.WechatUserService.SetUserImage(intID, imageUrl.Url, "customized_avatar"); err != nil {
+	if err = services.WechatUserService.SetUserImage(intID, imageUrls.Urls[0], "customized_avatar"); err != nil {
 		response.Fail(c, http.StatusInternalServerError, "数据库错误")
 		return
 	}
 
-	if err = services.WechatUserService.SetUserImage(intID, imageUrl.Url, "cover_image"); err != nil {
+	if err = services.WechatUserService.SetUserImage(intID, imageUrls.Urls[0], "cover_image"); err != nil {
 		response.Fail(c, http.StatusInternalServerError, "数据库错误")
 		return
 	}
@@ -266,7 +266,7 @@ func SetUserImage(c *gin.Context) {
 
 	*/
 
-	if err = services.WechatUserService.SetUserImages(intID, imageUrl.Url); err != nil {
+	if err = services.WechatUserService.SetUserImages(intID, imageUrl.Urls); err != nil {
 		response.Fail(c, http.StatusInternalServerError, "数据库错误")
 		return
 	}
