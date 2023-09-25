@@ -200,6 +200,7 @@ func userToRecommendedUser(users *[]models.WechatUser, lng, lat float32) *[]resp
 		}
 		recommendedUsers[i].Lat = user.Lat
 		recommendedUsers[i].Lng = user.Lng
+		recommendedUsers[i].Verified = user.Verified
 		pet, err := PetService.GetPetDetails(int(user.ID.ID))
 		if err != nil {
 			recommendedUsers[i].PetName = ""

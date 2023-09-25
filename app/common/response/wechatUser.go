@@ -23,7 +23,7 @@ type RecommendedUser struct {
 	Lng           float32  `example:"113.95" json:"Lng"`
 	Lat           float32  `example:"22.51" json:"Lat"`
 	Location      string   `example:"南山区" json:"Location"`
-	Verified      bool     `example:"true" json:"Verified"`
+	Verified      int      `example:"0" json:"Verified"`
 	CoverImageUrl string   `example:"www.coverUrl.com" json:"CoverImageUrl"`
 	Tags          []string `example:"猫控 读书达人 电影爱好者" json:"Tags"`
 	Images        []string `example:"www.imgUrl1.com, www.imgUrl2.com" json:"Images"`
