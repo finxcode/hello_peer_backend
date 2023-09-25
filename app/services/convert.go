@@ -23,6 +23,7 @@ func WechatUserToRandomUser(wechatUsers []models.WechatUser) []response.RandomUs
 		resUser.CoverImageUrl = user.CoverImage
 		resUser.Lat = user.Lat
 		resUser.Lng = user.Lng
+		resUser.Gender = user.Gender
 		resUsers = append(resUsers, resUser)
 	}
 	return resUsers

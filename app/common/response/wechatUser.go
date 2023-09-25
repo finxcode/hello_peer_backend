@@ -11,6 +11,7 @@ type RandomUser struct {
 	Location      string  `json:"location"`
 	CoverImageUrl string  `json:"coverImageUrl"`
 	Distance      int     `json:"distance"`
+	Gender        int     `json:"gender"`
 }
 
 type RecommendedUser struct {
