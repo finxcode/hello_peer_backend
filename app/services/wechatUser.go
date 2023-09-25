@@ -361,6 +361,7 @@ func (wechatUserService *wechatUserService) GetUserDetailsById(uid, from int) (*
 	respUserDetails.Marriage = wechatUser.Marriage
 	respUserDetails.Income = wechatUser.Income
 	respUserDetails.Purpose = wechatUser.Purpose
+	respUserDetails.Verified = wechatUser.Verified
 
 	resp, err := PetService.GetPetDetails(uid)
 	if err != nil {

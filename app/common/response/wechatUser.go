@@ -54,6 +54,7 @@ type UserDetails struct {
 	PetName       string   `json:"pet_name"`
 	FocusStatus   int      `json:"focusStatus"`
 	FriendStatus  int      `json:"friendStatus"`
+	Verified      int      `json:"verified"`
 }
 
 type UserDetailsUpdate struct {
