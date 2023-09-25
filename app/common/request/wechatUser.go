@@ -27,5 +27,5 @@ type Position struct {
 }
 
 type Image struct {
-	Urls []string `json:"url"`
+	Urls []string `json:"url" binding:"dive"`
 }
