@@ -253,8 +253,10 @@ func (wechatUserService *wechatUserService) SetUserAvatar(uid int, filename stri
 		return nil
 	}
 	imgs := filename
-	for _, image := range images {
-		imgs += " " + image
+	for idx, image := range images {
+		if idx != 0 {
+			imgs += " " + image
+		}
 	}
 	res := global.App.DB.Model(models.WechatUser{}).Where("id = ?", uid).Update("images", imgs)
 	if res.Error != nil {
