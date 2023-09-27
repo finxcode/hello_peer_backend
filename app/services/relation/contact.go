@@ -349,6 +349,7 @@ func (r *relationService) GetMyFriendRequest(uid int) (*response.MesToFriends, e
 
 	if err != nil {
 		zap.L().Error("db know_mes table error", zap.String("update state to 2 failed with error: ", err.Error()))
+		return nil, nil
 	}
 
 	err = global.App.DB.Table("wechat_users").
@@ -369,8 +370,6 @@ func (r *relationService) GetMyFriendRequest(uid int) (*response.MesToFriends, e
 			return nil, errors.New(fmt.Sprintf("query requested friend list failed with db error: %s", err.Error()))
 		}
 	}
-
-	zap.L().Info("debugging on created_at", zap.String("created_at = ", friendDto[0].CreatedAt.String()))
 
 	friends.MyFriendRequests = friendDtoToFriendToMyFriendRequest(&friendDto)
 
