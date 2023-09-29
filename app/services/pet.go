@@ -53,7 +53,7 @@ func (p *petService) SetPetDetails(uid int, pet *models.Pet) error {
 	return nil
 }
 
-func (p *petService) SetPetImages(uid int, filename string) error {
+func (p *petService) SetPetImages(uid int, filenames []string) error {
 	var pet models.Pet
 	err := global.App.DB.Where("user_id = ?", uid).First(&pet).Error
 	if err == gorm.ErrRecordNotFound {
@@ -61,8 +61,10 @@ func (p *petService) SetPetImages(uid int, filename string) error {
 		if err != nil {
 			return errors.New("找不到宠物数据")
 		} else {
-			imgs := pet.Images
-			imgs += " " + filename
+			imgs := ""
+			for _, filename := range filenames {
+				imgs += " " + filename
+			}
 			res := global.App.DB.Model(models.Pet{}).Where("user_id = ?", uid).Update("images", imgs)
 			if res.Error != nil {
 				zap.L().Error("set pet images error", zap.Any("database error at insertion", res.Error))
@@ -73,8 +75,10 @@ func (p *petService) SetPetImages(uid int, filename string) error {
 		zap.L().Error("set pet images error", zap.Any("database error at retrieval", err.Error()))
 		return err
 	} else {
-		imgs := pet.Images
-		imgs += " " + filename
+		imgs := ""
+		for _, filename := range filenames {
+			imgs += " " + filename
+		}
 		res := global.App.DB.Model(models.Pet{}).Where("user_id = ?", uid).Update("images", imgs)
 		if res.Error != nil {
 			zap.L().Error("set pet images error", zap.Any("database error at insertion", res.Error))

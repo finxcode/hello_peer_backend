@@ -25,7 +25,3 @@ type Position struct {
 	Lat float32 `json:"lat"`
 	Lng float32 `json:"lng"`
 }
-
-type Image struct {
-	Urls []string `json:"url" binding:"dive"`
-}

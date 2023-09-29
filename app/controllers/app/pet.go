@@ -3,7 +3,6 @@ package app
 import (
 	"net/http"
 	"strconv"
-	"time"
 	"webapp_gin/app/common/request"
 	"webapp_gin/app/common/response"
 	"webapp_gin/app/models"
@@ -94,25 +93,32 @@ func SetPetImage(c *gin.Context) {
 		response.BusinessFail(c, err.Error())
 		return
 	}
-	file, err := c.FormFile("content")
 
-	// The file cannot be received.
-	if err != nil {
-		response.Fail(c, http.StatusBadRequest, "接收文件错误")
+	var imageUrls request.Image
+	if err := c.ShouldBindJSON(&imageUrls); err != nil {
+		response.BadRequest(c)
 		return
 	}
+
+	//file, err := c.FormFile("content")
+
+	// The file cannot be received.
+	//if err != nil {
+	//	response.Fail(c, http.StatusBadRequest, "接收文件错误")
+	//	return
+	//}
 	// Retrieve file information
 	// extension := filepath.Ext(file.Filename)
 	// Generate random file name for the new uploaded file so it doesn't override the old file with same name
-	newFileName := strconv.Itoa(intID) + "_" + strconv.Itoa(int(time.Now().Unix())) + "_" + file.Filename
+	//newFileName := strconv.Itoa(intID) + "_" + strconv.Itoa(int(time.Now().Unix())) + "_" + file.Filename
 
 	// The file is received, so let's save it
-	if err := c.SaveUploadedFile(file, "./storage/static/assets/"+newFileName); err != nil {
-		response.Fail(c, http.StatusInternalServerError, "保存文件错误")
-		return
-	}
+	//if err := c.SaveUploadedFile(file, "./storage/static/assets/"+newFileName); err != nil {
+	//	response.Fail(c, http.StatusInternalServerError, "保存文件错误")
+	//	return
+	//}
 
-	if err = services.PetService.SetPetImages(intID, newFileName); err != nil {
+	if err = services.PetService.SetPetImages(intID, imageUrls.Urls); err != nil {
 		response.Fail(c, http.StatusInternalServerError, "数据库错误")
 		return
 	}
