@@ -21,6 +21,10 @@ func GetPetDetails(c *gin.Context) {
 	}
 
 	resp, err := services.PetService.GetPetDetails(intID)
+	if err, ok := err.(*services.NoPetFoundError); ok {
+		response.NoRecordFound(c, err.Error())
+		return
+	}
 	if err != nil {
 		response.Fail(c, 50000, err.Error())
 		return

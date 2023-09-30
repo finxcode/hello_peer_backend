@@ -47,3 +47,11 @@ func TokenFail(c *gin.Context) {
 func BadRequest(c *gin.Context) {
 	Fail(c, global.Errors.BadRequestError.ErrorCode, global.Errors.BadRequestError.ErrorMsg)
 }
+
+func NoRecordFound(c *gin.Context, msg string) {
+	c.JSON(http.StatusOK, Response{
+		0,
+		nil,
+		msg,
+	})
+}

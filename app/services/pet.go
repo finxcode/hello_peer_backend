@@ -20,7 +20,7 @@ func (p *petService) GetPetDetails(uid int) (*models.Pet, error) {
 	var pet models.Pet
 	err := global.App.DB.Where("user_id", uid).First(&pet).Error
 	if err != nil {
-		return nil, errors.New("查询宠物数据库错误")
+		return nil, NewNoPetError("no pet record found")
 	}
 	return &pet, nil
 }
