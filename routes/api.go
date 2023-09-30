@@ -41,6 +41,9 @@ func SetApiGroupRoutes(router *gin.RouterGroup) {
 	router.Static("/images", "./storage/static/assets")
 	router.GET("/sys/getVersion", app.GetVersion)
 
+	router.GET("/sys/getUserTerms", app.GetUserTerms)
+	router.GET("/sys/getPrivacyPolicy", app.GetPrivacyPolicy)
+
 	authRouter := router.Group("").Use(middleware.JWTAuth(services.AppGuardName))
 	{
 		authRouter.POST("/auth/info", app.Info)
@@ -99,8 +102,6 @@ func SetApiGroupRoutes(router *gin.RouterGroup) {
 
 		authRouter.GET("/user/setting/hasPassword", app.HasPassword)
 
-		authRouter.GET("/sys/getUserTerms", app.GetUserTerms)
-		authRouter.GET("/sys/getPrivacyPolicy", app.GetPrivacyPolicy)
 	}
 
 }
