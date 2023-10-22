@@ -10,6 +10,7 @@ type Gender struct {
 
 type BasicInfo struct {
 	Gender        int     `json:"gender"`
+	UserName      string  `json:"nickname"`
 	BirthDay      string  `json:"birth_day"`
 	Constellation string  `json:"constellation"`
 	Height        float32 `json:"height"`

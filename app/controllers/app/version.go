@@ -7,14 +7,11 @@ import (
 )
 
 func GetVersion(c *gin.Context) {
-	type version struct {
-		version string
-	}
 
 	v := global.App.Config.App.Version
 
-	ver := version{
-		version: v,
+	ver := response.Version{
+		Version: v,
 	}
 
 	response.Success(c, ver)

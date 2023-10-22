@@ -5,3 +5,7 @@ type Agreement struct {
 	Title   string `json:"title"`
 	Content string `json:"content"`
 }
+
+type Version struct {
+	Version string `json:"version"`
+}
