@@ -57,6 +57,7 @@ func SetPetDetails(c *gin.Context) {
 
 	pet := models.Pet{
 		PetName:     petReq.PetName,
+		PetType:     petReq.PetType,
 		Sex:         petReq.Sex,
 		Birthday:    petReq.Birthday,
 		Description: petReq.Description,
@@ -173,6 +174,7 @@ func GetPetDetailById(c *gin.Context) {
 	petResponse.Weight = resp.Weight
 	petResponse.Description = resp.Description
 	petResponse.Images = utils.ParseToArray(&resp.Images, " ")
+	petResponse.PetType = resp.PetType
 
 	response.Success(c, petResponse)
 }

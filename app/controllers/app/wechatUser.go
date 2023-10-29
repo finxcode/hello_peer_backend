@@ -151,6 +151,7 @@ func SetUserAvatar(c *gin.Context) {
 		return
 	}
 
+	_ = services.WechatUserService.SetUserInfoComplete(intID, 2)
 	response.Success(c, nil)
 }
 
