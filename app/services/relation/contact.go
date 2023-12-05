@@ -137,9 +137,27 @@ func (r *relationService) ReleaseFriendRelation(from, to int) error {
 		Order("created_at desc").
 		First(&knowMe)
 	if res.Error == gorm.ErrRecordNotFound {
-		return errors.New("no relation record found in db")
+		result := global.App.DB.Model(&models.KnowMe{}).
+			Where("know_from = ? and know_to = ?", to, from).
+			Order("created_at desc").
+			First(&knowMe)
+		if result.Error == gorm.ErrRecordNotFound {
+			return errors.New("no relation record found in db")
+		} else if result.Error != nil {
+			errors.New(fmt.Sprintf("query relation db failed woth error: %s", res.Error.Error()))
+		} else {
+			if knowMe.State != 3 {
+				return errors.New("relation state is not 'ready for releasing'")
+			}
+			return updateStateAndDeleteFriend(global.App.DB, to, from)
+		}
 	} else if res.Error != nil {
 		return errors.New(fmt.Sprintf("query relation db failed woth error: %s", res.Error.Error()))
+	} else {
+		if knowMe.State != 3 {
+			return errors.New("relation state is not 'ready for releasing'")
+		}
+		return updateStateAndDeleteFriend(global.App.DB, from, to)
 	}
 
 	if knowMe.State != 3 {
