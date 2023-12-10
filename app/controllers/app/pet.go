@@ -59,12 +59,16 @@ func SetPetDetails(c *gin.Context) {
 
 	pet := models.Pet{
 		PetName:     petReq.PetName,
-		PetType:     petReq.PetType,
 		Sex:         petReq.Sex,
 		Birthday:    petReq.Birthday,
 		Description: petReq.Description,
 		Weight:      petReq.Weight,
 	}
+
+	if petReq.PetType == 0 {
+		pet.PetType = 0
+	}
+
 	zap.L().Info("pet info", zap.Any("pet", pet))
 
 	err = services.PetService.SetPetDetails(intID, &pet)
