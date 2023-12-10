@@ -1,6 +1,7 @@
 package app
 
 import (
+	"go.uber.org/zap"
 	"net/http"
 	"strconv"
 	"webapp_gin/app/common/request"
@@ -63,6 +64,7 @@ func SetPetDetails(c *gin.Context) {
 		Description: petReq.Description,
 		Weight:      petReq.Weight,
 	}
+	zap.L().Info("pet info", zap.Any("pet", pet))
 
 	err = services.PetService.SetPetDetails(intID, &pet)
 
