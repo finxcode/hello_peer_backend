@@ -33,6 +33,7 @@ func GetPetDetails(c *gin.Context) {
 
 	petResponse.PetName = resp.PetName
 	petResponse.Sex = resp.Sex
+	petResponse.PetType = resp.PetType
 	petResponse.Birthday = resp.Birthday
 	petResponse.Weight = resp.Weight
 	petResponse.Description = resp.Description
