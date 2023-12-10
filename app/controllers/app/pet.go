@@ -33,11 +33,14 @@ func GetPetDetails(c *gin.Context) {
 
 	petResponse.PetName = resp.PetName
 	petResponse.Sex = resp.Sex
-	petResponse.PetType = resp.PetType
 	petResponse.Birthday = resp.Birthday
 	petResponse.Weight = resp.Weight
 	petResponse.Description = resp.Description
 	petResponse.Images = utils.ParseToArray(&resp.Images, " ")
+
+	if resp.PetType == -1 {
+		petResponse.PetType = 0
+	}
 
 	response.Success(c, petResponse)
 
@@ -66,7 +69,7 @@ func SetPetDetails(c *gin.Context) {
 	}
 
 	if petReq.PetType == 0 {
-		pet.PetType = 0
+		pet.PetType = -1
 	}
 
 	zap.L().Info("pet info", zap.Any("pet", pet))
