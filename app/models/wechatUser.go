@@ -14,9 +14,9 @@ type WechatUser struct {
 	Height           float32 `json:"height" gorm:"comment:身高"`
 	Weight           float32 `json:"weight" gorm:"comment：体重"`
 	Occupation       string  `json:"occupation" gorm:"comment:职业"`
-	Constellation    string  `json:"constellation gorm:comment:星座"`
-	Education        string  `json:"education gorm:comment:学历"`
-	Marriage         string  `json:"marriage gorm:comment:婚姻"`
+	Constellation    string  `json:"constellation" gorm:"comment:星座"`
+	Education        string  `json:"education" gorm:"comment:学历"`
+	Marriage         string  `json:"marriage" gorm:"comment:婚姻"`
 	Lat              float32 `json:"lat" gorm:"comment:维度"`
 	Lng              float32 `json:"lng" gorm:"comment:经度"`
 	OpenId           string  `json:"openid" gorm:"comment:微信openid"`

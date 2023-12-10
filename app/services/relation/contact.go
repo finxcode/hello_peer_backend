@@ -133,38 +133,23 @@ func (r *relationService) ReleaseFriendRelation(from, to int) error {
 	//todo: bi-directional search know_mes table
 	var knowMe models.KnowMe
 	res := global.App.DB.Model(&models.KnowMe{}).
-		Where("know_from = ? and know_to = ?", from, to).
+		Where("(know_from = ? and know_to = ?) or (know_from = ? and know_to = ?)", from, to, to, from).
 		Order("created_at desc").
 		First(&knowMe)
 	if res.Error == gorm.ErrRecordNotFound {
-		result := global.App.DB.Model(&models.KnowMe{}).
-			Where("know_from = ? and know_to = ?", to, from).
-			Order("created_at desc").
-			First(&knowMe)
-		if result.Error == gorm.ErrRecordNotFound {
-			return errors.New("no relation record found in db")
-		} else if result.Error != nil {
-			errors.New(fmt.Sprintf("query relation db failed woth error: %s", res.Error.Error()))
-		} else {
-			if knowMe.State != 3 {
-				return errors.New("relation state is not 'ready for releasing'")
-			}
-			return updateStateAndDeleteFriend(global.App.DB, to, from)
-		}
+		return errors.New("no relation record found in db")
 	} else if res.Error != nil {
-		return errors.New(fmt.Sprintf("query relation db failed woth error: %s", res.Error.Error()))
-	} else {
-		if knowMe.State != 3 {
-			return errors.New("relation state is not 'ready for releasing'")
-		}
-		return updateStateAndDeleteFriend(global.App.DB, from, to)
+		return errors.New(fmt.Sprintf("query relation db failed with error: %s", res.Error.Error()))
 	}
 
 	if knowMe.State != 3 {
 		return errors.New("relation state is not 'ready for releasing'")
 	}
 
-	return updateStateAndDeleteFriend(global.App.DB, from, to)
+	from_id, _ := strconv.Atoi(knowMe.KnowFrom)
+	to_id, _ := strconv.Atoi(knowMe.KnowTo)
+
+	return updateStateAndDeleteFriend(global.App.DB, from_id, to_id)
 }
 
 func (r *relationService) GetFriendList(uid int) (*response.Friends, error) {
