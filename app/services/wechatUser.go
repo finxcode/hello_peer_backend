@@ -6,6 +6,7 @@ import (
 	"webapp_gin/app/common/request"
 	"webapp_gin/app/common/response"
 	"webapp_gin/app/models"
+	"webapp_gin/app/services/helper"
 	"webapp_gin/app/services/relation"
 	"webapp_gin/global"
 	"webapp_gin/utils"
@@ -119,14 +120,14 @@ func (wechatUserService *wechatUserService) SetUserGender(uid, gender int) error
 	return nil
 }
 
-func (wechatUserService *wechatUserService) SetUserBasicInfo(uid int, reqUser *request.BasicInfo) error {
+func (wechatUserService *wechatUserService) SetUserBasicInfo(uid int, reqUser *request.BasicInfo, token string) error {
 	res := global.App.DB.Model(models.WechatUser{}).Where("id = ?", uid).Updates(reqUser)
 	if res.Error != nil {
 		zap.L().Error("set users basic information error", zap.Any("database error", res.Error))
 		return res.Error
 	}
 
-	err := wechatUserService.SetUserInfoComplete(uid, 1)
+	err := wechatUserService.SetUserInfoComplete(uid, 1, token)
 	if err != nil {
 		zap.L().Error("users info complete level error", zap.String("set users info complete level error", err.Error()))
 	}
@@ -134,6 +135,19 @@ func (wechatUserService *wechatUserService) SetUserBasicInfo(uid int, reqUser *r
 	err = PetService.InitPet(uid)
 	if err != nil {
 		zap.L().Error("database error", zap.String("create pet failed with error", err.Error()))
+	}
+
+	compReq := helper.CompleteRequest{
+		TaskId: 1,
+	}
+	compResp, err := helper.CompleteTask(compReq, token)
+	if err != nil {
+		zap.L().Error("credit dispense error", zap.String("giving out user credit error", err.Error()))
+
+	}
+	if compResp.Data == false {
+		zap.L().Error("credit dispense error", zap.String("giving out user credit failed with false return", err.Error()))
+		return errors.New(compResp.Message)
 	}
 	return nil
 }
@@ -231,7 +245,7 @@ func (wechatUserService *wechatUserService) SetUserImages(uid int, filename []st
 	return nil
 }
 
-func (wechatUserService *wechatUserService) SetUserAvatar(uid int, filename string) error {
+func (wechatUserService *wechatUserService) SetUserAvatar(uid int, filename string, token string) error {
 	var wechatUser models.WechatUser
 	err := global.App.DB.Where("id = ?", uid).First(&wechatUser).Error
 	if err != nil {
@@ -264,7 +278,7 @@ func (wechatUserService *wechatUserService) SetUserAvatar(uid int, filename stri
 		return res.Error
 	}
 
-	err = wechatUserService.SetUserInfoComplete(uid, 2)
+	err = wechatUserService.SetUserInfoComplete(uid, 2, token)
 	if err != nil {
 		zap.L().Error("users info complete level error", zap.String("set users info complete level error", err.Error()))
 	}
@@ -396,10 +410,22 @@ func (wechatUserService *wechatUserService) GetUserInfoComplete(uid int) (int, e
 	return level, nil
 }
 
-func (wechatUserService *wechatUserService) SetUserInfoComplete(uid, level int) error {
+func (wechatUserService *wechatUserService) SetUserInfoComplete(uid, level int, token string) error {
 	res := global.App.DB.Model(models.WechatUser{}).Where("id = ?", uid).Update("info_complete", level)
 	if res.Error != nil {
 		return res.Error
+	}
+	if level == 2 {
+		compReq := helper.CompleteRequest{
+			TaskId: 2,
+		}
+		compResp, err := helper.CompleteTask(compReq, token)
+		if err != nil {
+			return errors.New("获得宠粮错误")
+		}
+		if compResp.Status != 0 {
+			return errors.New("获得宠粮错误")
+		}
 	}
 	return nil
 }

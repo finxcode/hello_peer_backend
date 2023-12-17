@@ -93,7 +93,7 @@ func SetUSerBasicInfo(c *gin.Context) {
 		response.BusinessFail(c, err.Error())
 		return
 	}
-	err = services.WechatUserService.SetUserBasicInfo(intID, &reqUserInfoForm)
+	err = services.WechatUserService.SetUserBasicInfo(intID, &reqUserInfoForm, c.Keys["token"].(string))
 	if err != nil {
 		response.FailByError(c, global.CustomError{
 			ErrorMsg:  "设置用户基础信息错误",
@@ -136,7 +136,7 @@ func SetUserAvatar(c *gin.Context) {
 	//	return
 	//}
 
-	if err = services.WechatUserService.SetUserAvatar(intID, imageUrls.Urls[0]); err != nil {
+	if err = services.WechatUserService.SetUserAvatar(intID, imageUrls.Urls[0], c.Keys["token"].(string)); err != nil {
 		response.Fail(c, http.StatusInternalServerError, "设置头像错误")
 		return
 	}
@@ -151,7 +151,7 @@ func SetUserAvatar(c *gin.Context) {
 		return
 	}
 
-	_ = services.WechatUserService.SetUserInfoComplete(intID, 2)
+	_ = services.WechatUserService.SetUserInfoComplete(intID, 2, c.Keys["token"].(string))
 	response.Success(c, nil)
 }
 

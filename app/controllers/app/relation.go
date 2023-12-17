@@ -244,7 +244,7 @@ func SendFriendRequest(c *gin.Context) {
 	}
 
 	on, _ := strconv.Atoi(contact.On)
-	err = relation.Service.AddNewContact(intID, on, contact.Message)
+	err = relation.Service.AddNewContact(intID, on, contact.Message, c.Keys["token"].(string))
 
 	if err != nil {
 		if err.Error() == "previous request still valid" {

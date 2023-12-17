@@ -9,6 +9,7 @@ import (
 	"webapp_gin/app/common/response"
 	"webapp_gin/app/models"
 	"webapp_gin/app/services/dto"
+	"webapp_gin/app/services/helper"
 	"webapp_gin/global"
 	"webapp_gin/utils"
 
@@ -19,12 +20,23 @@ import (
 //AddNewContact
 //state: 0 - 待处理 1 - 已婉拒 2 - 过期自动拒绝 3 - 已同意 4 - 已解除
 //status: 0 - 新认识 1 - 已查看
-func (r *relationService) AddNewContact(from, to int, message string) error {
+func (r *relationService) AddNewContact(from, to int, message, token string) error {
 	var knowMe models.KnowMe
 	var wechatUser models.WechatUser
 	err := global.App.DB.Where("id = ?", from).First(&wechatUser).Error
 	if err != nil {
 		return errors.New("no user found")
+	}
+
+	compReq := helper.CompleteRequest{
+		TaskId: 25,
+	}
+	compResp, err := helper.CompleteTask(compReq, token)
+	if err != nil {
+		return err
+	}
+	if compResp.Data == false {
+		return errors.New(compResp.Message)
 	}
 
 	res := global.App.DB.Model(&models.KnowMe{}).Where("know_from = ? and know_to = ?", from, to).Order("created_at desc").First(&knowMe)
