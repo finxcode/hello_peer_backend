@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/dgrijalva/jwt-go"
 	"strconv"
 	"webapp_gin/app/common/request"
 	"webapp_gin/app/common/response"
@@ -244,7 +245,7 @@ func SendFriendRequest(c *gin.Context) {
 	}
 
 	on, _ := strconv.Atoi(contact.On)
-	err = relation.Service.AddNewContact(intID, on, contact.Message, c.Keys["token"].(string))
+	err = relation.Service.AddNewContact(intID, on, contact.Message, c.Keys["token"].(*jwt.Token).Raw)
 
 	if err != nil {
 		if err.Error() == "previous request still valid" {

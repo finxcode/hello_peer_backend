@@ -1,6 +1,7 @@
 package app
 
 import (
+	"github.com/dgrijalva/jwt-go"
 	"net/http"
 	"strconv"
 	"time"
@@ -93,7 +94,7 @@ func SetUSerBasicInfo(c *gin.Context) {
 		response.BusinessFail(c, err.Error())
 		return
 	}
-	err = services.WechatUserService.SetUserBasicInfo(intID, &reqUserInfoForm, c.Keys["token"].(string))
+	err = services.WechatUserService.SetUserBasicInfo(intID, &reqUserInfoForm, c.Keys["token"].(*jwt.Token).Raw)
 	if err != nil {
 		response.FailByError(c, global.CustomError{
 			ErrorMsg:  "设置用户基础信息错误",
@@ -136,7 +137,7 @@ func SetUserAvatar(c *gin.Context) {
 	//	return
 	//}
 
-	if err = services.WechatUserService.SetUserAvatar(intID, imageUrls.Urls[0], c.Keys["token"].(string)); err != nil {
+	if err = services.WechatUserService.SetUserAvatar(intID, imageUrls.Urls[0], c.Keys["token"].(*jwt.Token).Raw); err != nil {
 		response.Fail(c, http.StatusInternalServerError, "设置头像错误")
 		return
 	}
@@ -151,7 +152,7 @@ func SetUserAvatar(c *gin.Context) {
 		return
 	}
 
-	_ = services.WechatUserService.SetUserInfoComplete(intID, 2, c.Keys["token"].(string))
+	_ = services.WechatUserService.SetUserInfoComplete(intID, 2, c.Keys["token"].(*jwt.Token).Raw)
 	response.Success(c, nil)
 }
 
