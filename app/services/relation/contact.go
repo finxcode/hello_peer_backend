@@ -31,6 +31,9 @@ func (r *relationService) AddNewContact(from, to int, message, token string) err
 	compReq := helper.CompleteRequest{
 		TaskId: 25,
 	}
+
+	zap.L().Info("user token", zap.String("requested user token", token))
+
 	compResp, err := helper.CompleteTask(compReq, token)
 	if err != nil {
 		return err
