@@ -30,6 +30,7 @@ func (r *relationService) AddNewContact(from, to int, message, token string) err
 
 	compReq := helper.CompleteRequest{
 		TaskId: 25,
+		UserId: from,
 	}
 
 	zap.L().Info("user token", zap.String("requested user token", token))
